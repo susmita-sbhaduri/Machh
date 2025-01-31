@@ -1,0 +1,52 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:po="http://primefaces.org/omega">
+  <h:form id="menuform">
+    <div class="sidebar">
+        <div class="sidebar-scroll-content">
+            <div class="logo">
+                <p:link outcome="/secured/empty">
+                    <p:graphicImage name="images/#{guestPreferences.menuColor eq 'light' ? 'omega-black.svg' : 'omega-white.svg'}" library="omega-layout" width="113"/>
+                </p:link>
+            </div>
+            <div class="profile">
+                <p:graphicImage name="images/profile.png" library="omega-layout" />
+                <a id="profile-button" href="#">
+                    <span class="username">#{loginController.username}</span>
+                    <i class="pi pi-fw pi-cog"/>
+                </a>
+                <ul>
+                    <li><a href="#"><i class="pi pi-fw pi-sliders-h"/><span>Account</span></a></li>
+                    <li><a href="#"><i class="pi pi-fw pi-bell"/><span>Notifications</span><span class="menu-badge">2</span></a></li>
+                    <li><a href="#"><i class="pi pi-fw pi-sign-out"/><span>Logout</span></a></li>
+                </ul>
+            </div>
+            <div class="menu">
+                <po:menu widgetVar="OmegaMenuWidget">
+                    <p:menuitem id="m_dashboard" value="Dashboard" icon="pi pi-fw pi-home" outcome="/landing"/>
+                    <p:submenu id="m_components" label="UI Kit" icon="pi pi-fw pi-star">
+                        <p:menuitem id="m_formlayout" value="Form Layout" icon="pi pi-fw pi-id-card" outcome="/landing"/>
+                        <p:menuitem id="m_input" value="Input" icon="pi pi-fw pi-check-square" outcome="/landing"/>
+                        <p:menuitem id="m_floatlabel" value="Float Label" icon="pi pi-fw pi-bookmark" outcome="/landing"/>
+                        <p:menuitem id="m_invalidstate" value="Invalid State" icon="pi pi-fw pi-exclamation-circle"
+                                    outcome="/landing"/>
+                        
+                    </p:submenu>
+                    <p:submenu id="m_primeblocks" label="Prime Blocks" icon="pi pi-fw pi-prime">
+                        <p:menuitem id="m_freeblocks" value="Free Blocks" icon="pi pi-fw pi-eye" outcome="/landing"/>
+                        <p:menuitem id="m_allblocks" value="All Blocks" icon="pi pi-fw pi-globe" target="_blank" url="https://www.primefaces.org/primeblocks-jsf"/>
+                    </p:submenu>                    
+                    <p:submenu id="m_default" label="Pages" icon="pi pi-fw pi-briefcase">                        
+                        <p:menuitem id="m_empty" value="Empty" icon="pi pi-fw pi-circle-off" outcome="/secured/empty"/>
+                    </p:submenu>
+                    
+                </po:menu>
+            </div>
+        </div>
+    </div>
+  </h:form>
+</ui:composition>
