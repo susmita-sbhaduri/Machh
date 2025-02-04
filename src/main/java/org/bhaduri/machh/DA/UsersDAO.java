@@ -23,8 +23,8 @@ public class UsersDAO extends UsersJpaController{
         EntityManager em = getEntityManager();
         TypedQuery<Users> query = em.createNamedQuery("Users.getUserDetails", Users.class);
         query.setParameter("username", username);
-            query.setParameter("password", password);
-            Users userdetails = query.getSingleResult();
+        query.setParameter("password", password);
+        Users userdetails = query.getSingleResult();
             return userdetails;
 //        EntityTransaction transaction = em.getTransaction();
 //        Users userdetails;  

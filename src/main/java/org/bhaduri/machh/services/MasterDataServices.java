@@ -24,12 +24,6 @@ public class MasterDataServices {
     public MasterDataServices() {
         emf = Persistence.createEntityManagerFactory("org.bhaduri_Machh_jar_1.0-SNAPSHOT");
         utx = null;
-//        try {
-//               InitialContext ctx = new InitialContext();
-//               utx = (UserTransaction) ctx.lookup("java:comp/UserTransaction");
-//        } catch (NamingException e) {
-//            System.out.println(e + " has occurred in getUserAuthDetails.");                       
-//        }
     }
     public UsersDTO getUserAuthDetails(String username, String password) {
         UsersDAO useraccess = new UsersDAO(utx,emf);  
