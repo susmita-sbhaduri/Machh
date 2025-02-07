@@ -2051,3 +2051,12 @@ p:last-child {
 }
 
 /* Add your customizations of the layout styles here */
+
+#h_outputTextid{
+    font-weight:bold;
+}
+
+#h_buttonid{
+    display:inline-block;
+    margin-top:5px;
+}

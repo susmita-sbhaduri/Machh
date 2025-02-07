@@ -8,14 +8,19 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.UserTransaction;
+import java.util.ArrayList;
+import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import org.bhaduri.machh.DA.ExpenseCategoryDAO;
 
 
 import org.bhaduri.machh.DA.UsersDAO;
+import org.bhaduri.machh.DTO.ExpenseCategoryDTO;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
+import org.bhaduri.machh.entities.ExpenseCategory;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
@@ -42,6 +47,30 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getUserAuthDetails.");
+            return null;
+        }
+    }
+    
+    public List<ExpenseCategoryDTO> getExpenseCategoryDetails() {
+        ExpenseCategoryDAO expensecategoryDAO = new ExpenseCategoryDAO(utx,emf);  
+        List<ExpenseCategoryDTO> recordList = new ArrayList<>();
+        ExpenseCategoryDTO record = new ExpenseCategoryDTO();
+        try {  
+            List<ExpenseCategory> expensecategories = expensecategoryDAO.findExpenseCategoryEntities();
+            for (int i = 0; i < expensecategories.size(); i++) {
+                record.setExpenseType(expensecategories.get(i).getExpenseType());
+                record.setExpenseType(expensecategories.get(i).getCropId().toString());
+                recordList.add(record);
+                record = new ExpenseCategoryDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No expense categories rae found.");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getExpenseCategoryDetails.");
             return null;
         }
     }

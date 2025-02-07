@@ -16,15 +16,17 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Users;
+import org.bhaduri.machh.entities.Employee;
+import org.bhaduri.machh.entities.Operation;
+import org.bhaduri.machh.entities.OperationPK;
 
 /**
  *
  * @author sb
  */
-public class UsersJpaController implements Serializable {
+public class OperationJpaController implements Serializable {
 
-    public UsersJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public OperationJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -35,12 +37,25 @@ public class UsersJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Users users) throws PreexistingEntityException, RollbackFailureException, Exception {
+    public void create(Operation operation) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (operation.getOperationPK() == null) {
+            operation.setOperationPK(new OperationPK());
+        }
+        operation.getOperationPK().setEmployeeid(operation.getEmployee().getId());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            em.persist(users);
+            Employee employee = operation.getEmployee();
+            if (employee != null) {
+                employee = em.getReference(employee.getClass(), employee.getId());
+                operation.setEmployee(employee);
+            }
+            em.persist(operation);
+            if (employee != null) {
+                employee.getOperationList().add(operation);
+                employee = em.merge(employee);
+            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -48,8 +63,8 @@ public class UsersJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findUsers(users.getId()) != null) {
-                throw new PreexistingEntityException("Users " + users + " already exists.", ex);
+            if (findOperation(operation.getOperationPK()) != null) {
+                throw new PreexistingEntityException("Operation " + operation + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -59,12 +74,28 @@ public class UsersJpaController implements Serializable {
         }
     }
 
-    public void edit(Users users) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Operation operation) throws NonexistentEntityException, RollbackFailureException, Exception {
+        operation.getOperationPK().setEmployeeid(operation.getEmployee().getId());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            users = em.merge(users);
+            Operation persistentOperation = em.find(Operation.class, operation.getOperationPK());
+            Employee employeeOld = persistentOperation.getEmployee();
+            Employee employeeNew = operation.getEmployee();
+            if (employeeNew != null) {
+                employeeNew = em.getReference(employeeNew.getClass(), employeeNew.getId());
+                operation.setEmployee(employeeNew);
+            }
+            operation = em.merge(operation);
+            if (employeeOld != null && !employeeOld.equals(employeeNew)) {
+                employeeOld.getOperationList().remove(operation);
+                employeeOld = em.merge(employeeOld);
+            }
+            if (employeeNew != null && !employeeNew.equals(employeeOld)) {
+                employeeNew.getOperationList().add(operation);
+                employeeNew = em.merge(employeeNew);
+            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -74,9 +105,9 @@ public class UsersJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = users.getId();
-                if (findUsers(id) == null) {
-                    throw new NonexistentEntityException("The users with id " + id + " no longer exists.");
+                OperationPK id = operation.getOperationPK();
+                if (findOperation(id) == null) {
+                    throw new NonexistentEntityException("The operation with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -87,19 +118,24 @@ public class UsersJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(OperationPK id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Users users;
+            Operation operation;
             try {
-                users = em.getReference(Users.class, id);
-                users.getId();
+                operation = em.getReference(Operation.class, id);
+                operation.getOperationPK();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The users with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The operation with id " + id + " no longer exists.", enfe);
             }
-            em.remove(users);
+            Employee employee = operation.getEmployee();
+            if (employee != null) {
+                employee.getOperationList().remove(operation);
+                employee = em.merge(employee);
+            }
+            em.remove(operation);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -115,19 +151,19 @@ public class UsersJpaController implements Serializable {
         }
     }
 
-    public List<Users> findUsersEntities() {
-        return findUsersEntities(true, -1, -1);
+    public List<Operation> findOperationEntities() {
+        return findOperationEntities(true, -1, -1);
     }
 
-    public List<Users> findUsersEntities(int maxResults, int firstResult) {
-        return findUsersEntities(false, maxResults, firstResult);
+    public List<Operation> findOperationEntities(int maxResults, int firstResult) {
+        return findOperationEntities(false, maxResults, firstResult);
     }
 
-    private List<Users> findUsersEntities(boolean all, int maxResults, int firstResult) {
+    private List<Operation> findOperationEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Users.class));
+            cq.select(cq.from(Operation.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -139,20 +175,20 @@ public class UsersJpaController implements Serializable {
         }
     }
 
-    public Users findUsers(String id) {
+    public Operation findOperation(OperationPK id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Users.class, id);
+            return em.find(Operation.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getUsersCount() {
+    public int getOperationCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Users> rt = cq.from(Users.class);
+            Root<Operation> rt = cq.from(Operation.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

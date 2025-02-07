@@ -15,7 +15,7 @@ import org.bhaduri.machh.entities.Users;
 
 public class UsersDAO extends UsersJpaController{
     
-     public UsersDAO(UserTransaction utx, EntityManagerFactory emf) {
+    public UsersDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
     }
     public Users getUserDetails(String username, String password) {
