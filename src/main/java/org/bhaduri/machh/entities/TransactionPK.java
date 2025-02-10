@@ -28,11 +28,6 @@ public class TransactionPK implements Serializable {
     private Date date;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "resourcetype")
-    private String resourcetype;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 100)
     @Column(name = "cropcategory")
     private String cropcategory;
@@ -41,15 +36,26 @@ public class TransactionPK implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "crop")
     private String crop;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "resourcecategory")
+    private String resourcecategory;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "resourcename")
+    private String resourcename;
 
     public TransactionPK() {
     }
 
-    public TransactionPK(Date date, String resourcetype, String cropcategory, String crop) {
+    public TransactionPK(Date date, String cropcategory, String crop, String resourcecategory, String resourcename) {
         this.date = date;
-        this.resourcetype = resourcetype;
         this.cropcategory = cropcategory;
         this.crop = crop;
+        this.resourcecategory = resourcecategory;
+        this.resourcename = resourcename;
     }
 
     public Date getDate() {
@@ -58,14 +64,6 @@ public class TransactionPK implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public String getResourcetype() {
-        return resourcetype;
-    }
-
-    public void setResourcetype(String resourcetype) {
-        this.resourcetype = resourcetype;
     }
 
     public String getCropcategory() {
@@ -84,13 +82,30 @@ public class TransactionPK implements Serializable {
         this.crop = crop;
     }
 
+    public String getResourcecategory() {
+        return resourcecategory;
+    }
+
+    public void setResourcecategory(String resourcecategory) {
+        this.resourcecategory = resourcecategory;
+    }
+
+    public String getResourcename() {
+        return resourcename;
+    }
+
+    public void setResourcename(String resourcename) {
+        this.resourcename = resourcename;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (date != null ? date.hashCode() : 0);
-        hash += (resourcetype != null ? resourcetype.hashCode() : 0);
         hash += (cropcategory != null ? cropcategory.hashCode() : 0);
         hash += (crop != null ? crop.hashCode() : 0);
+        hash += (resourcecategory != null ? resourcecategory.hashCode() : 0);
+        hash += (resourcename != null ? resourcename.hashCode() : 0);
         return hash;
     }
 
@@ -104,13 +119,16 @@ public class TransactionPK implements Serializable {
         if ((this.date == null && other.date != null) || (this.date != null && !this.date.equals(other.date))) {
             return false;
         }
-        if ((this.resourcetype == null && other.resourcetype != null) || (this.resourcetype != null && !this.resourcetype.equals(other.resourcetype))) {
-            return false;
-        }
         if ((this.cropcategory == null && other.cropcategory != null) || (this.cropcategory != null && !this.cropcategory.equals(other.cropcategory))) {
             return false;
         }
         if ((this.crop == null && other.crop != null) || (this.crop != null && !this.crop.equals(other.crop))) {
+            return false;
+        }
+        if ((this.resourcecategory == null && other.resourcecategory != null) || (this.resourcecategory != null && !this.resourcecategory.equals(other.resourcecategory))) {
+            return false;
+        }
+        if ((this.resourcename == null && other.resourcename != null) || (this.resourcename != null && !this.resourcename.equals(other.resourcename))) {
             return false;
         }
         return true;
@@ -118,7 +136,7 @@ public class TransactionPK implements Serializable {
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.TransactionPK[ date=" + date + ", resourcetype=" + resourcetype + ", cropcategory=" + cropcategory + ", crop=" + crop + " ]";
+        return "org.bhaduri.machh.entities.TransactionPK[ date=" + date + ", cropcategory=" + cropcategory + ", crop=" + crop + ", resourcecategory=" + resourcecategory + ", resourcename=" + resourcename + " ]";
     }
     
 }

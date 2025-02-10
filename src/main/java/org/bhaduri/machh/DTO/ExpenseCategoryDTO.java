@@ -10,8 +10,18 @@ import java.io.Serializable;
  */
 public class ExpenseCategoryDTO implements Serializable {
     private String expenseType;
-    private String cropID;
+    private CropTransaction cropTransaction;
+    private OpsTransaction opsTransaction;
 
+    public ExpenseCategoryDTO(String expenseType, CropTransaction cropTransaction) {
+        this.expenseType = expenseType;
+        this.cropTransaction = cropTransaction;
+    }
+
+    public ExpenseCategoryDTO(String expenseType, OpsTransaction opsTransaction) {
+        this.expenseType = expenseType;
+        this.opsTransaction = opsTransaction;
+    }
     public String getExpenseType() {
         return expenseType;
     }
@@ -20,12 +30,4 @@ public class ExpenseCategoryDTO implements Serializable {
         this.expenseType = expenseType;
     }
 
-    public String getCropID() {
-        return cropID;
-    }
-
-    public void setCropID(String cropID) {
-        this.cropID = cropID;
-    }
-    
 }

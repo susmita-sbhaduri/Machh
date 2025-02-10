@@ -13,6 +13,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.UserTransaction;
 import org.bhaduri.machh.entities.Crop;
+import org.bhaduri.machh.entities.Resourcecategory;
 import org.bhaduri.machh.entities.Transaction;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +48,9 @@ public class ResourceJpaController implements Serializable {
         if (resource.getTransactionList() == null) {
             resource.setTransactionList(new ArrayList<Transaction>());
         }
-        resource.getResourcePK().setCrop(resource.getCrop1().getCropPK().getCrop());
+        resource.getResourcePK().setResourcecategory(resource.getResourcecategory1().getResourcecategory());
         resource.getResourcePK().setCropcategory(resource.getCrop1().getCropPK().getCropcategory());
+        resource.getResourcePK().setCrop(resource.getCrop1().getCropPK().getCrop());
         EntityManager em = null;
         try {
             utx.begin();
@@ -57,6 +59,11 @@ public class ResourceJpaController implements Serializable {
             if (crop1 != null) {
                 crop1 = em.getReference(crop1.getClass(), crop1.getCropPK());
                 resource.setCrop1(crop1);
+            }
+            Resourcecategory resourcecategory1 = resource.getResourcecategory1();
+            if (resourcecategory1 != null) {
+                resourcecategory1 = em.getReference(resourcecategory1.getClass(), resourcecategory1.getResourcecategory());
+                resource.setResourcecategory1(resourcecategory1);
             }
             List<Transaction> attachedTransactionList = new ArrayList<Transaction>();
             for (Transaction transactionListTransactionToAttach : resource.getTransactionList()) {
@@ -68,6 +75,10 @@ public class ResourceJpaController implements Serializable {
             if (crop1 != null) {
                 crop1.getResourceList().add(resource);
                 crop1 = em.merge(crop1);
+            }
+            if (resourcecategory1 != null) {
+                resourcecategory1.getResourceList().add(resource);
+                resourcecategory1 = em.merge(resourcecategory1);
             }
             for (Transaction transactionListTransaction : resource.getTransactionList()) {
                 Resource oldResourceOfTransactionListTransaction = transactionListTransaction.getResource();
@@ -97,8 +108,9 @@ public class ResourceJpaController implements Serializable {
     }
 
     public void edit(Resource resource) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
-        resource.getResourcePK().setCrop(resource.getCrop1().getCropPK().getCrop());
+        resource.getResourcePK().setResourcecategory(resource.getResourcecategory1().getResourcecategory());
         resource.getResourcePK().setCropcategory(resource.getCrop1().getCropPK().getCropcategory());
+        resource.getResourcePK().setCrop(resource.getCrop1().getCropPK().getCrop());
         EntityManager em = null;
         try {
             utx.begin();
@@ -106,6 +118,8 @@ public class ResourceJpaController implements Serializable {
             Resource persistentResource = em.find(Resource.class, resource.getResourcePK());
             Crop crop1Old = persistentResource.getCrop1();
             Crop crop1New = resource.getCrop1();
+            Resourcecategory resourcecategory1Old = persistentResource.getResourcecategory1();
+            Resourcecategory resourcecategory1New = resource.getResourcecategory1();
             List<Transaction> transactionListOld = persistentResource.getTransactionList();
             List<Transaction> transactionListNew = resource.getTransactionList();
             List<String> illegalOrphanMessages = null;
@@ -124,6 +138,10 @@ public class ResourceJpaController implements Serializable {
                 crop1New = em.getReference(crop1New.getClass(), crop1New.getCropPK());
                 resource.setCrop1(crop1New);
             }
+            if (resourcecategory1New != null) {
+                resourcecategory1New = em.getReference(resourcecategory1New.getClass(), resourcecategory1New.getResourcecategory());
+                resource.setResourcecategory1(resourcecategory1New);
+            }
             List<Transaction> attachedTransactionListNew = new ArrayList<Transaction>();
             for (Transaction transactionListNewTransactionToAttach : transactionListNew) {
                 transactionListNewTransactionToAttach = em.getReference(transactionListNewTransactionToAttach.getClass(), transactionListNewTransactionToAttach.getTransactionPK());
@@ -139,6 +157,14 @@ public class ResourceJpaController implements Serializable {
             if (crop1New != null && !crop1New.equals(crop1Old)) {
                 crop1New.getResourceList().add(resource);
                 crop1New = em.merge(crop1New);
+            }
+            if (resourcecategory1Old != null && !resourcecategory1Old.equals(resourcecategory1New)) {
+                resourcecategory1Old.getResourceList().remove(resource);
+                resourcecategory1Old = em.merge(resourcecategory1Old);
+            }
+            if (resourcecategory1New != null && !resourcecategory1New.equals(resourcecategory1Old)) {
+                resourcecategory1New.getResourceList().add(resource);
+                resourcecategory1New = em.merge(resourcecategory1New);
             }
             for (Transaction transactionListNewTransaction : transactionListNew) {
                 if (!transactionListOld.contains(transactionListNewTransaction)) {
@@ -200,6 +226,11 @@ public class ResourceJpaController implements Serializable {
             if (crop1 != null) {
                 crop1.getResourceList().remove(resource);
                 crop1 = em.merge(crop1);
+            }
+            Resourcecategory resourcecategory1 = resource.getResourcecategory1();
+            if (resourcecategory1 != null) {
+                resourcecategory1.getResourceList().remove(resource);
+                resourcecategory1 = em.merge(resourcecategory1);
             }
             em.remove(resource);
             utx.commit();

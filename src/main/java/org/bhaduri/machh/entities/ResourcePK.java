@@ -20,9 +20,14 @@ public class ResourcePK implements Serializable {
 
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "resourcetype")
-    private String resourcetype;
+    @Size(min = 1, max = 50)
+    @Column(name = "resourcecategory")
+    private String resourcecategory;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "resourcename")
+    private String resourcename;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -37,18 +42,27 @@ public class ResourcePK implements Serializable {
     public ResourcePK() {
     }
 
-    public ResourcePK(String resourcetype, String cropcategory, String crop) {
-        this.resourcetype = resourcetype;
+    public ResourcePK(String resourcecategory, String resourcename, String cropcategory, String crop) {
+        this.resourcecategory = resourcecategory;
+        this.resourcename = resourcename;
         this.cropcategory = cropcategory;
         this.crop = crop;
     }
 
-    public String getResourcetype() {
-        return resourcetype;
+    public String getResourcecategory() {
+        return resourcecategory;
     }
 
-    public void setResourcetype(String resourcetype) {
-        this.resourcetype = resourcetype;
+    public void setResourcecategory(String resourcecategory) {
+        this.resourcecategory = resourcecategory;
+    }
+
+    public String getResourcename() {
+        return resourcename;
+    }
+
+    public void setResourcename(String resourcename) {
+        this.resourcename = resourcename;
     }
 
     public String getCropcategory() {
@@ -70,7 +84,8 @@ public class ResourcePK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (resourcetype != null ? resourcetype.hashCode() : 0);
+        hash += (resourcecategory != null ? resourcecategory.hashCode() : 0);
+        hash += (resourcename != null ? resourcename.hashCode() : 0);
         hash += (cropcategory != null ? cropcategory.hashCode() : 0);
         hash += (crop != null ? crop.hashCode() : 0);
         return hash;
@@ -83,7 +98,10 @@ public class ResourcePK implements Serializable {
             return false;
         }
         ResourcePK other = (ResourcePK) object;
-        if ((this.resourcetype == null && other.resourcetype != null) || (this.resourcetype != null && !this.resourcetype.equals(other.resourcetype))) {
+        if ((this.resourcecategory == null && other.resourcecategory != null) || (this.resourcecategory != null && !this.resourcecategory.equals(other.resourcecategory))) {
+            return false;
+        }
+        if ((this.resourcename == null && other.resourcename != null) || (this.resourcename != null && !this.resourcename.equals(other.resourcename))) {
             return false;
         }
         if ((this.cropcategory == null && other.cropcategory != null) || (this.cropcategory != null && !this.cropcategory.equals(other.cropcategory))) {
@@ -97,7 +115,7 @@ public class ResourcePK implements Serializable {
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.ResourcePK[ resourcetype=" + resourcetype + ", cropcategory=" + cropcategory + ", crop=" + crop + " ]";
+        return "org.bhaduri.machh.entities.ResourcePK[ resourcecategory=" + resourcecategory + ", resourcename=" + resourcename + ", cropcategory=" + cropcategory + ", crop=" + crop + " ]";
     }
     
 }

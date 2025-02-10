@@ -30,11 +30,11 @@ import java.util.List;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Resource.findAll", query = "SELECT r FROM Resource r"),
-    @NamedQuery(name = "Resource.findByResourcetype", query = "SELECT r FROM Resource r WHERE r.resourcePK.resourcetype = :resourcetype"),
+    @NamedQuery(name = "Resource.findByResourcecategory", query = "SELECT r FROM Resource r WHERE r.resourcePK.resourcecategory = :resourcecategory"),
+    @NamedQuery(name = "Resource.findByResourcename", query = "SELECT r FROM Resource r WHERE r.resourcePK.resourcename = :resourcename"),
     @NamedQuery(name = "Resource.findByCropcategory", query = "SELECT r FROM Resource r WHERE r.resourcePK.cropcategory = :cropcategory"),
     @NamedQuery(name = "Resource.findByCrop", query = "SELECT r FROM Resource r WHERE r.resourcePK.crop = :crop"),
     @NamedQuery(name = "Resource.findByResourcelocation", query = "SELECT r FROM Resource r WHERE r.resourcelocation = :resourcelocation"),
-    @NamedQuery(name = "Resource.findByResourcename", query = "SELECT r FROM Resource r WHERE r.resourcename = :resourcename"),
     @NamedQuery(name = "Resource.findByResourcecontact", query = "SELECT r FROM Resource r WHERE r.resourcecontact = :resourcecontact"),
     @NamedQuery(name = "Resource.findByAvailibilitytime", query = "SELECT r FROM Resource r WHERE r.availibilitytime = :availibilitytime"),
     @NamedQuery(name = "Resource.findByTransportmeans", query = "SELECT r FROM Resource r WHERE r.transportmeans = :transportmeans")})
@@ -46,9 +46,6 @@ public class Resource implements Serializable {
     @Size(max = 100)
     @Column(name = "resourcelocation")
     private String resourcelocation;
-    @Size(max = 50)
-    @Column(name = "resourcename")
-    private String resourcename;
     @Size(max = 100)
     @Column(name = "resourcecontact")
     private String resourcecontact;
@@ -63,6 +60,9 @@ public class Resource implements Serializable {
         @JoinColumn(name = "crop", referencedColumnName = "crop", insertable = false, updatable = false)})
     @ManyToOne(optional = false)
     private Crop crop1;
+    @JoinColumn(name = "resourcecategory", referencedColumnName = "resourcecategory", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Resourcecategory resourcecategory1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "resource")
     private List<Transaction> transactionList;
 
@@ -73,8 +73,8 @@ public class Resource implements Serializable {
         this.resourcePK = resourcePK;
     }
 
-    public Resource(String resourcetype, String cropcategory, String crop) {
-        this.resourcePK = new ResourcePK(resourcetype, cropcategory, crop);
+    public Resource(String resourcecategory, String resourcename, String cropcategory, String crop) {
+        this.resourcePK = new ResourcePK(resourcecategory, resourcename, cropcategory, crop);
     }
 
     public ResourcePK getResourcePK() {
@@ -91,14 +91,6 @@ public class Resource implements Serializable {
 
     public void setResourcelocation(String resourcelocation) {
         this.resourcelocation = resourcelocation;
-    }
-
-    public String getResourcename() {
-        return resourcename;
-    }
-
-    public void setResourcename(String resourcename) {
-        this.resourcename = resourcename;
     }
 
     public String getResourcecontact() {
@@ -131,6 +123,14 @@ public class Resource implements Serializable {
 
     public void setCrop1(Crop crop1) {
         this.crop1 = crop1;
+    }
+
+    public Resourcecategory getResourcecategory1() {
+        return resourcecategory1;
+    }
+
+    public void setResourcecategory1(Resourcecategory resourcecategory1) {
+        this.resourcecategory1 = resourcecategory1;
     }
 
     @XmlTransient

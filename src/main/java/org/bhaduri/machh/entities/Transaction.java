@@ -28,9 +28,10 @@ import java.util.Date;
 @NamedQueries({
     @NamedQuery(name = "Transaction.findAll", query = "SELECT t FROM Transaction t"),
     @NamedQuery(name = "Transaction.findByDate", query = "SELECT t FROM Transaction t WHERE t.transactionPK.date = :date"),
-    @NamedQuery(name = "Transaction.findByResourcetype", query = "SELECT t FROM Transaction t WHERE t.transactionPK.resourcetype = :resourcetype"),
     @NamedQuery(name = "Transaction.findByCropcategory", query = "SELECT t FROM Transaction t WHERE t.transactionPK.cropcategory = :cropcategory"),
     @NamedQuery(name = "Transaction.findByCrop", query = "SELECT t FROM Transaction t WHERE t.transactionPK.crop = :crop"),
+    @NamedQuery(name = "Transaction.findByResourcecategory", query = "SELECT t FROM Transaction t WHERE t.transactionPK.resourcecategory = :resourcecategory"),
+    @NamedQuery(name = "Transaction.findByResourcename", query = "SELECT t FROM Transaction t WHERE t.transactionPK.resourcename = :resourcename"),
     @NamedQuery(name = "Transaction.findByTransactiontype", query = "SELECT t FROM Transaction t WHERE t.transactiontype = :transactiontype"),
     @NamedQuery(name = "Transaction.findByQuntity", query = "SELECT t FROM Transaction t WHERE t.quntity = :quntity"),
     @NamedQuery(name = "Transaction.findByPrice", query = "SELECT t FROM Transaction t WHERE t.price = :price"),
@@ -53,7 +54,8 @@ public class Transaction implements Serializable {
     @Column(name = "comments")
     private String comments;
     @JoinColumns({
-        @JoinColumn(name = "resourcetype", referencedColumnName = "resourcetype", insertable = false, updatable = false),
+        @JoinColumn(name = "resourcecategory", referencedColumnName = "resourcecategory", insertable = false, updatable = false),
+        @JoinColumn(name = "resourcename", referencedColumnName = "resourcename", insertable = false, updatable = false),
         @JoinColumn(name = "cropcategory", referencedColumnName = "cropcategory", insertable = false, updatable = false),
         @JoinColumn(name = "crop", referencedColumnName = "crop", insertable = false, updatable = false)})
     @ManyToOne(optional = false)
@@ -66,8 +68,8 @@ public class Transaction implements Serializable {
         this.transactionPK = transactionPK;
     }
 
-    public Transaction(Date date, String resourcetype, String cropcategory, String crop) {
-        this.transactionPK = new TransactionPK(date, resourcetype, cropcategory, crop);
+    public Transaction(Date date, String cropcategory, String crop, String resourcecategory, String resourcename) {
+        this.transactionPK = new TransactionPK(date, cropcategory, crop, resourcecategory, resourcename);
     }
 
     public TransactionPK getTransactionPK() {

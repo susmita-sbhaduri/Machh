@@ -42,7 +42,8 @@ public class TransactionJpaController implements Serializable {
             transaction.setTransactionPK(new TransactionPK());
         }
         transaction.getTransactionPK().setCrop(transaction.getResource().getResourcePK().getCrop());
-        transaction.getTransactionPK().setResourcetype(transaction.getResource().getResourcePK().getResourcetype());
+        transaction.getTransactionPK().setResourcecategory(transaction.getResource().getResourcePK().getResourcecategory());
+        transaction.getTransactionPK().setResourcename(transaction.getResource().getResourcePK().getResourcename());
         transaction.getTransactionPK().setCropcategory(transaction.getResource().getResourcePK().getCropcategory());
         EntityManager em = null;
         try {
@@ -78,7 +79,8 @@ public class TransactionJpaController implements Serializable {
 
     public void edit(Transaction transaction) throws NonexistentEntityException, RollbackFailureException, Exception {
         transaction.getTransactionPK().setCrop(transaction.getResource().getResourcePK().getCrop());
-        transaction.getTransactionPK().setResourcetype(transaction.getResource().getResourcePK().getResourcetype());
+        transaction.getTransactionPK().setResourcecategory(transaction.getResource().getResourcePK().getResourcecategory());
+        transaction.getTransactionPK().setResourcename(transaction.getResource().getResourcePK().getResourcename());
         transaction.getTransactionPK().setCropcategory(transaction.getResource().getResourcePK().getCropcategory());
         EntityManager em = null;
         try {
