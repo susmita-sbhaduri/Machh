@@ -31,12 +31,25 @@
 
                         <p:selectOneMenu id="transtype" value="#{transactionProcess.transtype}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
-                            <f:selectItem itemLabel="Purchase" itemValue="purchase"/>
-                            <f:selectItem itemLabel="Sell" itemValue="sell"/>
+                            <f:selectItem itemLabel="CapX" itemValue="capx"/>
+                            <f:selectItem itemLabel="OpX" itemValue="opx"/>
+                        <p:ajax event="change" listener="#{transactionProcess.onTransTypeChange}" 
+                                update="cropcategory, cropname" />    
+                        </p:selectOneMenu>
+                        
+                        <p:selectOneMenu id="cropcategory" value="#{transactionProcess.cropcategory}">
+                            <f:selectItem itemLabel="Select One" itemValue=""/>
+                            <f:selectItems value="#{transactionProcess.cropcategories}" 
+                            var="cropcat" itemLabel="#{cropcat}" itemValue="#{cropcat}" />
+                        </p:selectOneMenu>
 
+                        <p:selectOneMenu id="cropname" value="#{transactionProcess.cropname}">
+                            <f:selectItem itemLabel="Select One" itemValue=""/>
+                            <f:selectItems value="#{transactionProcess.cropnames}" 
+                            var="crop" itemLabel="#{crop}" itemValue="#{crop}" />
                         </p:selectOneMenu>
                     </div>
-                    <div class="field col-12 md:col-4">
+<!--                    <div class="field col-12 md:col-4">
                         <p:outputLabel for="expenseCategory" value="Expense Category" />                      
 
                         <p:selectOneMenu id="expenseCategory" value="#{transactionProcess.expenseCategory}">
@@ -45,7 +58,7 @@
                                            var="category" itemLabel="#{category}" itemValue="#{category}"/>
 
                         </p:selectOneMenu>
-                    </div>
+                    </div>-->
                 </div>    
                 <!--<h:button outcome="/landing" value="Home" id="h_buttonid" icon="pi pi-home"/>-->
                 <p:commandButton value="Submit" action="#{transactionProcess.process()}" />

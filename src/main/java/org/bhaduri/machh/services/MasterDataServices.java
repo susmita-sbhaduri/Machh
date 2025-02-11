@@ -12,19 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import org.bhaduri.machh.DA.ExpenseCategoryDAO;
+import org.bhaduri.machh.DA.CropDAO;
+
 
 
 import org.bhaduri.machh.DA.UsersDAO;
-import org.bhaduri.machh.DTO.ExpenseCategoryDTO;
+import org.bhaduri.machh.DTO.CropPk;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
-import org.bhaduri.machh.entities.ExpenseCategory;
+import org.bhaduri.machh.entities.CropPK;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
-    private UserTransaction utx;
+    private final UserTransaction utx;
 
     public MasterDataServices() {
         emf = Persistence.createEntityManagerFactory("org.bhaduri_Machh_jar_1.0-SNAPSHOT");
@@ -51,17 +52,17 @@ public class MasterDataServices {
         }
     }
     
-    public List<ExpenseCategoryDTO> getExpenseCategoryDetails() {
-        ExpenseCategoryDAO expensecategoryDAO = new ExpenseCategoryDAO(utx,emf);  
-        List<ExpenseCategoryDTO> recordList = new ArrayList<>();
-        ExpenseCategoryDTO record = new ExpenseCategoryDTO();
+    public List<CropPk> getCropPkList() {
+        CropDAO cropdao = new CropDAO(utx,emf);  
+        List<CropPk> recordList = new ArrayList<>();
+        CropPk record = new CropPk();
         try {  
-            List<ExpenseCategory> expensecategories = expensecategoryDAO.findExpenseCategoryEntities();
-            for (int i = 0; i < expensecategories.size(); i++) {
-                record.setExpenseType(expensecategories.get(i).getExpenseType());
-                record.setExpenseType(expensecategories.get(i).getCropId().toString());
+            List<CropPK> croppkentities = cropdao.listCropPk();
+            for (int i = 0; i < croppkentities.size(); i++) {
+                record.setCropCategory(croppkentities.get(i).getCropcategory());
+                record.setCropName(croppkentities.get(i).getCrop());
                 recordList.add(record);
-                record = new ExpenseCategoryDTO();
+                record = new CropPk();
             }        
             return recordList;
         }

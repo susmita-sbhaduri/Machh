@@ -6,8 +6,8 @@
     <named-query name="Users.getUserDetails">
         <query>SELECT u FROM Users u WHERE u.username = :username and u.password = :password</query>
     </named-query>
-    <named-query name="ExpenseCategory.listAllCategory">
-        <query>SELECT e FROM ExpenseCategory e</query>
+    <named-query name="CropPK.listAllCropPk">
+        <query>SELECT c.cropcategory, c.crop FROM crop c</query>
     </named-query>
 </entity-mappings>
 

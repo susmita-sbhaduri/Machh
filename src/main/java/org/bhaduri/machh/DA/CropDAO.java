@@ -10,23 +10,25 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.transaction.UserTransaction;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
+import org.bhaduri.machh.JPA.CropJpaController;
 
 import org.bhaduri.machh.JPA.TransactionJpaController;
+import org.bhaduri.machh.entities.CropPK;
 import org.bhaduri.machh.entities.Transaction;
 /**
  *
  * @author sb
  */
-public class ExpenseCategoryDAO extends ExpenseCategoryJpaController{
-    public ExpenseCategoryDAO(UserTransaction utx, EntityManagerFactory emf) {
+public class CropDAO extends CropJpaController{
+    public CropDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
     }
-    public List<ExpenseCategory> listExpenseCategory() {
+    public List<CropPK> listCropPk() {
         EntityManager em = getEntityManager();
-        TypedQuery<ExpenseCategory> query = em.createNamedQuery("ExpenseCategory.listAllCategory", ExpenseCategory.class);
+        TypedQuery<CropPK> query = em.createNamedQuery("CropPK.listAllCropPk", CropPK.class);
 //        query.setParameter("scripid", scripid);        
-        List<ExpenseCategory> listofcategory = query.getResultList();
-        return listofcategory;
+        List<CropPK> listofcroppk = query.getResultList();
+        return listofcroppk;
     }
     
 }
