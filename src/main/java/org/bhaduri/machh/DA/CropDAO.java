@@ -13,7 +13,7 @@ import java.util.List;
 import org.bhaduri.machh.JPA.CropJpaController;
 
 import org.bhaduri.machh.JPA.TransactionJpaController;
-import org.bhaduri.machh.entities.CropPK;
+import org.bhaduri.machh.entities.Crop;
 import org.bhaduri.machh.entities.Transaction;
 /**
  *
@@ -23,11 +23,19 @@ public class CropDAO extends CropJpaController{
     public CropDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
     }
-    public List<CropPK> listCropPk() {
+    public List<String> listCropCat() {
         EntityManager em = getEntityManager();
-        TypedQuery<CropPK> query = em.createNamedQuery("CropPK.listAllCropPk", CropPK.class);
+        TypedQuery<String> query = em.createNamedQuery("Crop.listAllCropCat", String.class);
 //        query.setParameter("scripid", scripid);        
-        List<CropPK> listofcroppk = query.getResultList();
+        List<String> listofcropcat = query.getResultList();
+        return listofcropcat;
+    }
+    
+    public List<String> listCropName(String cropcategory) {
+        EntityManager em = getEntityManager();
+        TypedQuery<String> query = em.createNamedQuery("Crop.listNameByCat", String.class);
+        query.setParameter("cropcategory", cropcategory);        
+        List<String> listofcroppk = query.getResultList();
         return listofcroppk;
     }
     

@@ -5,20 +5,16 @@
 package org.bhaduri.machh.entities;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  *
@@ -39,8 +35,6 @@ public class Resourcecategory implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "resourcecategory")
     private String resourcecategory;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "resourcecategory1")
-    private List<Resource> resourceList;
 
     public Resourcecategory() {
     }
@@ -55,15 +49,6 @@ public class Resourcecategory implements Serializable {
 
     public void setResourcecategory(String resourcecategory) {
         this.resourcecategory = resourcecategory;
-    }
-
-    @XmlTransient
-    public List<Resource> getResourceList() {
-        return resourceList;
-    }
-
-    public void setResourceList(List<Resource> resourceList) {
-        this.resourceList = resourceList;
     }
 
     @Override

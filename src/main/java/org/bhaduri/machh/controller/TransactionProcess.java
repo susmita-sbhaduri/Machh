@@ -15,7 +15,7 @@ import java.util.List;
 import org.bhaduri.machh.DTO.CropPk;
 import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.services.MasterDataServices;
-import org.bhaduri.machh.DTO.ExpenseCategoryDTO;
+//import org.bhaduri.machh.DTO.ExpenseCategoryDTO;
 
 /**
  *
@@ -37,17 +37,29 @@ public class TransactionProcess implements Serializable{
         System.out.println("PostConstruct: Bean initialized");
     }
     public void onTransTypeChange() {
-        List<SelectItem> cropcategories = new ArrayList<>();     
-        List<SelectItem> cropnames = new ArrayList<>(); 
-        cropcategories.add(new SelectItem("", "Select One"));  // Add default option
-        cropnames.add(new SelectItem("", "Select One"));
-        MasterDataServices masterDataService = new MasterDataServices();
-        List<CropPk> cropPkDto = masterDataService.getCropPkList();
-        for (int i = 0; i < cropPkDto.size(); i++) {
-            cropcategories.add(new SelectItem(cropPkDto.get(i).getCropCategory()));
-            cropnames.add(new SelectItem(cropPkDto.get(i).getCropName()));
+        if ("capx".equals(transtype)) {
+            cropcategories = new ArrayList<>();
+//            cropnames = new ArrayList<>();
+//            cropcategories.add(new SelectItem("", "Select One"));  // Add default option
+//            cropnames.add(new SelectItem("", "Select One"));
+            MasterDataServices masterDataService = new MasterDataServices();
+            List<String> cropCat = masterDataService.getCropCat();
+            for (int i = 0; i < cropCat.size(); i++) {
+                cropcategories.add(cropCat.get(i));
+//                cropnames.add(cropPkDto.get(i).getCropName());
+            }
         }
-        
+    }
+    
+    public void onCropCatChange() {
+        if ("capx".equals(transtype)) {            
+            cropnames = new ArrayList<>();
+            MasterDataServices masterDataService = new MasterDataServices();
+            List<String> cropnamesforcat = masterDataService.getCropNameForCat(cropcategory);
+            for (int i = 0; i < cropnamesforcat.size(); i++) {                
+                cropnames.add(cropnamesforcat.get(i));
+            }
+        }
     }
     public Date getTransdate() {
         return transdate;

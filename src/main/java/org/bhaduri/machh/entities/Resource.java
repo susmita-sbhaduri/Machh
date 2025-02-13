@@ -4,22 +4,15 @@
  */
 package org.bhaduri.machh.entities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  *
@@ -55,16 +48,6 @@ public class Resource implements Serializable {
     @Size(max = 100)
     @Column(name = "transportmeans")
     private String transportmeans;
-    @JoinColumns({
-        @JoinColumn(name = "cropcategory", referencedColumnName = "cropcategory", insertable = false, updatable = false),
-        @JoinColumn(name = "crop", referencedColumnName = "crop", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private Crop crop1;
-    @JoinColumn(name = "resourcecategory", referencedColumnName = "resourcecategory", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Resourcecategory resourcecategory1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "resource")
-    private List<Transaction> transactionList;
 
     public Resource() {
     }
@@ -115,31 +98,6 @@ public class Resource implements Serializable {
 
     public void setTransportmeans(String transportmeans) {
         this.transportmeans = transportmeans;
-    }
-
-    public Crop getCrop1() {
-        return crop1;
-    }
-
-    public void setCrop1(Crop crop1) {
-        this.crop1 = crop1;
-    }
-
-    public Resourcecategory getResourcecategory1() {
-        return resourcecategory1;
-    }
-
-    public void setResourcecategory1(Resourcecategory resourcecategory1) {
-        this.resourcecategory1 = resourcecategory1;
-    }
-
-    @XmlTransient
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
     }
 
     @Override

@@ -16,7 +16,6 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Crop;
 import org.bhaduri.machh.entities.Site;
 import org.bhaduri.machh.entities.SitePK;
 
@@ -41,22 +40,11 @@ public class SiteJpaController implements Serializable {
         if (site.getSitePK() == null) {
             site.setSitePK(new SitePK());
         }
-        site.getSitePK().setCrop(site.getCrop1().getCropPK().getCrop());
-        site.getSitePK().setCropcategory(site.getCrop1().getCropPK().getCropcategory());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Crop crop1 = site.getCrop1();
-            if (crop1 != null) {
-                crop1 = em.getReference(crop1.getClass(), crop1.getCropPK());
-                site.setCrop1(crop1);
-            }
             em.persist(site);
-            if (crop1 != null) {
-                crop1.getSiteList().add(site);
-                crop1 = em.merge(crop1);
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -76,28 +64,11 @@ public class SiteJpaController implements Serializable {
     }
 
     public void edit(Site site) throws NonexistentEntityException, RollbackFailureException, Exception {
-        site.getSitePK().setCrop(site.getCrop1().getCropPK().getCrop());
-        site.getSitePK().setCropcategory(site.getCrop1().getCropPK().getCropcategory());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Site persistentSite = em.find(Site.class, site.getSitePK());
-            Crop crop1Old = persistentSite.getCrop1();
-            Crop crop1New = site.getCrop1();
-            if (crop1New != null) {
-                crop1New = em.getReference(crop1New.getClass(), crop1New.getCropPK());
-                site.setCrop1(crop1New);
-            }
             site = em.merge(site);
-            if (crop1Old != null && !crop1Old.equals(crop1New)) {
-                crop1Old.getSiteList().remove(site);
-                crop1Old = em.merge(crop1Old);
-            }
-            if (crop1New != null && !crop1New.equals(crop1Old)) {
-                crop1New.getSiteList().add(site);
-                crop1New = em.merge(crop1New);
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -131,11 +102,6 @@ public class SiteJpaController implements Serializable {
                 site.getSitePK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The site with id " + id + " no longer exists.", enfe);
-            }
-            Crop crop1 = site.getCrop1();
-            if (crop1 != null) {
-                crop1.getSiteList().remove(site);
-                crop1 = em.merge(crop1);
             }
             em.remove(site);
             utx.commit();

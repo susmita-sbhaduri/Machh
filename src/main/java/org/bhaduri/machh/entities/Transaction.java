@@ -7,9 +7,6 @@ package org.bhaduri.machh.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -53,13 +50,6 @@ public class Transaction implements Serializable {
     @Size(max = 100)
     @Column(name = "comments")
     private String comments;
-    @JoinColumns({
-        @JoinColumn(name = "resourcecategory", referencedColumnName = "resourcecategory", insertable = false, updatable = false),
-        @JoinColumn(name = "resourcename", referencedColumnName = "resourcename", insertable = false, updatable = false),
-        @JoinColumn(name = "cropcategory", referencedColumnName = "cropcategory", insertable = false, updatable = false),
-        @JoinColumn(name = "crop", referencedColumnName = "crop", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private Resource resource;
 
     public Transaction() {
     }
@@ -110,14 +100,6 @@ public class Transaction implements Serializable {
 
     public void setComments(String comments) {
         this.comments = comments;
-    }
-
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
     }
 
     @Override

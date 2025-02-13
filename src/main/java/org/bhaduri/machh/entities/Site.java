@@ -7,9 +7,6 @@ package org.bhaduri.machh.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -46,11 +43,6 @@ public class Site implements Serializable {
     @Size(max = 45)
     @Column(name = "sizekatha")
     private String sizekatha;
-    @JoinColumns({
-        @JoinColumn(name = "cropcategory", referencedColumnName = "cropcategory", insertable = false, updatable = false),
-        @JoinColumn(name = "crop", referencedColumnName = "crop", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private Crop crop1;
 
     public Site() {
     }
@@ -93,14 +85,6 @@ public class Site implements Serializable {
 
     public void setSizekatha(String sizekatha) {
         this.sizekatha = sizekatha;
-    }
-
-    public Crop getCrop1() {
-        return crop1;
-    }
-
-    public void setCrop1(Crop crop1) {
-        this.crop1 = crop1;
     }
 
     @Override

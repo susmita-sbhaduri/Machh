@@ -5,20 +5,19 @@
 package org.bhaduri.machh.entities;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
 /**
  *
@@ -30,12 +29,15 @@ import java.util.List;
 @NamedQueries({
     @NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e"),
     @NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = :id"),
+    @NamedQuery(name = "Employee.findByEmpcategory", query = "SELECT e FROM Employee e WHERE e.empcategory = :empcategory"),
     @NamedQuery(name = "Employee.findByName", query = "SELECT e FROM Employee e WHERE e.name = :name"),
     @NamedQuery(name = "Employee.findByAddress", query = "SELECT e FROM Employee e WHERE e.address = :address"),
     @NamedQuery(name = "Employee.findByContact", query = "SELECT e FROM Employee e WHERE e.contact = :contact"),
     @NamedQuery(name = "Employee.findBySalary", query = "SELECT e FROM Employee e WHERE e.salary = :salary"),
     @NamedQuery(name = "Employee.findByLoanTotal", query = "SELECT e FROM Employee e WHERE e.loanTotal = :loanTotal"),
-    @NamedQuery(name = "Employee.findByDueAmount", query = "SELECT e FROM Employee e WHERE e.dueAmount = :dueAmount")})
+    @NamedQuery(name = "Employee.findByDueAmount", query = "SELECT e FROM Employee e WHERE e.dueAmount = :dueAmount"),
+    @NamedQuery(name = "Employee.findByStartdate", query = "SELECT e FROM Employee e WHERE e.startdate = :startdate"),
+    @NamedQuery(name = "Employee.findByEnddate", query = "SELECT e FROM Employee e WHERE e.enddate = :enddate")})
 public class Employee implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,6 +46,9 @@ public class Employee implements Serializable {
     @NotNull
     @Column(name = "id")
     private Integer id;
+    @Size(max = 45)
+    @Column(name = "empcategory")
+    private String empcategory;
     @Size(max = 45)
     @Column(name = "name")
     private String name;
@@ -62,8 +67,12 @@ public class Employee implements Serializable {
     @Size(max = 45)
     @Column(name = "due amount")
     private String dueAmount;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
-    private List<Operation> operationList;
+    @Column(name = "startdate")
+    @Temporal(TemporalType.DATE)
+    private Date startdate;
+    @Column(name = "enddate")
+    @Temporal(TemporalType.DATE)
+    private Date enddate;
 
     public Employee() {
     }
@@ -78,6 +87,14 @@ public class Employee implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getEmpcategory() {
+        return empcategory;
+    }
+
+    public void setEmpcategory(String empcategory) {
+        this.empcategory = empcategory;
     }
 
     public String getName() {
@@ -128,13 +145,20 @@ public class Employee implements Serializable {
         this.dueAmount = dueAmount;
     }
 
-    @XmlTransient
-    public List<Operation> getOperationList() {
-        return operationList;
+    public Date getStartdate() {
+        return startdate;
     }
 
-    public void setOperationList(List<Operation> operationList) {
-        this.operationList = operationList;
+    public void setStartdate(Date startdate) {
+        this.startdate = startdate;
+    }
+
+    public Date getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(Date enddate) {
+        this.enddate = enddate;
     }
 
     @Override

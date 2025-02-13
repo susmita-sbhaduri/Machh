@@ -7,8 +7,6 @@ package org.bhaduri.machh.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
@@ -41,9 +39,6 @@ public class Operation implements Serializable {
     @Size(max = 45)
     @Column(name = "amount")
     private String amount;
-    @JoinColumn(name = "employeeid", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Employee employee;
 
     public Operation() {
     }
@@ -78,14 +73,6 @@ public class Operation implements Serializable {
 
     public void setAmount(String amount) {
         this.amount = amount;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
     }
 
     @Override

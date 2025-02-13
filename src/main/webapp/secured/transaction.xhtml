@@ -24,9 +24,8 @@
                     <div class="field col-12 md:col-4">
                         <p:outputLabel for="transdate" value="Select Date" />  
                         <!--<p:calendar id="transdate" value="#{transactionProcess.transdate}" mode="popup" />-->     
-                        <p:datePicker id="transdate" value="#{transactionProcess.transdate}" pattern="dd/MM/yyyy" /> 
-                    </div>
-                    <div class="field col-12 md:col-4">
+                        <p:datePicker id="transdate" value="#{transactionProcess.transdate}" 
+                                      pattern="dd/MM/yyyy" />
                         <p:outputLabel for="transtype" value="Transaction Type" />                      
 
                         <p:selectOneMenu id="transtype" value="#{transactionProcess.transtype}">
@@ -34,31 +33,59 @@
                             <f:selectItem itemLabel="CapX" itemValue="capx"/>
                             <f:selectItem itemLabel="OpX" itemValue="opx"/>
                         <p:ajax event="change" listener="#{transactionProcess.onTransTypeChange}" 
-                                update="cropcategory, cropname" />    
+                                update="@form" process="@this"/>    
                         </p:selectOneMenu>
-                        
-                        <p:selectOneMenu id="cropcategory" value="#{transactionProcess.cropcategory}">
+                    </div>
+                    <div class="field col-12 md:col-4">
+                        <!-- Crop Category Dropdown - Only shown if CapX is selected -->
+                        <p:outputLabel for="cropcategory" value="Crop Category" 
+                       rendered="#{transactionProcess.transtype == 'capx'}" />
+                        <p:selectOneMenu id="cropcategory" 
+                                         value="#{transactionProcess.cropcategory}"
+                                         rendered="#{transactionProcess.transtype == 'capx'}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
                             <f:selectItems value="#{transactionProcess.cropcategories}" 
                             var="cropcat" itemLabel="#{cropcat}" itemValue="#{cropcat}" />
+                            <p:ajax event="change" listener="#{transactionProcess.onCropCatChange}" 
+                                update="cropname" process="@this"/>
                         </p:selectOneMenu>
-
-                        <p:selectOneMenu id="cropname" value="#{transactionProcess.cropname}">
+                        
+                        <!-- Crop Name Dropdown - Only shown if CapX is selected -->
+                        <p:outputLabel for="cropname" value="Crop Name" 
+                                       rendered="#{transactionProcess.transtype == 'capx'}" />
+                        <p:selectOneMenu id="cropname" 
+                                         value="#{transactionProcess.cropname}"
+                                         rendered="#{transactionProcess.transtype == 'capx'}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
                             <f:selectItems value="#{transactionProcess.cropnames}" 
                             var="crop" itemLabel="#{crop}" itemValue="#{crop}" />
                         </p:selectOneMenu>
                     </div>
-<!--                    <div class="field col-12 md:col-4">
-                        <p:outputLabel for="expenseCategory" value="Expense Category" />                      
-
-                        <p:selectOneMenu id="expenseCategory" value="#{transactionProcess.expenseCategory}">
+                    
+                    <div class="field col-12 md:col-4">
+                        <!-- Crop Category Dropdown - Only shown if OpX is selected -->
+                        <p:outputLabel for="hrcategory" value="Labour Category" 
+                       rendered="#{transactionProcess.transtype == 'opx'}" />
+                        <p:selectOneMenu id="hrcategory" 
+                                         value="#{transactionProcess.hrcategory}"
+                                         rendered="#{transactionProcess.transtype == 'opx'}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
-                            <f:selectItems value="#{transactionProcess.expenseCategories}" 
-                                           var="category" itemLabel="#{category}" itemValue="#{category}"/>
-
+                            <f:selectItems value="#{transactionProcess.hrcategories}" 
+                            var="hrcat" itemLabel="#{hrcat}" itemValue="#{hrcat}" />
                         </p:selectOneMenu>
-                    </div>-->
+                        
+                        <!-- Crop Name Dropdown - Only shown if CapX is selected -->
+                        <p:outputLabel for="cropname" value="Crop Name" 
+                                       rendered="#{transactionProcess.transtype == 'capx'}" />
+                        <p:selectOneMenu id="cropname" 
+                                         value="#{transactionProcess.cropname}"
+                                         rendered="#{transactionProcess.transtype == 'capx'}">
+                            <f:selectItem itemLabel="Select One" itemValue=""/>
+                            <f:selectItems value="#{transactionProcess.cropnames}" 
+                            var="crop" itemLabel="#{crop}" itemValue="#{crop}" />
+                        </p:selectOneMenu>
+                    </div>
+                 
                 </div>    
                 <!--<h:button outcome="/landing" value="Home" id="h_buttonid" icon="pi pi-home"/>-->
                 <p:commandButton value="Submit" action="#{transactionProcess.process()}" />

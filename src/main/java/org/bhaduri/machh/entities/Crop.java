@@ -4,22 +4,18 @@
  */
 package org.bhaduri.machh.entities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -49,10 +45,6 @@ public class Crop implements Serializable {
     @Column(name = "harvestingdt")
     @Temporal(TemporalType.DATE)
     private Date harvestingdt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "crop1")
-    private List<Site> siteList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "crop1")
-    private List<Resource> resourceList;
 
     public Crop() {
     }
@@ -95,24 +87,6 @@ public class Crop implements Serializable {
 
     public void setHarvestingdt(Date harvestingdt) {
         this.harvestingdt = harvestingdt;
-    }
-
-    @XmlTransient
-    public List<Site> getSiteList() {
-        return siteList;
-    }
-
-    public void setSiteList(List<Site> siteList) {
-        this.siteList = siteList;
-    }
-
-    @XmlTransient
-    public List<Resource> getResourceList() {
-        return resourceList;
-    }
-
-    public void setResourceList(List<Resource> resourceList) {
-        this.resourceList = resourceList;
     }
 
     @Override

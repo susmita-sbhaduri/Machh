@@ -16,7 +16,6 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Employee;
 import org.bhaduri.machh.entities.Operation;
 import org.bhaduri.machh.entities.OperationPK;
 
@@ -41,21 +40,11 @@ public class OperationJpaController implements Serializable {
         if (operation.getOperationPK() == null) {
             operation.setOperationPK(new OperationPK());
         }
-        operation.getOperationPK().setEmployeeid(operation.getEmployee().getId());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Employee employee = operation.getEmployee();
-            if (employee != null) {
-                employee = em.getReference(employee.getClass(), employee.getId());
-                operation.setEmployee(employee);
-            }
             em.persist(operation);
-            if (employee != null) {
-                employee.getOperationList().add(operation);
-                employee = em.merge(employee);
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -75,27 +64,11 @@ public class OperationJpaController implements Serializable {
     }
 
     public void edit(Operation operation) throws NonexistentEntityException, RollbackFailureException, Exception {
-        operation.getOperationPK().setEmployeeid(operation.getEmployee().getId());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Operation persistentOperation = em.find(Operation.class, operation.getOperationPK());
-            Employee employeeOld = persistentOperation.getEmployee();
-            Employee employeeNew = operation.getEmployee();
-            if (employeeNew != null) {
-                employeeNew = em.getReference(employeeNew.getClass(), employeeNew.getId());
-                operation.setEmployee(employeeNew);
-            }
             operation = em.merge(operation);
-            if (employeeOld != null && !employeeOld.equals(employeeNew)) {
-                employeeOld.getOperationList().remove(operation);
-                employeeOld = em.merge(employeeOld);
-            }
-            if (employeeNew != null && !employeeNew.equals(employeeOld)) {
-                employeeNew.getOperationList().add(operation);
-                employeeNew = em.merge(employeeNew);
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -129,11 +102,6 @@ public class OperationJpaController implements Serializable {
                 operation.getOperationPK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The operation with id " + id + " no longer exists.", enfe);
-            }
-            Employee employee = operation.getEmployee();
-            if (employee != null) {
-                employee.getOperationList().remove(operation);
-                employee = em.merge(employee);
             }
             em.remove(operation);
             utx.commit();

@@ -16,7 +16,6 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Resource;
 import org.bhaduri.machh.entities.Transaction;
 import org.bhaduri.machh.entities.TransactionPK;
 
@@ -41,24 +40,11 @@ public class TransactionJpaController implements Serializable {
         if (transaction.getTransactionPK() == null) {
             transaction.setTransactionPK(new TransactionPK());
         }
-        transaction.getTransactionPK().setCrop(transaction.getResource().getResourcePK().getCrop());
-        transaction.getTransactionPK().setResourcecategory(transaction.getResource().getResourcePK().getResourcecategory());
-        transaction.getTransactionPK().setResourcename(transaction.getResource().getResourcePK().getResourcename());
-        transaction.getTransactionPK().setCropcategory(transaction.getResource().getResourcePK().getCropcategory());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Resource resource = transaction.getResource();
-            if (resource != null) {
-                resource = em.getReference(resource.getClass(), resource.getResourcePK());
-                transaction.setResource(resource);
-            }
             em.persist(transaction);
-            if (resource != null) {
-                resource.getTransactionList().add(transaction);
-                resource = em.merge(resource);
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -78,30 +64,11 @@ public class TransactionJpaController implements Serializable {
     }
 
     public void edit(Transaction transaction) throws NonexistentEntityException, RollbackFailureException, Exception {
-        transaction.getTransactionPK().setCrop(transaction.getResource().getResourcePK().getCrop());
-        transaction.getTransactionPK().setResourcecategory(transaction.getResource().getResourcePK().getResourcecategory());
-        transaction.getTransactionPK().setResourcename(transaction.getResource().getResourcePK().getResourcename());
-        transaction.getTransactionPK().setCropcategory(transaction.getResource().getResourcePK().getCropcategory());
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Transaction persistentTransaction = em.find(Transaction.class, transaction.getTransactionPK());
-            Resource resourceOld = persistentTransaction.getResource();
-            Resource resourceNew = transaction.getResource();
-            if (resourceNew != null) {
-                resourceNew = em.getReference(resourceNew.getClass(), resourceNew.getResourcePK());
-                transaction.setResource(resourceNew);
-            }
             transaction = em.merge(transaction);
-            if (resourceOld != null && !resourceOld.equals(resourceNew)) {
-                resourceOld.getTransactionList().remove(transaction);
-                resourceOld = em.merge(resourceOld);
-            }
-            if (resourceNew != null && !resourceNew.equals(resourceOld)) {
-                resourceNew.getTransactionList().add(transaction);
-                resourceNew = em.merge(resourceNew);
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -135,11 +102,6 @@ public class TransactionJpaController implements Serializable {
                 transaction.getTransactionPK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The transaction with id " + id + " no longer exists.", enfe);
-            }
-            Resource resource = transaction.getResource();
-            if (resource != null) {
-                resource.getTransactionList().remove(transaction);
-                resource = em.merge(resource);
             }
             em.remove(transaction);
             utx.commit();

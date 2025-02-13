@@ -12,10 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.UserTransaction;
-import org.bhaduri.machh.entities.Resource;
-import java.util.ArrayList;
 import java.util.List;
-import org.bhaduri.machh.JPA.exceptions.IllegalOrphanException;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
@@ -39,29 +36,11 @@ public class ResourcecategoryJpaController implements Serializable {
     }
 
     public void create(Resourcecategory resourcecategory) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (resourcecategory.getResourceList() == null) {
-            resourcecategory.setResourceList(new ArrayList<Resource>());
-        }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            List<Resource> attachedResourceList = new ArrayList<Resource>();
-            for (Resource resourceListResourceToAttach : resourcecategory.getResourceList()) {
-                resourceListResourceToAttach = em.getReference(resourceListResourceToAttach.getClass(), resourceListResourceToAttach.getResourcePK());
-                attachedResourceList.add(resourceListResourceToAttach);
-            }
-            resourcecategory.setResourceList(attachedResourceList);
             em.persist(resourcecategory);
-            for (Resource resourceListResource : resourcecategory.getResourceList()) {
-                Resourcecategory oldResourcecategory1OfResourceListResource = resourceListResource.getResourcecategory1();
-                resourceListResource.setResourcecategory1(resourcecategory);
-                resourceListResource = em.merge(resourceListResource);
-                if (oldResourcecategory1OfResourceListResource != null) {
-                    oldResourcecategory1OfResourceListResource.getResourceList().remove(resourceListResource);
-                    oldResourcecategory1OfResourceListResource = em.merge(oldResourcecategory1OfResourceListResource);
-                }
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -80,45 +59,12 @@ public class ResourcecategoryJpaController implements Serializable {
         }
     }
 
-    public void edit(Resourcecategory resourcecategory) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Resourcecategory resourcecategory) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Resourcecategory persistentResourcecategory = em.find(Resourcecategory.class, resourcecategory.getResourcecategory());
-            List<Resource> resourceListOld = persistentResourcecategory.getResourceList();
-            List<Resource> resourceListNew = resourcecategory.getResourceList();
-            List<String> illegalOrphanMessages = null;
-            for (Resource resourceListOldResource : resourceListOld) {
-                if (!resourceListNew.contains(resourceListOldResource)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Resource " + resourceListOldResource + " since its resourcecategory1 field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            List<Resource> attachedResourceListNew = new ArrayList<Resource>();
-            for (Resource resourceListNewResourceToAttach : resourceListNew) {
-                resourceListNewResourceToAttach = em.getReference(resourceListNewResourceToAttach.getClass(), resourceListNewResourceToAttach.getResourcePK());
-                attachedResourceListNew.add(resourceListNewResourceToAttach);
-            }
-            resourceListNew = attachedResourceListNew;
-            resourcecategory.setResourceList(resourceListNew);
             resourcecategory = em.merge(resourcecategory);
-            for (Resource resourceListNewResource : resourceListNew) {
-                if (!resourceListOld.contains(resourceListNewResource)) {
-                    Resourcecategory oldResourcecategory1OfResourceListNewResource = resourceListNewResource.getResourcecategory1();
-                    resourceListNewResource.setResourcecategory1(resourcecategory);
-                    resourceListNewResource = em.merge(resourceListNewResource);
-                    if (oldResourcecategory1OfResourceListNewResource != null && !oldResourcecategory1OfResourceListNewResource.equals(resourcecategory)) {
-                        oldResourcecategory1OfResourceListNewResource.getResourceList().remove(resourceListNewResource);
-                        oldResourcecategory1OfResourceListNewResource = em.merge(oldResourcecategory1OfResourceListNewResource);
-                    }
-                }
-            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -141,7 +87,7 @@ public class ResourcecategoryJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -152,17 +98,6 @@ public class ResourcecategoryJpaController implements Serializable {
                 resourcecategory.getResourcecategory();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The resourcecategory with id " + id + " no longer exists.", enfe);
-            }
-            List<String> illegalOrphanMessages = null;
-            List<Resource> resourceListOrphanCheck = resourcecategory.getResourceList();
-            for (Resource resourceListOrphanCheckResource : resourceListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Resourcecategory (" + resourcecategory + ") cannot be destroyed since the Resource " + resourceListOrphanCheckResource + " in its resourceList field has a non-nullable resourcecategory1 field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             em.remove(resourcecategory);
             utx.commit();
