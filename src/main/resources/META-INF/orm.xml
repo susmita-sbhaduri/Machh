@@ -12,5 +12,11 @@
     <named-query name="Crop.listNameByCat">
         <query>SELECT c.cropPK.crop FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory</query>
     </named-query>
+    <named-query name="Resource.listResCatPerCrop">
+        <query>SELECT DISTINCT r.resourcePK.resourcecategory FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop</query>
+    </named-query>
+    <named-query name="Resource.listResDetPerCrop">
+        <query>SELECT r.resourcePK.resourcename FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop AND r.resourcePK.resourcecategory =:resourcecategory</query>
+    </named-query>
 </entity-mappings>
 

@@ -30,6 +30,12 @@ public class TransactionProcess implements Serializable{
     private List<String> cropcategories;
     private String cropname;
     private List<String> cropnames;
+    private String resourcecat;
+    private List<String> resourcecategories;
+    private String resourcename;
+    private List<String> resourcenames;
+
+    
     
     
     @PostConstruct 
@@ -52,15 +58,35 @@ public class TransactionProcess implements Serializable{
     }
     
     public void onCropCatChange() {
-        if ("capx".equals(transtype)) {            
+//        if ("capx".equals(transtype)) {            
             cropnames = new ArrayList<>();
             MasterDataServices masterDataService = new MasterDataServices();
             List<String> cropnamesforcat = masterDataService.getCropNameForCat(cropcategory);
             for (int i = 0; i < cropnamesforcat.size(); i++) {                
                 cropnames.add(cropnamesforcat.get(i));
             }
+//        }
+    }
+    
+    public void onCropAllChange() {
+        resourcecategories = new ArrayList<>();
+        MasterDataServices masterDataService = new MasterDataServices();
+        List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
+        for (int i = 0; i < rescatforcrop.size(); i++) {
+            resourcecategories.add(rescatforcrop.get(i));
         }
     }
+    
+    public void onResCatChange() {
+        resourcenames = new ArrayList<>();
+        MasterDataServices masterDataService = new MasterDataServices();
+        List<String> resnamespercat = 
+                masterDataService.getResDetForCrop(cropcategory, cropname, resourcecat);
+        for (int i = 0; i < resnamespercat.size(); i++) {
+            resourcenames.add(resnamespercat.get(i));
+        }
+    }
+    
     public Date getTransdate() {
         return transdate;
     }
@@ -109,6 +135,37 @@ public class TransactionProcess implements Serializable{
         this.transtype = transtype;
     }
     
+    public String getResourcecat() {
+        return resourcecat;
+    }
+
+    public void setResourcecat(String resourcecat) {
+        this.resourcecat = resourcecat;
+    }
+
+    public List<String> getResourcecategories() {
+        return resourcecategories;
+    }
+
+    public void setResourcecategories(List<String> resourcecategories) {
+        this.resourcecategories = resourcecategories;
+    }
+
+    public String getResourcename() {
+        return resourcename;
+    }
+
+    public void setResourcename(String resourcename) {
+        this.resourcename = resourcename;
+    }
+
+    public List<String> getResourcenames() {
+        return resourcenames;
+    }
+
+    public void setResourcenames(List<String> resourcenames) {
+        this.resourcenames = resourcenames;
+    }
     public void process () {
 //        userDTO = new UsersDTO();
 //        MasterDataServices masterDataService = new MasterDataServices();

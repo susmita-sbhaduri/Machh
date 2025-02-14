@@ -13,6 +13,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DA.CropDAO;
+import org.bhaduri.machh.DA.ResourceDAO;
 
 
 
@@ -92,6 +93,45 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getCropNameForCat.");
+            return null;
+        }
+    }
+    public List<String> getResCatForCrop(String cropcat, String cropname) {
+        ResourceDAO resourcedao = new ResourceDAO(utx,emf);  
+        List<String> recordList = new ArrayList<>();
+        try {  
+            List<String> rescatforcrop = resourcedao.listResCat(cropcat, cropname);
+            for (int i = 0; i < rescatforcrop.size(); i++) {              
+                recordList.add(rescatforcrop.get(i));
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No resource is found for this crop");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResCatForCrop.");
+            return null;
+        }
+    }
+    
+    public List<String> getResDetForCrop(String cropcat, String cropname, String resourcecat) {
+        ResourceDAO resourcedao = new ResourceDAO(utx,emf);  
+        List<String> recordList = new ArrayList<>();
+        try {  
+            List<String> rescatforcrop = resourcedao.listResDet(cropcat, cropname, resourcecat);
+            for (int i = 0; i < rescatforcrop.size(); i++) {              
+                recordList.add(rescatforcrop.get(i));
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No resource is found for this crop and resource category");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResDetForCrop.");
             return null;
         }
     }

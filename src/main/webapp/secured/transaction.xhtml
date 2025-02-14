@@ -59,32 +59,35 @@
                             <f:selectItem itemLabel="Select One" itemValue=""/>
                             <f:selectItems value="#{transactionProcess.cropnames}" 
                             var="crop" itemLabel="#{crop}" itemValue="#{crop}" />
+                            <p:ajax event="change" listener="#{transactionProcess.onCropAllChange}" 
+                                update="resourcecat" process="@this"/>
                         </p:selectOneMenu>
-                    </div>
                     
-                    <div class="field col-12 md:col-4">
-                        <!-- Crop Category Dropdown - Only shown if OpX is selected -->
-                        <p:outputLabel for="hrcategory" value="Labour Category" 
-                       rendered="#{transactionProcess.transtype == 'opx'}" />
-                        <p:selectOneMenu id="hrcategory" 
-                                         value="#{transactionProcess.hrcategory}"
-                                         rendered="#{transactionProcess.transtype == 'opx'}">
+                        <!-- Crop Category Dropdown - Only shown if CapX is selected -->
+                        <p:outputLabel for="resourcecat" value="Resource Category" 
+                                        rendered="#{not empty transactionProcess.cropnames}" />
+                        <p:selectOneMenu id="resourcecat" 
+                                         value="#{transactionProcess.resourcecat}"
+                                         rendered="#{not empty transactionProcess.cropnames}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
-                            <f:selectItems value="#{transactionProcess.hrcategories}" 
-                            var="hrcat" itemLabel="#{hrcat}" itemValue="#{hrcat}" />
+                            <f:selectItems value="#{transactionProcess.resourcecategories}" 
+                            var="rescat" itemLabel="#{rescat}" itemValue="#{rescat}" />
+                            <p:ajax event="change" listener="#{transactionProcess.onResCatChange}" 
+                                update="resourcename" process="@this"/>
                         </p:selectOneMenu>
                         
                         <!-- Crop Name Dropdown - Only shown if CapX is selected -->
-                        <p:outputLabel for="cropname" value="Crop Name" 
-                                       rendered="#{transactionProcess.transtype == 'capx'}" />
-                        <p:selectOneMenu id="cropname" 
-                                         value="#{transactionProcess.cropname}"
-                                         rendered="#{transactionProcess.transtype == 'capx'}">
+                        <p:outputLabel for="resourcename" value="Resource Name" 
+                                       rendered="#{not empty transactionProcess.resourcecategories}" />
+                        <p:selectOneMenu id="resourcename" 
+                                         value="#{transactionProcess.resourcename}"
+                                         rendered="#{not empty transactionProcess.resourcecategories}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
-                            <f:selectItems value="#{transactionProcess.cropnames}" 
-                            var="crop" itemLabel="#{crop}" itemValue="#{crop}" />
+                            <f:selectItems value="#{transactionProcess.resourcenames}" 
+                            var="resname" itemLabel="#{resname}" itemValue="#{resname}" />
                         </p:selectOneMenu>
                     </div>
+
                  
                 </div>    
                 <!--<h:button outcome="/landing" value="Home" id="h_buttonid" icon="pi pi-home"/>-->

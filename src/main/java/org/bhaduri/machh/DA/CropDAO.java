@@ -14,7 +14,6 @@ import org.bhaduri.machh.JPA.CropJpaController;
 
 import org.bhaduri.machh.JPA.TransactionJpaController;
 import org.bhaduri.machh.entities.Crop;
-import org.bhaduri.machh.entities.Transaction;
 /**
  *
  * @author sb
