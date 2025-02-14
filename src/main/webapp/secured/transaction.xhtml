@@ -47,7 +47,7 @@
                             <f:selectItems value="#{transactionProcess.cropcategories}" 
                             var="cropcat" itemLabel="#{cropcat}" itemValue="#{cropcat}" />
                             <p:ajax event="change" listener="#{transactionProcess.onCropCatChange}" 
-                                update="cropname" process="@this"/>
+                                update="@form" process="@this"/>
                         </p:selectOneMenu>
                         
                         <!-- Crop Name Dropdown - Only shown if CapX is selected -->
@@ -60,20 +60,20 @@
                             <f:selectItems value="#{transactionProcess.cropnames}" 
                             var="crop" itemLabel="#{crop}" itemValue="#{crop}" />
                             <p:ajax event="change" listener="#{transactionProcess.onCropAllChange}" 
-                                update="resourcecat" process="@this"/>
+                                update="@form" process="@this"/>
                         </p:selectOneMenu>
                     
                         <!-- Crop Category Dropdown - Only shown if CapX is selected -->
                         <p:outputLabel for="resourcecat" value="Resource Category" 
-                                        rendered="#{not empty transactionProcess.cropnames}" />
+                                        rendered="#{not empty transactionProcess.cropcategory and not empty transactionProcess.cropname}" />
                         <p:selectOneMenu id="resourcecat" 
                                          value="#{transactionProcess.resourcecat}"
-                                         rendered="#{not empty transactionProcess.cropnames}">
+                                         rendered="#{not empty transactionProcess.cropcategory and not empty transactionProcess.cropname}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
                             <f:selectItems value="#{transactionProcess.resourcecategories}" 
                             var="rescat" itemLabel="#{rescat}" itemValue="#{rescat}" />
                             <p:ajax event="change" listener="#{transactionProcess.onResCatChange}" 
-                                update="resourcename" process="@this"/>
+                                update="@form" process="@this"/>
                         </p:selectOneMenu>
                         
                         <!-- Crop Name Dropdown - Only shown if CapX is selected -->

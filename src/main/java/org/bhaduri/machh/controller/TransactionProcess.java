@@ -69,21 +69,25 @@ public class TransactionProcess implements Serializable{
     }
     
     public void onCropAllChange() {
-        resourcecategories = new ArrayList<>();
-        MasterDataServices masterDataService = new MasterDataServices();
-        List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
-        for (int i = 0; i < rescatforcrop.size(); i++) {
-            resourcecategories.add(rescatforcrop.get(i));
+        if (cropname != null && !cropname.isEmpty()) {
+            resourcecategories = new ArrayList<>();
+            MasterDataServices masterDataService = new MasterDataServices();
+            List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
+            for (int i = 0; i < rescatforcrop.size(); i++) {
+                resourcecategories.add(rescatforcrop.get(i));
+            }
         }
     }
     
     public void onResCatChange() {
-        resourcenames = new ArrayList<>();
-        MasterDataServices masterDataService = new MasterDataServices();
-        List<String> resnamespercat = 
-                masterDataService.getResDetForCrop(cropcategory, cropname, resourcecat);
-        for (int i = 0; i < resnamespercat.size(); i++) {
-            resourcenames.add(resnamespercat.get(i));
+        if (resourcecat != null && !resourcecat.isEmpty()) {
+            resourcenames = new ArrayList<>();
+            MasterDataServices masterDataService = new MasterDataServices();
+            List<String> resnamespercat
+                    = masterDataService.getResDetForCrop(cropcategory, cropname, resourcecat);
+            for (int i = 0; i < resnamespercat.size(); i++) {
+                resourcenames.add(resnamespercat.get(i));
+            }
         }
     }
     
