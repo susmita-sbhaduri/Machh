@@ -58,7 +58,10 @@ public class TransactionProcess implements Serializable{
     }
     
     public void onCropCatChange() {
-//        if ("capx".equals(transtype)) {            
+//        if ("capx".equals(transtype)) { 
+            
+           
+            
             cropnames = new ArrayList<>();
             MasterDataServices masterDataService = new MasterDataServices();
             List<String> cropnamesforcat = masterDataService.getCropNameForCat(cropcategory);
@@ -69,18 +72,25 @@ public class TransactionProcess implements Serializable{
     }
     
     public void onCropAllChange() {
-        if (cropname != null && !cropname.isEmpty()) {
+//        if (cropname != null && !cropname.isEmpty()) {
+            
+        
             resourcecategories = new ArrayList<>();
             MasterDataServices masterDataService = new MasterDataServices();
             List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
             for (int i = 0; i < rescatforcrop.size(); i++) {
                 resourcecategories.add(rescatforcrop.get(i));
             }
-        }
+            if(rescatforcrop.isEmpty()){
+                resourcecategories.add("None");
+            }
+//        }
     }
     
     public void onResCatChange() {
-        if (resourcecat != null && !resourcecat.isEmpty()) {
+//        if (resourcecat != null && !resourcecat.isEmpty()) {
+            
+            
             resourcenames = new ArrayList<>();
             MasterDataServices masterDataService = new MasterDataServices();
             List<String> resnamespercat
@@ -88,7 +98,7 @@ public class TransactionProcess implements Serializable{
             for (int i = 0; i < resnamespercat.size(); i++) {
                 resourcenames.add(resnamespercat.get(i));
             }
-        }
+//        }
     }
     
     public Date getTransdate() {
