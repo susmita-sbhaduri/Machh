@@ -64,7 +64,7 @@
                         </p:selectOneMenu>
                     </div>
                     <div class="field col-12 md:col-4">
-                        <!-- Crop Category Dropdown - Only shown if CapX is selected -->
+                        <!-- Resource Category Dropdown - Only shown if crop category is selected -->
                         <p:outputLabel for="resourcecat" value="Resource Category" 
                                        rendered="#{not empty transactionProcess.cropcategory}" />
                         <p:selectOneMenu id="resourcecat" 
@@ -77,7 +77,6 @@
                                 update="@form" process="@this"/>
                         </p:selectOneMenu>
                         
-                        <!-- Crop Name Dropdown - Only shown if CapX is selected -->
                         <p:outputLabel for="resourcename" value="Resource Name" 
                                        rendered="#{not empty transactionProcess.cropcategory}" />
                         <p:selectOneMenu id="resourcename" 
@@ -87,9 +86,21 @@
                             <f:selectItems value="#{transactionProcess.resourcenames}" 
                             var="resname" itemLabel="#{resname}" itemValue="#{resname}" />
                         </p:selectOneMenu>
-                    </div>               
-                 
-                </div>    
+                    </div>
+                </div>
+                <div class="ui-fluid formgrid grid">
+                    <div class="field col-12 md:col-4">
+                        <p:outputLabel for="transcat" value="Transaction Type" />                      
+
+                        <p:selectOneMenu id="transcat" value="#{transactionProcess.transcat}">
+                            <f:selectItem itemLabel="Select One" itemValue=""/>
+                            <f:selectItem itemLabel="Buy" itemValue="buy"/>
+                            <f:selectItem itemLabel="Sell" itemValue="sell"/>
+                        <p:ajax event="itemSelect" listener="#{transactionProcess.onTransTypeChange}" 
+                                update="@form" process="@this"/>    
+                        </p:selectOneMenu>
+                    </div>
+                </div>
                 <!--<h:button outcome="/landing" value="Home" id="h_buttonid" icon="pi pi-home"/>-->
                 <p:commandButton value="Submit" action="#{transactionProcess.process()}" />
             </h:form>

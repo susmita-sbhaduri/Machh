@@ -59,46 +59,40 @@ public class TransactionProcess implements Serializable{
     
     public void onCropCatChange() {
 //        if ("capx".equals(transtype)) { 
-            
-           
-            
-            cropnames = new ArrayList<>();
-            MasterDataServices masterDataService = new MasterDataServices();
-            List<String> cropnamesforcat = masterDataService.getCropNameForCat(cropcategory);
-            for (int i = 0; i < cropnamesforcat.size(); i++) {                
-                cropnames.add(cropnamesforcat.get(i));
-            }
+
+        cropnames = new ArrayList<>();
+        MasterDataServices masterDataService = new MasterDataServices();
+        List<String> cropnamesforcat = masterDataService.getCropNameForCat(cropcategory);
+        for (int i = 0; i < cropnamesforcat.size(); i++) {
+            cropnames.add(cropnamesforcat.get(i));
+        }
 //        }
     }
     
     public void onCropAllChange() {
-//        if (cropname != null && !cropname.isEmpty()) {
-            
-        
-            resourcecategories = new ArrayList<>();
-            MasterDataServices masterDataService = new MasterDataServices();
-            List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
-            for (int i = 0; i < rescatforcrop.size(); i++) {
-                resourcecategories.add(rescatforcrop.get(i));
-            }
-            if(rescatforcrop.isEmpty()){
-                resourcecategories.add("None");
-            }
-//        }
+
+        resourcecategories = new ArrayList<>();
+        MasterDataServices masterDataService = new MasterDataServices();
+        List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
+        for (int i = 0; i < rescatforcrop.size(); i++) {
+            resourcecategories.add(rescatforcrop.get(i));
+        }
+        if (rescatforcrop.isEmpty()) {
+            resourcecategories.add("None");
+        }
+
     }
     
     public void onResCatChange() {
-//        if (resourcecat != null && !resourcecat.isEmpty()) {
-            
-            
-            resourcenames = new ArrayList<>();
-            MasterDataServices masterDataService = new MasterDataServices();
-            List<String> resnamespercat
-                    = masterDataService.getResDetForCrop(cropcategory, cropname, resourcecat);
-            for (int i = 0; i < resnamespercat.size(); i++) {
-                resourcenames.add(resnamespercat.get(i));
-            }
-//        }
+
+        resourcenames = new ArrayList<>();
+        MasterDataServices masterDataService = new MasterDataServices();
+        List<String> resnamespercat
+                = masterDataService.getResDetForCrop(cropcategory, cropname, resourcecat);
+        for (int i = 0; i < resnamespercat.size(); i++) {
+            resourcenames.add(resnamespercat.get(i));
+        }
+
     }
     
     public Date getTransdate() {

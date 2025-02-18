@@ -18,6 +18,7 @@ import org.bhaduri.machh.DA.ResourceDAO;
 
 
 import org.bhaduri.machh.DA.UsersDAO;
+import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.CropPk;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
@@ -96,6 +97,34 @@ public class MasterDataServices {
             return null;
         }
     }
+    
+    public List<CropDTO> getCropList() {
+        CropDAO cropdao = new CropDAO(utx,emf);  
+        List<CropDTO> recordList = new ArrayList<>();
+        CropDTO record = new CropDTO();
+        try {  
+            List<Crop> croplist = cropdao.getCropListAll();
+            for (int i = 0; i < croplist.size(); i++) {
+                record.setCropCategory(croplist.get(i).getCropPK().getCropcategory());
+                record.setCropName(croplist.get(i).getCropPK().getCrop());  
+                record.setDetails(croplist.get(i).getDetails());
+                record.setSowingDate(croplist.get(i).getSowingdt());
+                record.setHarvestDate(croplist.get(i).getHarvestingdt());
+                recordList.add(record);
+                record = new CropDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crop names are found for this crop category");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getCropNameForCat.");
+            return null;
+        }
+    }
+    
     public List<String> getResCatForCrop(String cropcat, String cropname) {
         ResourceDAO resourcedao = new ResourceDAO(utx,emf);  
         List<String> recordList = new ArrayList<>();
