@@ -18,9 +18,17 @@ import org.bhaduri.machh.services.MasterDataServices;
 @Named(value = "cropList")
 @ViewScoped
 public class CropList implements Serializable {
-
+    CropDTO selectedCrop;
     List<CropDTO> crops;
 
+    public CropDTO getSelectedCrop() {
+        return selectedCrop;
+    }
+
+    public void setSelectedCrop(CropDTO selectedCrop) {
+        this.selectedCrop = selectedCrop;
+    }
+    
     public List<CropDTO> getCrops() {
         return crops;
     }
@@ -33,5 +41,15 @@ public class CropList implements Serializable {
     public void fillCropValues() {
         MasterDataServices masterDataService = new MasterDataServices();
         crops = masterDataService.getCropList();        
+    }
+    public String goToEditCrop() {
+        return "SessionExpired";
+    }
+    public String goToDeleteCrop(CropDTO crop){
+        return "SessionExpired";
+    }
+    
+    public CropDTO getSelectedUser() {
+        return selectedCrop;
     }
 }

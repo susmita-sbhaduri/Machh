@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="Crop Maintenance">
+        Crop Maintenance
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="col-12">
+            <p:button outcome="/landing" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        </div>
+        <div class="col-12">
+            <p:commandButton value="New" icon="pi pi-plus" action="#{cropList.goToEditCrop()}" title="Delete"/>
+        </div>
+        <p:growl id="growl" showDetail="true" />
+        <f:metadata>
+            <f:viewAction action="#{cropList.fillCropValues()}" />
+        </f:metadata>
+        <h4>Enter the Transaction Details.</h4>
+        <div class="card">
+            <h:form>
+                <p:dataTable var="crop" value="#{cropList.crops}" reflow="true">
+                    <p:column headerText="Crop Category">
+                        <h:outputText value="#{crop.cropCategory}" />
+                    </p:column>
+                    <p:column headerText="Crop Name">
+                        <h:outputText value="#{crop.cropName}" />
+                    </p:column>
+                    <p:column headerText="Details">
+                        <h:outputText value="#{crop.details}" />
+                    </p:column>
+                    <p:column headerText="Sowing Date">
+                        <p:calendar value="#{crop.sowingDate}" pattern="yyyy-MM-dd" />
+                        <!--<h:outputText value="#{crop.sowingDate}" />-->
+                    </p:column>
+                    <p:column headerText="Harvesting Date">
+                        <p:calendar value="#{crop.harvestDate}" pattern="yyyy-MM-dd" />
+                        <!--<h:outputText value="#{crop.harvestDate}" />-->
+                    </p:column>
+
+                    <p:column exportable="false" ariaHeaderText="Actions">
+                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-pencil" title="Edit" action="#{cropList.goToEditCrop()}" >
+                            <f:setPropertyActionListener value="#{crop}" target="#{cropList.selectedCrop}" />
+                        </p:commandButton>
+                    </p:column>
+                    <p:column>    
+                        <p:commandButton  class="ui-button-warning rounded-button" icon="pi pi-trash" title="Delete" 
+                                          action="#{cropList.goToDeleteCrop(crop)}" />
+
+                    </p:column>
+
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

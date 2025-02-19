@@ -24,9 +24,10 @@ import org.bhaduri.machh.services.MasterDataServices;
 @Named(value = "transactionProcess")
 @ViewScoped
 public class TransactionProcess implements Serializable{
-    private Date transdate;
+    private String transdate;
     private String transtype;
     private String cropcategory;
+    private String transcat;
     private List<String> cropcategories;
     private String cropname;
     private List<String> cropnames;
@@ -34,6 +35,14 @@ public class TransactionProcess implements Serializable{
     private List<String> resourcecategories;
     private String resourcename;
     private List<String> resourcenames;
+
+    public String getTranscat() {
+        return transcat;
+    }
+
+    public void setTranscat(String transcat) {
+        this.transcat = transcat;
+    }
 
     
     
@@ -95,7 +104,8 @@ public class TransactionProcess implements Serializable{
 
     }
     
-    public Date getTransdate() {
+   
+    public String getTransdate() {
         return transdate;
     }
 
@@ -131,7 +141,7 @@ public class TransactionProcess implements Serializable{
         this.cropnames = cropnames;
     }
 
-    public void setTransdate(Date transdate) {
+    public void setTransdate(String transdate) {
         this.transdate = transdate;
     }
 

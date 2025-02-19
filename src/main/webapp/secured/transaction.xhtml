@@ -25,9 +25,9 @@
                         <p:outputLabel for="transdate" value="Select Date" />  
                         <!--<p:calendar id="transdate" value="#{transactionProcess.transdate}" mode="popup" />-->     
                         <p:datePicker id="transdate" value="#{transactionProcess.transdate}" 
-                                      pattern="dd/MM/yyyy" />
-                        <p:outputLabel for="transtype" value="Transaction Type" />                      
-
+                                      pattern="yyyy-MM-dd" />
+                                                
+                        <p:outputLabel for="transtype" value="Transaction Type" />
                         <p:selectOneMenu id="transtype" value="#{transactionProcess.transtype}">
                             <f:selectItem itemLabel="Select One" itemValue=""/>
                             <f:selectItem itemLabel="CapEx" itemValue="capx"/>
@@ -96,7 +96,7 @@
                             <f:selectItem itemLabel="Select One" itemValue=""/>
                             <f:selectItem itemLabel="Buy" itemValue="buy"/>
                             <f:selectItem itemLabel="Sell" itemValue="sell"/>
-                        <p:ajax event="itemSelect" listener="#{transactionProcess.onTransTypeChange}" 
+                        <p:ajax event="itemSelect" listener="#{transactionProcess.setTranscat}" 
                                 update="@form" process="@this"/>    
                         </p:selectOneMenu>
                     </div>

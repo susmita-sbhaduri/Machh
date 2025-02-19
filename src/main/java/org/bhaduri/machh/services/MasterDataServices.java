@@ -8,7 +8,9 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.UserTransaction;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -102,14 +104,27 @@ public class MasterDataServices {
         CropDAO cropdao = new CropDAO(utx,emf);  
         List<CropDTO> recordList = new ArrayList<>();
         CropDTO record = new CropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {  
             List<Crop> croplist = cropdao.getCropListAll();
             for (int i = 0; i < croplist.size(); i++) {
                 record.setCropCategory(croplist.get(i).getCropPK().getCropcategory());
                 record.setCropName(croplist.get(i).getCropPK().getCrop());  
                 record.setDetails(croplist.get(i).getDetails());
-                record.setSowingDate(croplist.get(i).getSowingdt());
-                record.setHarvestDate(croplist.get(i).getHarvestingdt());
+                if (croplist.get(i).getSowingdt() != null) {
+                    mysqlDate = croplist.get(i).getSowingdt();                    
+                    record.setSowingDate(formatter.format(mysqlDate));
+                }else{
+                    record.setSowingDate("");
+                }
+                if (croplist.get(i).getHarvestingdt() != null) {
+                    mysqlDate = croplist.get(i).getHarvestingdt();
+                    record.setHarvestDate(formatter.format(mysqlDate));
+                }else{
+                    record.setHarvestDate("");
+                }                               
                 recordList.add(record);
                 record = new CropDTO();
             }        

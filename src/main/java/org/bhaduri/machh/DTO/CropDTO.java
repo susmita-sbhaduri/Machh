@@ -5,7 +5,7 @@
 package org.bhaduri.machh.DTO;
 
 import java.io.Serializable;
-import java.util.Date;
+
 
 /**
  *
@@ -15,8 +15,8 @@ public class CropDTO implements Serializable {
     private String cropCategory;
     private String cropName;
     private String details;
-    private Date sowingDate;
-    private Date harvestDate;
+    private String sowingDate;
+    private String harvestDate;
 
     public String getCropCategory() {
         return cropCategory;
@@ -42,19 +42,19 @@ public class CropDTO implements Serializable {
         this.details = details;
     }
 
-    public Date getSowingDate() {
+    public String getSowingDate() {
         return sowingDate;
     }
 
-    public void setSowingDate(Date sowingDate) {
+    public void setSowingDate(String sowingDate) {
         this.sowingDate = sowingDate;
     }
 
-    public Date getHarvestDate() {
+    public String getHarvestDate() {
         return harvestDate;
     }
 
-    public void setHarvestDate(Date harvestDate) {
+    public void setHarvestDate(String harvestDate) {
         this.harvestDate = harvestDate;
     }
     
