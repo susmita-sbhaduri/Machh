@@ -18,7 +18,7 @@ import org.bhaduri.machh.services.MasterDataServices;
 @Named(value = "cropList")
 @ViewScoped
 public class CropList implements Serializable {
-    CropDTO selectedCrop;
+    private CropDTO selectedCrop;
     List<CropDTO> crops;
 
     public CropDTO getSelectedCrop() {
@@ -43,7 +43,8 @@ public class CropList implements Serializable {
         crops = masterDataService.getCropList();        
     }
     public String goToEditCrop() {
-        return "SessionExpired";
+        String redirectUrl = "/secured/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();
+        return redirectUrl;
     }
     public String goToDeleteCrop(CropDTO crop){
         return "SessionExpired";

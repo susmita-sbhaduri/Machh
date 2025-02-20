@@ -9,7 +9,7 @@
     <div class="sidebar">
         <div class="sidebar-scroll-content">
             <div class="logo">
-                <p:link outcome="/secured/empty">
+                <p:link outcome="/secured/userlogin">
                     <p:graphicImage name="images/#{guestPreferences.menuColor eq 'light' ? 'omega-black.svg' : 'omega-white.svg'}" library="omega-layout" width="113"/>
                 </p:link>
             </div>
@@ -42,7 +42,7 @@
                         <p:menuitem id="m_allblocks" value="All Blocks" icon="pi pi-fw pi-globe" target="_blank" url="https://www.primefaces.org/primeblocks-jsf"/>
                     </p:submenu>                    
                     <p:submenu id="m_default" label="Pages" icon="pi pi-fw pi-briefcase">                        
-                        <p:menuitem id="m_empty" value="Empty" icon="pi pi-fw pi-circle-off" outcome="/secured/empty"/>
+                        <p:menuitem id="m_empty" value="Empty" icon="pi pi-fw pi-circle-off" outcome="/secured/userlogin"/>
                     </p:submenu>
                     
                 </po:menu>

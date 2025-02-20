@@ -22,9 +22,9 @@
         <f:metadata>
             <f:viewAction action="#{cropList.fillCropValues()}" />
         </f:metadata>
-        <h4>Enter the Transaction Details.</h4>
+        <h4>Crop Details.</h4>
         <div class="card">
-            <h:form>
+            <h:form id="cropgrid" style="text-align: center">
                 <p:dataTable var="crop" value="#{cropList.crops}" reflow="true">
                     <p:column headerText="Crop Category">
                         <h:outputText value="#{crop.cropCategory}" />
@@ -36,12 +36,12 @@
                         <h:outputText value="#{crop.details}" />
                     </p:column>
                     <p:column headerText="Sowing Date">
-                        <p:calendar value="#{crop.sowingDate}" pattern="yyyy-MM-dd" />
-                        <!--<h:outputText value="#{crop.sowingDate}" />-->
+                        <!--<p:calendar value="#{crop.sowingDate}" pattern="yyyy-MM-dd" />-->
+                        <h:outputText value="#{crop.sowingDate}" />
                     </p:column>
                     <p:column headerText="Harvesting Date">
-                        <p:calendar value="#{crop.harvestDate}" pattern="yyyy-MM-dd" />
-                        <!--<h:outputText value="#{crop.harvestDate}" />-->
+                        <!--<p:calendar value="#{crop.harvestDate}" pattern="yyyy-MM-dd" />-->
+                        <h:outputText value="#{crop.harvestDate}" />
                     </p:column>
 
                     <p:column exportable="false" ariaHeaderText="Actions">

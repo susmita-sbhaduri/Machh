@@ -50,7 +50,7 @@ public class LoginController implements Serializable {
         userDTO = masterDataService.getUserAuthDetails(username, password);
         if(userDTO.getID().equals("null")){
             return "landing?faces-redirect=true";
-        } else return "/secured/empty?faces-redirect=true";
+        } else return "/secured/userlogin?faces-redirect=true";
 //        if (username.equals("susmita")) {
 //            if (password.equals("bumbu123")) {
 //                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("username", username);

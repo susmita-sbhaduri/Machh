@@ -131,11 +131,48 @@ public class MasterDataServices {
             return recordList;
         }
         catch (NoResultException e) {
-            System.out.println("No crop names are found for this crop category");            
+            System.out.println("No crops are found");            
             return null;
         }
         catch (Exception exception) {
-            System.out.println(exception + " has occurred in getCropNameForCat.");
+            System.out.println(exception + " has occurred in getCropList.");
+            return null;
+        }
+    }
+    
+    public CropDTO getCropsPerPk(String cropcategory, String cropname) {
+        CropDAO cropdao = new CropDAO(utx,emf);         
+        CropDTO record = new CropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Crop croprec = cropdao.getCropPerPK(cropcategory, cropname);
+
+            record.setCropCategory(croprec.getCropPK().getCropcategory());
+            record.setCropName(croprec.getCropPK().getCrop());
+            record.setDetails(croprec.getDetails());
+            if (croprec.getSowingdt() != null) {
+                mysqlDate = croprec.getSowingdt();
+                record.setSowingDate(formatter.format(mysqlDate));
+            } else {
+                record.setSowingDate("");
+            }
+            if (croprec.getHarvestingdt() != null) {
+                mysqlDate = croprec.getHarvestingdt();
+                record.setHarvestDate(formatter.format(mysqlDate));
+            } else {
+                record.setHarvestDate("");
+            }
+
+            return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crop record is found for cropcategory, cropname");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getCropsPerPk.");
             return null;
         }
     }
