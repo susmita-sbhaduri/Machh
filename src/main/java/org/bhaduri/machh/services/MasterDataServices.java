@@ -177,6 +177,35 @@ public class MasterDataServices {
         }
     }
     
+    public int editCrop(CropDTO cropdto) {
+        CropDAO cropdao = new CropDAO(utx,emf);         
+        
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            CropPk croprecpk = new CropPk();
+            Crop croprec = new Crop();
+            croprecpk.setCropCategory(cropdto.getCropCategory());
+            croprecpk.setCropName(cropdto.getCropName());
+            croprec.setDetails(cropdto.getDetails());
+            mysqlDate = formatter.parse(cropdto.getSowingDate());
+            croprec.setSowingdt(mysqlDate);
+            mysqlDate = formatter.parse(cropdto.getHarvestDate());
+            croprec.setHarvestingdt(mysqlDate);
+            cropdao.edit(croprec);
+            return 1;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crop record is found for cropcategory, cropname");            
+            return 2;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getCropsPerPk.");
+            return 2;
+        }
+    }
+    
     public List<String> getResCatForCrop(String cropcat, String cropname) {
         ResourceDAO resourcedao = new ResourceDAO(utx,emf);  
         List<String> recordList = new ArrayList<>();

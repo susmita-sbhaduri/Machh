@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSF/JSFManagedBean.java to edit this template
  */
-package org.bhaduri.machh.controller;
+package org.bhaduri.machh.crop;
 
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -43,7 +43,7 @@ public class CropList implements Serializable {
         crops = masterDataService.getCropList();        
     }
     public String goToEditCrop() {
-        String redirectUrl = "/secured/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();
+        String redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();
         return redirectUrl;
     }
     public String goToDeleteCrop(CropDTO crop){

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSF/JSFManagedBean.java to edit this template
  */
-package org.bhaduri.machh.controller;
+package org.bhaduri.machh.crop;
 
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
@@ -27,6 +27,8 @@ public class CropEdit implements Serializable {
     }
     
     public void save() {
+        MasterDataServices masterDataService = new MasterDataServices();
+        
         System.out.println("PostConstruct: Bean initialized");
     }
     

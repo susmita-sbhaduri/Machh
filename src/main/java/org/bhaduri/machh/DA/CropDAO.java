@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.transaction.UserTransaction;
 import jakarta.persistence.TypedQuery;
+import java.util.Date;
 import java.util.List;
 import org.bhaduri.machh.JPA.CropJpaController;
 
@@ -53,5 +54,7 @@ public class CropDAO extends CropJpaController{
         Crop cropsperpk = query.getSingleResult();
         return cropsperpk;
     }
+    
+   
     
 }
