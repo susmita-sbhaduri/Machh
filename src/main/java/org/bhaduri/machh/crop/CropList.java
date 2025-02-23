@@ -46,6 +46,10 @@ public class CropList implements Serializable {
         String redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();
         return redirectUrl;
     }
+    
+    public String goToAddCrop() {
+        return "SessionExpired";
+    }
     public String goToDeleteCrop(CropDTO crop){
         return "SessionExpired";
     }

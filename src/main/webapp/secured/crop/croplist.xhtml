@@ -7,21 +7,20 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html">
 
-    <ui:define name="Crop Maintenance">
-        Crop Maintenance
-    </ui:define>
-
-    <ui:define name="content">
+    <ui:define name="metadata">
 <!--        <div class="col-12">-->
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        <!--</div>-->        
-        <p:commandButton value="New" icon="pi pi-plus" action="#{cropList.goToEditCrop()}" title="Delete"/>
+        <!--</div>-->         
         
         <p:growl id="growl" showDetail="true" />
+        <p:button value="New" icon="pi pi-plus" outcome="/secured/userhome"/>
         <f:metadata>
             <f:viewAction action="#{cropList.fillCropValues()}" />
         </f:metadata>
-        <h4>Crop Details.</h4>
+    </ui:define>    
+        
+        <ui:define name="content">
+            <h4>Crop Details.</h4>
         <div class="card">
             <h:form id="cropgrid" style="text-align: center">
                 <p:dataTable var="crop" value="#{cropList.crops}" reflow="true">

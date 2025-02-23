@@ -7,11 +7,9 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html">
 
-    <ui:define name="Crop Edit">
-        Crop Edit
-    </ui:define>
 
-    <ui:define name="content">
+    <ui:define name="metadata">
+    
         <div class="col-12">
             <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         </div>
@@ -21,15 +19,17 @@
             <f:viewParam name="cropnameEd" value="#{cropEdit.cropnameEd}"></f:viewParam>
             <f:viewAction action="#{cropEdit.fillCropValues()}" />
         </f:metadata>
-        
+    </ui:define>
+    <ui:define name="content">    
         <div class="card">
             <h:form id="cropeditform" style="text-align: center">
+                
                 <h4>Edit Crop Details.</h4>
-                <p:panelGrid columns="4">
+                <p:panelGrid columns="2">
                      <h:outputLabel for="cropcat" value="Crop Category" />
-                     <h:inputText id="cropcat" value="#{cropEdit.cropEditBean.cropCategory}" disabled="true"/>
+                     <h:inputText id="cropcat" value="#{cropEdit.cropEditBean.cropCategory}" readonly="true"/>
                      <h:outputLabel for="cropname" value="Crop Name" />
-                     <h:inputText id="cropname" value="#{cropEdit.cropEditBean.cropName}" disabled="true"/>
+                     <h:inputText id="cropname" value="#{cropEdit.cropEditBean.cropName}" readonly="true"/>
                      <h:outputLabel for="cropdetails" value="Details" />
                      <h:inputText id="cropdetails" value="#{cropEdit.cropEditBean.details}"/>
                      <h:outputLabel for="cdate" value="Sowing Date" />
@@ -39,9 +39,9 @@
                      <p:datePicker id="hdate" value="#{cropEdit.cropEditBean.harvestDate}" 
                                       pattern="yyyy-MM-dd" />
                      
-                     <p:commandButton type="button" value="Submit" icon="pi pi-check"
+                     <p:commandButton value="Save" icon="pi pi-check"
                                       action="#{cropEdit.save()}"/>
-                     <p:button icon="pi pi-times" value="Cancel" outcome="cropedit" />
+                     <p:button icon="pi pi-times" value="Cancel" outcome="/secured/crop/croplist" />
                 </p:panelGrid>
             </h:form>
         </div>

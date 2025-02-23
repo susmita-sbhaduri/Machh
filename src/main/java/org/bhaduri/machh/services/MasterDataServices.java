@@ -22,6 +22,10 @@ import org.bhaduri.machh.DA.ResourceDAO;
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.CropPk;
+
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
@@ -194,15 +198,15 @@ public class MasterDataServices {
             mysqlDate = formatter.parse(cropdto.getHarvestDate());
             croprec.setHarvestingdt(mysqlDate);
             cropdao.edit(croprec);
-            return 1;
+            return SUCCESS;
         }
         catch (NoResultException e) {
             System.out.println("No crop record is found for cropcategory, cropname");            
-            return 2;
+            return DB_NON_EXISTING;
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getCropsPerPk.");
-            return 2;
+            return DB_SEVERE;
         }
     }
     

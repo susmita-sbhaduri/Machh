@@ -4,10 +4,15 @@
  */
 package org.bhaduri.machh.crop;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import org.bhaduri.machh.DTO.CropDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.services.MasterDataServices;
 
 /**
@@ -21,18 +26,44 @@ public class CropEdit implements Serializable {
     private String cropnameEd;
     private CropDTO cropEditBean;
     
+    
     public void fillCropValues() {
         MasterDataServices masterDataService = new MasterDataServices();
-        cropEditBean = masterDataService.getCropsPerPk(cropcatEd, cropnameEd);        
-    }
-    
-    public void save() {
-        MasterDataServices masterDataService = new MasterDataServices();
+        cropEditBean = masterDataService.getCropsPerPk(cropcatEd, cropnameEd); 
         
-        System.out.println("PostConstruct: Bean initialized");
     }
     
+    public String save() {
+        MasterDataServices masterDataService = new MasterDataServices();
+        int response = masterDataService.editCrop(cropEditBean);
+        FacesMessage message = null;
+        String redirectUrl = "";
+        if(response==SUCCESS){
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+            redirectUrl = "/secured/crop/croplist";
+        } else {
+            if (response == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
+                redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + cropcatEd+ "&cropnameEd=" + cropnameEd;
+            }
+            if (response == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+                redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + cropcatEd+ "&cropnameEd=" + cropnameEd;              
+            }
+        }
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        f.addMessage(null, message);
+        return redirectUrl;
+    }
+    
+    public String testAction() {
+        System.out.println("Test action called");
+        return null; // Just to see if this gets called
+    }
+
     public CropEdit() {
+        System.out.println("PostConstruct: Bean initialized");
     }
 
     public String getCropcatEd() {
@@ -58,5 +89,6 @@ public class CropEdit implements Serializable {
     public void setCropEditBean(CropDTO cropEditBean) {
         this.cropEditBean = cropEditBean;
     }
-    
+
+        
 }
