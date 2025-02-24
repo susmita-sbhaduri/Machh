@@ -8,37 +8,33 @@
                 xmlns:h="jakarta.faces.html">
 
 
-    <ui:define name="metadata">
-    
-        <div class="col-12">
-            <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        </div>
+    <ui:define name="content"> 
         <p:growl id="growl" showDetail="true" />
+        <h4>Edit Crop Details.</h4>
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         <f:metadata>
             <f:viewParam name="cropcatEd" value="#{cropEdit.cropcatEd}"></f:viewParam>
             <f:viewParam name="cropnameEd" value="#{cropEdit.cropnameEd}"></f:viewParam>
             <f:viewAction action="#{cropEdit.fillCropValues()}" />
         </f:metadata>
-    </ui:define>
-    <ui:define name="content">    
         <div class="card">
             <h:form id="cropeditform" style="text-align: center">
-                
-                <h4>Edit Crop Details.</h4>
+
+
                 <p:panelGrid columns="2">
-                     <h:outputLabel for="testField" value="Crop Category" />
-                     <h:inputText id="testField" value="#{cropEdit.cropEditBean.cropCategory}" readonly="true"/>
-                     <h:outputLabel for="cropname" value="Crop Name" />
-                     <h:inputText id="cropname" value="#{cropEdit.cropEditBean.cropName}" readonly="true"/>
-                     <h:outputLabel for="cropdetails" value="Details" />
-                     <h:inputText id="cropdetails" value="#{cropEdit.cropEditBean.details}"/>
-                     <h:outputLabel for="sdate" value="Sowing Date" />
-                     <p:datePicker id="sdate" value="#{cropEdit.dateStringSow}" pattern="yyyy-MM-dd"/>
-                     <h:outputLabel for="hdate" value="Harvesting Date" />
-                     <p:datePicker id="hdate" value="#{cropEdit.dateStringHarvest}" pattern="yyyy-MM-dd"/>
-                     <p:commandButton value="Save" icon="pi pi-check"
-                                      action="#{cropEdit.save()}"/>
-                     <p:button icon="pi pi-times" value="Cancel" outcome="/secured/crop/croplist" />
+                    <h:outputLabel for="testField" value="Crop Category" />
+                    <h:inputText id="testField" value="#{cropEdit.cropEditBean.cropCategory}" readonly="true"/>
+                    <h:outputLabel for="cropname" value="Crop Name" />
+                    <h:inputText id="cropname" value="#{cropEdit.cropEditBean.cropName}" readonly="true"/>
+                    <h:outputLabel for="cropdetails" value="Details" />
+                    <h:inputText id="cropdetails" value="#{cropEdit.cropEditBean.details}"/>
+                    <h:outputLabel for="sdate" value="Sowing Date" />
+                    <p:datePicker id="sdate" value="#{cropEdit.dateStringSow}" pattern="yyyy-MM-dd"/>
+                    <h:outputLabel for="hdate" value="Harvesting Date" />
+                    <p:datePicker id="hdate" value="#{cropEdit.dateStringHarvest}" pattern="yyyy-MM-dd"/>
+                    <p:commandButton value="Save" icon="pi pi-check"
+                                     action="#{cropEdit.save()}"/>
+                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/crop/croplist" />
                 </p:panelGrid>
             </h:form>
         </div>
