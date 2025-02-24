@@ -12,6 +12,7 @@ import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.CropPk;
 import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.services.MasterDataServices;
@@ -51,7 +52,7 @@ public class TransactionProcess implements Serializable{
     public void init() {
         System.out.println("PostConstruct: Bean initialized");
     }
-    public void onTransTypeChange() {
+    public void onTransTypeChange() throws NamingException {
         if ("capx".equals(transtype)) {
             cropcategories = new ArrayList<>();
 //            cropnames = new ArrayList<>();
@@ -66,7 +67,7 @@ public class TransactionProcess implements Serializable{
         }
     }
     
-    public void onCropCatChange() {
+    public void onCropCatChange() throws NamingException {
 //        if ("capx".equals(transtype)) { 
 
         cropnames = new ArrayList<>();
@@ -78,7 +79,7 @@ public class TransactionProcess implements Serializable{
 //        }
     }
     
-    public void onCropAllChange() {
+    public void onCropAllChange() throws NamingException {
 
         resourcecategories = new ArrayList<>();
         MasterDataServices masterDataService = new MasterDataServices();
@@ -92,7 +93,7 @@ public class TransactionProcess implements Serializable{
 
     }
     
-    public void onResCatChange() {
+    public void onResCatChange() throws NamingException {
 
         resourcenames = new ArrayList<>();
         MasterDataServices masterDataService = new MasterDataServices();

@@ -8,6 +8,7 @@ import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
+import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -38,7 +39,7 @@ public class CropList implements Serializable {
     }
     public CropList() {
     }
-    public void fillCropValues() {
+    public void fillCropValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         crops = masterDataService.getCropList();        
     }

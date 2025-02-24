@@ -9,6 +9,7 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.application.NavigationHandler;
 import java.io.Serializable;
+import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -44,7 +45,7 @@ public class LoginController implements Serializable {
         this.password = password;
     }
     
-    public String login () {
+    public String login () throws NamingException {
         userDTO = new UsersDTO();
         MasterDataServices masterDataService = new MasterDataServices();
         userDTO = masterDataService.getUserAuthDetails(username, password);

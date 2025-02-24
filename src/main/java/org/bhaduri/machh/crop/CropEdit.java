@@ -9,6 +9,12 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.CropDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
@@ -25,22 +31,34 @@ public class CropEdit implements Serializable {
     private String cropcatEd;
     private String cropnameEd;
     private CropDTO cropEditBean;
+    private Date dateStringSow;
+    private Date dateStringHarvest;
+
     
-    
-    public void fillCropValues() {
+
+    public void fillCropValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         cropEditBean = masterDataService.getCropsPerPk(cropcatEd, cropnameEd); 
-        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            dateStringSow = sdf.parse(cropEditBean.getSowingDate());
+            dateStringHarvest = sdf.parse(cropEditBean.getHarvestDate());
+        } catch (ParseException ex) {
+            Logger.getLogger(CropEdit.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public String save() {
+    public String save() throws NamingException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        cropEditBean.setSowingDate(sdf.format(dateStringSow));
+        cropEditBean.setHarvestDate(sdf.format(dateStringHarvest));
         MasterDataServices masterDataService = new MasterDataServices();
         int response = masterDataService.editCrop(cropEditBean);
         FacesMessage message = null;
         String redirectUrl = "";
         if(response==SUCCESS){
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
-            redirectUrl = "/secured/crop/croplist";
+            redirectUrl = "/secured/crop/croplist?faces-redirect=true";
         } else {
             if (response == DB_NON_EXISTING) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
@@ -88,6 +106,22 @@ public class CropEdit implements Serializable {
 
     public void setCropEditBean(CropDTO cropEditBean) {
         this.cropEditBean = cropEditBean;
+    }
+
+    public Date getDateStringSow() {
+        return dateStringSow;
+    }
+
+    public void setDateStringSow(Date dateStringSow) {
+        this.dateStringSow = dateStringSow;
+    }
+
+    public Date getDateStringHarvest() {
+        return dateStringHarvest;
+    }
+
+    public void setDateStringHarvest(Date dateStringHarvest) {
+        this.dateStringHarvest = dateStringHarvest;
     }
 
         

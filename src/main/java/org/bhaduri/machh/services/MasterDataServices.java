@@ -4,6 +4,7 @@
  */
 package org.bhaduri.machh.services;
 
+import jakarta.annotation.Resource;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -30,14 +31,17 @@ import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.entities.Crop;
+import org.bhaduri.machh.entities.CropPK;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
     private final UserTransaction utx;
 
-    public MasterDataServices() {
+    
+    public MasterDataServices() throws NamingException {
         emf = Persistence.createEntityManagerFactory("org.bhaduri_Machh_jar_1.0-SNAPSHOT");
-        utx = null;
+        utx = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+//        utx = null;
     }
     public UsersDTO getUserAuthDetails(String username, String password) {
         UsersDAO useraccess = new UsersDAO(utx,emf);  
@@ -61,7 +65,7 @@ public class MasterDataServices {
     }
     
     public List<String> getCropCat() {
-        CropDAO cropdao = new CropDAO(utx,emf);  
+        CropDAO cropdao = new CropDAO(emf, utx);  
         List<String> recordList = new ArrayList<>();
         try {  
             List<String> cropcategories = cropdao.listCropCat();
@@ -81,7 +85,7 @@ public class MasterDataServices {
     }
     
     public List<String> getCropNameForCat(String cropcat) {
-        CropDAO cropdao = new CropDAO(utx,emf);  
+        CropDAO cropdao = new CropDAO(emf, utx);  
         List<String> recordList = new ArrayList<>();
 //        CropPk record = new CropPk();
         try {  
@@ -105,7 +109,7 @@ public class MasterDataServices {
     }
     
     public List<CropDTO> getCropList() {
-        CropDAO cropdao = new CropDAO(utx,emf);  
+        CropDAO cropdao = new CropDAO(emf, utx);  
         List<CropDTO> recordList = new ArrayList<>();
         CropDTO record = new CropDTO();
         Date mysqlDate;
@@ -145,7 +149,7 @@ public class MasterDataServices {
     }
     
     public CropDTO getCropsPerPk(String cropcategory, String cropname) {
-        CropDAO cropdao = new CropDAO(utx,emf);         
+        CropDAO cropdao = new CropDAO(emf, utx);         
         CropDTO record = new CropDTO();
         Date mysqlDate;
         String pattern = "yyyy-MM-dd";
@@ -182,16 +186,17 @@ public class MasterDataServices {
     }
     
     public int editCrop(CropDTO cropdto) {
-        CropDAO cropdao = new CropDAO(utx,emf);         
+        CropDAO cropdao = new CropDAO(emf, utx);         
         
         Date mysqlDate;
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {
-            CropPk croprecpk = new CropPk();
+            CropPK croprecpk = new CropPK();
             Crop croprec = new Crop();
-            croprecpk.setCropCategory(cropdto.getCropCategory());
-            croprecpk.setCropName(cropdto.getCropName());
+            croprecpk.setCropcategory(cropdto.getCropCategory());
+            croprecpk.setCrop(cropdto.getCropName());
+            croprec.setCropPK(croprecpk);
             croprec.setDetails(cropdto.getDetails());
             mysqlDate = formatter.parse(cropdto.getSowingDate());
             croprec.setSowingdt(mysqlDate);

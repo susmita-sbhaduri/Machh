@@ -4,6 +4,8 @@
  */
 package org.bhaduri.machh.JPA;
 
+
+import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import java.io.Serializable;
@@ -11,6 +13,11 @@ import jakarta.persistence.Query;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
@@ -23,13 +30,14 @@ import org.bhaduri.machh.entities.CropPK;
  *
  * @author sb
  */
-public class CropJpaController implements Serializable {
-
-    public CropJpaController(UserTransaction utx, EntityManagerFactory emf) {
+public class CropJpaController implements Serializable { 
+   
+    
+    public CropJpaController(EntityManagerFactory emf, UserTransaction utx) {
         this.utx = utx;
         this.emf = emf;
     }
-    private UserTransaction utx = null;
+    private UserTransaction utx = null;    
     private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
@@ -46,10 +54,10 @@ public class CropJpaController implements Serializable {
             em = getEntityManager();
             em.persist(crop);
             utx.commit();
-        } catch (Exception ex) {
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             try {
                 utx.rollback();
-            } catch (Exception re) {
+            } catch (SystemException | IllegalStateException | SecurityException re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
             if (findCrop(crop.getCropPK()) != null) {
@@ -70,10 +78,10 @@ public class CropJpaController implements Serializable {
             em = getEntityManager();
             crop = em.merge(crop);
             utx.commit();
-        } catch (Exception ex) {
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException ex) {
             try {
                 utx.rollback();
-            } catch (Exception re) {
+            } catch (SystemException | IllegalStateException | SecurityException re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
             String msg = ex.getLocalizedMessage();
