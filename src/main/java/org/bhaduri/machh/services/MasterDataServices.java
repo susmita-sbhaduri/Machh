@@ -23,6 +23,7 @@ import org.bhaduri.machh.DA.ResourceDAO;
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.CropPk;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
@@ -30,6 +31,7 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
+import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
 import org.bhaduri.machh.entities.CropPK;
 
@@ -210,7 +212,37 @@ public class MasterDataServices {
             return DB_NON_EXISTING;
         }
         catch (Exception exception) {
-            System.out.println(exception + " has occurred in getCropsPerPk.");
+            System.out.println(exception + " has occurred in editCrop.");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int addCrop(CropDTO cropdto) {
+        CropDAO cropdao = new CropDAO(emf, utx);         
+        
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            CropPK croprecpk = new CropPK();
+            Crop croprec = new Crop();
+            croprecpk.setCropcategory(cropdto.getCropCategory());
+            croprecpk.setCrop(cropdto.getCropName());
+            croprec.setCropPK(croprecpk);
+            croprec.setDetails(cropdto.getDetails());
+            mysqlDate = formatter.parse(cropdto.getSowingDate());
+            croprec.setSowingdt(mysqlDate);
+            mysqlDate = formatter.parse(cropdto.getHarvestDate());
+            croprec.setHarvestingdt(mysqlDate);
+            cropdao.create(croprec);
+            return SUCCESS;
+        }
+        catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this cropcategory, cropname");            
+            return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addCrop.");
             return DB_SEVERE;
         }
     }

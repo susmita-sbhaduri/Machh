@@ -7,33 +7,21 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html">
 
-
-    <ui:define name="content"> 
+    <ui:define name="content">
         <p:growl id="growl" showDetail="true" />
-        <h4>Edit Crop Details.</h4>
+        <h4>Insert New Crop.</h4>
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        <f:metadata>
-            <f:viewParam name="cropcatEd" value="#{cropEdit.cropcatEd}"></f:viewParam>
-            <f:viewParam name="cropnameEd" value="#{cropEdit.cropnameEd}"></f:viewParam>
-            <f:viewAction action="#{cropEdit.fillCropValues()}" />
-        </f:metadata>
         <div class="card">
-            <h:form id="cropeditform" style="text-align: center">
-
-
+            <h:form id="cropaddform" style="text-align: center">
                 <p:panelGrid columns="2">
                     <h:outputLabel for="cropcat" value="Crop Category" />
-                    <h:inputText id="cropcat" value="#{cropEdit.cropEditBean.cropCategory}" readonly="true"/>
+                    <h:inputText id="cropcat" value="#{cropAdd.cropcategory}" required="true"/>
                     <h:outputLabel for="cropname" value="Crop Name" />
-                    <h:inputText id="cropname" value="#{cropEdit.cropEditBean.cropName}" readonly="true"/>
-                    <h:outputLabel for="cropdetails" value="Details" />
-                    <h:inputText id="cropdetails" value="#{cropEdit.cropEditBean.details}"/>
+                    <h:inputText id="cropname" value="#{cropAdd.cropname}" required="true"/>
                     <h:outputLabel for="sdate" value="Sowing Date" />
-                    <p:datePicker id="sdate" value="#{cropEdit.dateStringSow}" pattern="yyyy-MM-dd"/>
-                    <h:outputLabel for="hdate" value="Harvesting Date" />
-                    <p:datePicker id="hdate" value="#{cropEdit.dateStringHarvest}" pattern="yyyy-MM-dd"/>
+                    <p:datePicker id="sdate" value="#{cropAdd.dateStringSow}" pattern="yyyy-MM-dd"/>
                     <p:commandButton value="Save" icon="pi pi-check"
-                                     action="#{cropEdit.save()}"/>
+                                     action="#{cropAdd.save()}"/>
                     <p:button icon="pi pi-times" value="Cancel" outcome="/secured/crop/croplist" />
                 </p:panelGrid>
             </h:form>
