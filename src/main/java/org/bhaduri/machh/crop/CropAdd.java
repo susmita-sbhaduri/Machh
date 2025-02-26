@@ -39,6 +39,7 @@ public class CropAdd implements Serializable {
         System.out.println("blah.");
     }
     public String save() throws NamingException {
+        cropAddBean = new CropDTO();        
         cropAddBean.setCropCategory(cropcategory);
         cropAddBean.setCropName(cropname);
         cropAddBean.setDetails(details);

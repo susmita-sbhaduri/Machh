@@ -16,11 +16,15 @@
                 <p:panelGrid columns="2">
                     <h:outputLabel for="cropcat" value="Crop Category" />
                     <h:inputText id="cropcat" value="#{cropAdd.cropcategory}" required="true"/>
-                    <h:outputLabel for="cropname" value="Crop Name" />
+                    <h:outputLabel for="cropname" value="Crop Name"/>
                     <h:inputText id="cropname" value="#{cropAdd.cropname}" required="true"/>
+                    <h:outputLabel for="cropdetails" value="Details" />
+                    <h:inputText id="cropdetails" value="#{cropAdd.details}"/>
                     <h:outputLabel for="sdate" value="Sowing Date" />
                     <p:datePicker id="sdate" value="#{cropAdd.dateStringSow}" pattern="yyyy-MM-dd"/>
-                    <p:commandButton value="Save" icon="pi pi-check"
+                    <h:outputLabel for="hdate" value="Harvesting Date" />
+                    <p:datePicker id="hdate" value="#{cropAdd.dateStringHarvest}" pattern="yyyy-MM-dd"/>
+                    <p:commandButton value="Add" icon="pi pi-check"
                                      action="#{cropAdd.save()}"/>
                     <p:button icon="pi pi-times" value="Cancel" outcome="/secured/crop/croplist" />
                 </p:panelGrid>
