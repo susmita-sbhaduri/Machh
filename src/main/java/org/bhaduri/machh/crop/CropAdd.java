@@ -4,6 +4,7 @@
  */
 package org.bhaduri.machh.crop;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
@@ -33,22 +34,31 @@ public class CropAdd implements Serializable {
     private String cropname;
     private String details;
     
-    
+    @PostConstruct
+    public void init() {       
+        dateStringSow = new Date();
+        dateStringHarvest = new Date();
+    }
     public CropAdd() {
         System.out.println("blah.");
     }
     public String save() throws NamingException {
         String redirectUrl = "";
+        FacesMessage message = null;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
         if (cropcategory == null || cropcategory.trim().isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage("cropcat", 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Category is required.", 
-                    "Crop Category is required."));
+            
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Category is required.", 
+                    "Crop Category is required.");
+            f.addMessage("cropcat", message);           
             redirectUrl = "/secured/crop/croplist?faces-redirect=true";
         } else {
             if (cropname == null || cropname.trim().isEmpty()) {
-                FacesContext.getCurrentInstance().addMessage("cropname", 
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Name is required.", 
-                "Crop Name is required."));
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Name is required.", 
+                "Crop Name is required.");
+                f.addMessage("cropname", message);
+//              
                 redirectUrl = "/secured/crop/croplist?faces-redirect=true";
             } else {
                 cropAddBean = new CropDTO();
@@ -59,8 +69,7 @@ public class CropAdd implements Serializable {
                 cropAddBean.setSowingDate(sdf.format(dateStringSow));
                 cropAddBean.setHarvestDate(sdf.format(dateStringHarvest));
                 MasterDataServices masterDataService = new MasterDataServices();
-                int response = masterDataService.addCrop(cropAddBean);
-                FacesMessage message = null;
+                int response = masterDataService.addCrop(cropAddBean);                
                 
                 if (response == SUCCESS) {
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
@@ -75,10 +84,7 @@ public class CropAdd implements Serializable {
                         redirectUrl = "/secured/crop/croplist?faces-redirect=true";
                     }
                 }
-                FacesContext f = FacesContext.getCurrentInstance();
-                f.getExternalContext().getFlash().setKeepMessages(true);
                 f.addMessage(null, message);
-                return redirectUrl;
             }
         }
 //        }         cropAddBean = new CropDTO();        
