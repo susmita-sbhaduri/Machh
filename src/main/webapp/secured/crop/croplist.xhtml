@@ -41,13 +41,16 @@
                     </p:column>
 
                     <p:column exportable="false" ariaHeaderText="Actions">
-                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-pencil" title="Edit" action="#{cropList.goToEditCrop()}" >
+                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-pencil" title="Edit" 
+                                         action="#{cropList.goToEditCrop()}" >
                             <f:setPropertyActionListener value="#{crop}" target="#{cropList.selectedCrop}" />
                         </p:commandButton>
                     </p:column>
                     <p:column>    
                         <p:commandButton  class="ui-button-warning rounded-button" icon="pi pi-trash" title="Delete" 
-                                          action="#{cropList.goToDeleteCrop(crop)}" />
+                                          action="#{cropList.deleteCrop(crop)}" />
+                        <f:setPropertyActionListener value="#{crop}" target="#{cropList.selectedCrop}" />
+                        </p:commandButton>
 
                     </p:column>
 

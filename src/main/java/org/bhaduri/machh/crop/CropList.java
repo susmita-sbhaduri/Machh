@@ -4,12 +4,15 @@
  */
 package org.bhaduri.machh.crop;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.CropDTO;
+import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
 /**
@@ -21,6 +24,8 @@ import org.bhaduri.machh.services.MasterDataServices;
 public class CropList implements Serializable {
     private CropDTO selectedCrop;
     List<CropDTO> crops;
+    List<SiteDTO> sites;
+    
 
     public CropDTO getSelectedCrop() {
         return selectedCrop;
@@ -48,11 +53,13 @@ public class CropList implements Serializable {
         return redirectUrl;
     }
     
-    public String goToAddCrop() {
-        return "SessionExpired";
-    }
-    public String goToDeleteCrop(CropDTO crop){
-        return "SessionExpired";
+    public String deleteCrop(CropDTO crop)throws NamingException {
+        String redirectUrl = "";
+        FacesMessage message = null;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        MasterDataServices masterDataService = new MasterDataServices();
+        sites = masterDataService.getSitesForCrop();
     }
     
     public CropDTO getSelectedUser() {

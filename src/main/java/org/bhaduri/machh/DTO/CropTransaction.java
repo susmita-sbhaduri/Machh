@@ -12,7 +12,7 @@ import java.util.Date;
  * @author sb
  */
 public class CropTransaction implements Serializable {
-    private Date transactionDate;
+    private String transactionDate;
     private String cropCategory;
     private String cropName;
     private String resourceCategory;
@@ -22,25 +22,25 @@ public class CropTransaction implements Serializable {
     private String totalPrice;
     private String comments;
 
-    public CropTransaction(Date transactionDate, String cropCategory, String cropName, String resourceCategory, String resourceName, String transactionType, String quantity, String totalPrice, String comments) {
-        this.transactionDate = transactionDate;
-        this.cropCategory = cropCategory;
-        this.cropName = cropName;
-        this.resourceCategory = resourceCategory;
-        this.resourceName = resourceName;
-        this.transactionType = transactionType;
-        this.quantity = quantity;
-        this.totalPrice = totalPrice;
-        this.comments = comments;
-    }
+//    public CropTransaction(Date transactionDate, String cropCategory, String cropName, String resourceCategory, String resourceName, String transactionType, String quantity, String totalPrice, String comments) {
+//        this.transactionDate = transactionDate;
+//        this.cropCategory = cropCategory;
+//        this.cropName = cropName;
+//        this.resourceCategory = resourceCategory;
+//        this.resourceName = resourceName;
+//        this.transactionType = transactionType;
+//        this.quantity = quantity;
+//        this.totalPrice = totalPrice;
+//        this.comments = comments;
+//    }
 
-    public Date getTransactionDate() {
+    public String getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
-    }
+    }    
 
     public String getCropCategory() {
         return cropCategory;
