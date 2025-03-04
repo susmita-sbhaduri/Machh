@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.CropDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -24,7 +25,7 @@ import org.bhaduri.machh.services.MasterDataServices;
 public class CropList implements Serializable {
     private CropDTO selectedCrop;
     List<CropDTO> crops;
-    List<SiteDTO> sites;
+//    List<SiteDTO> sites;
     
 
     public CropDTO getSelectedCrop() {
@@ -55,11 +56,19 @@ public class CropList implements Serializable {
     
     public String deleteCrop(CropDTO crop)throws NamingException {
         String redirectUrl = "";
+        
         FacesMessage message = null;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         MasterDataServices masterDataService = new MasterDataServices();
-        sites = masterDataService.getSitesForCrop();
+        int response = masterDataService.existsSiteForCrop(selectedCrop.getCropCategory(), selectedCrop.getCropName());
+        if( response > 0 && response != DB_SEVERE){
+           System.out.println("Record exists");
+        } else {
+           System.out.println("Record does not exist");
+        }
+        redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();
+        return redirectUrl;
     }
     
     public CropDTO getSelectedUser() {

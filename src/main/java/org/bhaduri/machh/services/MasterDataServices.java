@@ -17,6 +17,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DA.CropDAO;
 import org.bhaduri.machh.DA.ResourceDAO;
+import org.bhaduri.machh.DA.SiteDAO;
 
 
 
@@ -67,7 +68,7 @@ public class MasterDataServices {
     }
     
     public List<String> getCropCat() {
-        CropDAO cropdao = new CropDAO(emf, utx);  
+        CropDAO cropdao = new CropDAO(utx, emf);  
         List<String> recordList = new ArrayList<>();
         try {  
             List<String> cropcategories = cropdao.listCropCat();
@@ -87,7 +88,7 @@ public class MasterDataServices {
     }
     
     public List<String> getCropNameForCat(String cropcat) {
-        CropDAO cropdao = new CropDAO(emf, utx);  
+        CropDAO cropdao = new CropDAO(utx, emf);  
         List<String> recordList = new ArrayList<>();
 //        CropPk record = new CropPk();
         try {  
@@ -111,7 +112,7 @@ public class MasterDataServices {
     }
     
     public List<CropDTO> getCropList() {
-        CropDAO cropdao = new CropDAO(emf, utx);  
+        CropDAO cropdao = new CropDAO(utx, emf);  
         List<CropDTO> recordList = new ArrayList<>();
         CropDTO record = new CropDTO();
         Date mysqlDate;
@@ -151,7 +152,7 @@ public class MasterDataServices {
     }
     
     public CropDTO getCropsPerPk(String cropcategory, String cropname) {
-        CropDAO cropdao = new CropDAO(emf, utx);         
+        CropDAO cropdao = new CropDAO(utx, emf);        
         CropDTO record = new CropDTO();
         Date mysqlDate;
         String pattern = "yyyy-MM-dd";
@@ -188,7 +189,7 @@ public class MasterDataServices {
     }
     
     public int editCrop(CropDTO cropdto) {
-        CropDAO cropdao = new CropDAO(emf, utx);         
+        CropDAO cropdao = new CropDAO(utx, emf);          
         
         Date mysqlDate;
         String pattern = "yyyy-MM-dd";
@@ -218,7 +219,7 @@ public class MasterDataServices {
     }
     
     public int addCrop(CropDTO cropdto) {
-        CropDAO cropdao = new CropDAO(emf, utx);         
+        CropDAO cropdao = new CropDAO(utx, emf);         
         
         Date mysqlDate;
         String pattern = "yyyy-MM-dd";
@@ -284,6 +285,19 @@ public class MasterDataServices {
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getResDetForCrop.");
             return null;
+        }
+    }
+    
+    public int existsSiteForCrop(String cropcategory, String cropname) {
+        SiteDAO sitedao = new SiteDAO(utx, emf);
+        try {
+            int countofsiteid = sitedao.listSiteForCrop(cropcategory, cropname);
+            return countofsiteid;
+        }
+        
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in existsSiteForCrop.");
+            return DB_SEVERE;
         }
     }
 }

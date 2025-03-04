@@ -48,10 +48,9 @@
                     </p:column>
                     <p:column>    
                         <p:commandButton  class="ui-button-warning rounded-button" icon="pi pi-trash" title="Delete" 
-                                          action="#{cropList.deleteCrop(crop)}" />
+                                          action="#{cropList.deleteCrop(crop)}" >
                         <f:setPropertyActionListener value="#{crop}" target="#{cropList.selectedCrop}" />
                         </p:commandButton>
-
                     </p:column>
 
                 </p:dataTable>

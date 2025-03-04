@@ -33,7 +33,7 @@ import org.bhaduri.machh.entities.CropPK;
 public class CropJpaController implements Serializable { 
    
     
-    public CropJpaController(EntityManagerFactory emf, UserTransaction utx) {
+    public CropJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }

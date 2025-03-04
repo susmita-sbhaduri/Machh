@@ -21,8 +21,8 @@ import org.bhaduri.machh.entities.Crop;
  */
 public class CropDAO extends CropJpaController{
     
-    public CropDAO(EntityManagerFactory emf, UserTransaction utx) {
-        super(emf, utx);
+    public CropDAO(UserTransaction utx, EntityManagerFactory emf) {
+        super(utx, emf);
     }
     public List<String> listCropCat() {
         EntityManager em = getEntityManager();

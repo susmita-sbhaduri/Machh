@@ -24,5 +24,11 @@
     <named-query name="Resource.listResDetPerCrop">
         <query>SELECT r.resourcePK.resourcename FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop AND r.resourcePK.resourcecategory =:resourcecategory</query>
     </named-query>
+    <named-query name="Site.listSiteForCrop">
+        <query>SELECT s.sitePK.id FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:crop</query>
+    </named-query>
+<!--    <named-query name="Site.chkSiteForCrop">
+        <query>SELECT CASE WHEN EXISTS (SELECT 1 FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:cropname) THEN TRUE ELSE FALSE END</query>
+    </named-query>-->
 </entity-mappings>
 
