@@ -300,4 +300,17 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
+    
+    public int existsResourceForCrop(String cropcategory, String cropname) {
+        ResourceDAO resourcedao = new ResourceDAO(utx, emf);
+        try {
+            int count = resourcedao.listResourceForCrop(cropcategory, cropname);
+            return count;
+        }
+        
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in existsResourceForCrop.");
+            return DB_SEVERE;
+        }
+    }
 }

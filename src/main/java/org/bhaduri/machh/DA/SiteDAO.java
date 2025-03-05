@@ -25,7 +25,7 @@ public class SiteDAO extends SiteJpaController{
         TypedQuery<String> query = em.createNamedQuery("Site.listSiteForCrop", String.class);
         query.setParameter("cropcategory", cropcategory);
         query.setParameter("crop", crop);
-        int countofsiteid = query.getResultList().size();
-        return countofsiteid;
+//        int countofsiteid = query.getResultList().size();
+        return query.getResultList().size();
     }
 }

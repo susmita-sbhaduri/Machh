@@ -63,8 +63,19 @@ public class CropList implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         int response = masterDataService.existsSiteForCrop(selectedCrop.getCropCategory(), selectedCrop.getCropName());
         if( response > 0 && response != DB_SEVERE){
-           System.out.println("Record exists");
+           message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "This crop is not harvested in site yet.", 
+                    "This crop is not harvested in site yet.");
+            f.addMessage(null, message);           
+            redirectUrl = "/secured/crop/croplist?faces-redirect=true";
         } else {
+            response = masterDataService.existsResourceForCrop(selectedCrop.getCropCategory(), selectedCrop.getCropName());
+            if (response > 0 && response != DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is resources crop is not harvested in site yet.",
+                        "This crop is not harvested in site yet.");
+                f.addMessage(null, message);
+                redirectUrl = "/secured/crop/croplist?faces-redirect=true";
+            }
+//            int response = masterDataService.existsSiteForCrop(selectedCrop.getCropCategory(), selectedCrop.getCropName());
            System.out.println("Record does not exist");
         }
         redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();

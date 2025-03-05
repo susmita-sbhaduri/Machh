@@ -37,4 +37,13 @@ public class ResourceDAO extends ResourceJpaController{
         List<String> listresdetpercrop = query.getResultList();
         return listresdetpercrop;
     }
+    
+    public int listResourceForCrop(String cropcategory, String crop) {
+        EntityManager em = getEntityManager();
+        TypedQuery<String> query = em.createNamedQuery("Resource.listResourceForCrop", String.class);
+        query.setParameter("cropcategory", cropcategory);
+        query.setParameter("crop", crop);
+//        int countofsiteid = query.getResultList().size();
+        return query.getResultList().size();
+    }
 }
