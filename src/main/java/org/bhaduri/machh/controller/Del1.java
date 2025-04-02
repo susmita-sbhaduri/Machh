@@ -8,6 +8,6 @@ package org.bhaduri.machh.controller;
  *
  * @author sb
  */
-class MasterDataService {
+class Del1 {
     
 }

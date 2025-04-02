@@ -36,44 +36,44 @@ public class CropEdit implements Serializable {
 
     
 
-    public void fillCropValues() throws NamingException {
-        MasterDataServices masterDataService = new MasterDataServices();
-        cropEditBean = masterDataService.getCropsPerPk(cropcatEd, cropnameEd); 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            dateStringSow = sdf.parse(cropEditBean.getSowingDate());
-            dateStringHarvest = sdf.parse(cropEditBean.getHarvestDate());
-        } catch (ParseException ex) {
-            Logger.getLogger(CropEdit.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public void fillCropValues() throws NamingException {
+//        MasterDataServices masterDataService = new MasterDataServices();
+//        cropEditBean = masterDataService.getCropsPerPk(cropcatEd, cropnameEd); 
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        try {
+//            dateStringSow = sdf.parse(cropEditBean.getSowingDate());
+//            dateStringHarvest = sdf.parse(cropEditBean.getHarvestDate());
+//        } catch (ParseException ex) {
+//            Logger.getLogger(CropEdit.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     
-    public String save() throws NamingException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        cropEditBean.setSowingDate(sdf.format(dateStringSow));
-        cropEditBean.setHarvestDate(sdf.format(dateStringHarvest));
-        MasterDataServices masterDataService = new MasterDataServices();
-        int response = masterDataService.editCrop(cropEditBean);
-        FacesMessage message = null;
-        String redirectUrl = "";
-        if(response==SUCCESS){
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
-            redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-        } else {
-            if (response == DB_NON_EXISTING) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
-                redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + cropcatEd+ "&cropnameEd=" + cropnameEd;
-            }
-            if (response == DB_SEVERE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
-                redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + cropcatEd+ "&cropnameEd=" + cropnameEd;              
-            }
-        }
-        FacesContext f = FacesContext.getCurrentInstance();
-        f.getExternalContext().getFlash().setKeepMessages(true);
-        f.addMessage(null, message);
-        return redirectUrl;
-    }
+//    public String save() throws NamingException {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        cropEditBean.setSowingDate(sdf.format(dateStringSow));
+//        cropEditBean.setHarvestDate(sdf.format(dateStringHarvest));
+//        MasterDataServices masterDataService = new MasterDataServices();
+//        int response = masterDataService.editCrop(cropEditBean);
+//        FacesMessage message = null;
+//        String redirectUrl = "";
+//        if(response==SUCCESS){
+//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+//            redirectUrl = "/secured/crop/croplist?faces-redirect=true";
+//        } else {
+//            if (response == DB_NON_EXISTING) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
+//                redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + cropcatEd+ "&cropnameEd=" + cropnameEd;
+//            }
+//            if (response == DB_SEVERE) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+//                redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + cropcatEd+ "&cropnameEd=" + cropnameEd;              
+//            }
+//        }
+//        FacesContext f = FacesContext.getCurrentInstance();
+//        f.getExternalContext().getFlash().setKeepMessages(true);
+//        f.addMessage(null, message);
+//        return redirectUrl;
+//    }
     
     public String testAction() {
         System.out.println("Test action called");

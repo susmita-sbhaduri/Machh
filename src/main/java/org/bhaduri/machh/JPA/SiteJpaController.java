@@ -17,7 +17,6 @@ import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
 import org.bhaduri.machh.entities.Site;
-import org.bhaduri.machh.entities.SitePK;
 
 /**
  *
@@ -37,9 +36,6 @@ public class SiteJpaController implements Serializable {
     }
 
     public void create(Site site) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (site.getSitePK() == null) {
-            site.setSitePK(new SitePK());
-        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -52,7 +48,7 @@ public class SiteJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findSite(site.getSitePK()) != null) {
+            if (findSite(site.getId()) != null) {
                 throw new PreexistingEntityException("Site " + site + " already exists.", ex);
             }
             throw ex;
@@ -78,7 +74,7 @@ public class SiteJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                SitePK id = site.getSitePK();
+                String id = site.getId();
                 if (findSite(id) == null) {
                     throw new NonexistentEntityException("The site with id " + id + " no longer exists.");
                 }
@@ -91,7 +87,7 @@ public class SiteJpaController implements Serializable {
         }
     }
 
-    public void destroy(SitePK id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -99,7 +95,7 @@ public class SiteJpaController implements Serializable {
             Site site;
             try {
                 site = em.getReference(Site.class, id);
-                site.getSitePK();
+                site.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The site with id " + id + " no longer exists.", enfe);
             }
@@ -143,7 +139,7 @@ public class SiteJpaController implements Serializable {
         }
     }
 
-    public Site findSite(SitePK id) {
+    public Site findSite(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Site.class, id);

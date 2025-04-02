@@ -42,81 +42,54 @@ public class CropAdd implements Serializable {
     public CropAdd() {
         System.out.println("blah.");
     }
-    public String save() throws NamingException {
-        String redirectUrl = "";
-        FacesMessage message = null;
-        FacesContext f = FacesContext.getCurrentInstance();
-        f.getExternalContext().getFlash().setKeepMessages(true);
-        if (cropcategory == null || cropcategory.trim().isEmpty()) {
-            
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Category is required.", 
-                    "Crop Category is required.");
-            f.addMessage("cropcat", message);           
-            redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-        } else {
-            if (cropname == null || cropname.trim().isEmpty()) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Name is required.", 
-                "Crop Name is required.");
-                f.addMessage("cropname", message);
-//              
-                redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-            } else {
-                cropAddBean = new CropDTO();
-                cropAddBean.setCropCategory(cropcategory);
-                cropAddBean.setCropName(cropname);
-                cropAddBean.setDetails(details);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                cropAddBean.setSowingDate(sdf.format(dateStringSow));
-                cropAddBean.setHarvestDate(sdf.format(dateStringHarvest));
-                MasterDataServices masterDataService = new MasterDataServices();
-                int response = masterDataService.addCrop(cropAddBean);                
-                
-                if (response == SUCCESS) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
-                    redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-                } else {
-                    if (response == DB_DUPLICATE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_DUPLICATE));
-                        redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-                    }
-                    if (response == DB_SEVERE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
-                        redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-                    }
-                }
-                f.addMessage(null, message);
-            }
-        }
-//        }         cropAddBean = new CropDTO();        
-//        cropAddBean.setCropCategory(cropcategory);
-//        cropAddBean.setCropName(cropname);
-//        cropAddBean.setDetails(details);
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        cropAddBean.setSowingDate(sdf.format(dateStringSow));
-//        cropAddBean.setHarvestDate(sdf.format(dateStringHarvest));
-//        MasterDataServices masterDataService = new MasterDataServices();
-//        int response = masterDataService.addCrop(cropAddBean);
-//        FacesMessage message = null;
+//    public String save() throws NamingException {
 //        String redirectUrl = "";
-//        if(response==SUCCESS){
-//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
-//            redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-//        } else {
-//            if (response == DB_DUPLICATE) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_DUPLICATE));
-//                redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-//            }
-//            if (response == DB_SEVERE) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
-//                redirectUrl = "/secured/crop/croplist?faces-redirect=true";
-//            }
-//        }
+//        FacesMessage message = null;
 //        FacesContext f = FacesContext.getCurrentInstance();
 //        f.getExternalContext().getFlash().setKeepMessages(true);
-//        f.addMessage(null, message);
-        
-        return redirectUrl;
-    }
+//        if (cropcategory == null || cropcategory.trim().isEmpty()) {
+//            
+//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Category is required.", 
+//                    "Crop Category is required.");
+//            f.addMessage("cropcat", message);           
+//            redirectUrl = "/secured/crop/croplist?faces-redirect=true";
+//        } else {
+//            if (cropname == null || cropname.trim().isEmpty()) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Name is required.", 
+//                "Crop Name is required.");
+//                f.addMessage("cropname", message);
+////              
+//                redirectUrl = "/secured/crop/croplist?faces-redirect=true";
+//            } else {
+//                cropAddBean = new CropDTO();
+//                cropAddBean.setCropCategory(cropcategory);
+//                cropAddBean.setCropName(cropname);
+//                cropAddBean.setDetails(details);
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//                cropAddBean.setSowingDate(sdf.format(dateStringSow));
+//                cropAddBean.setHarvestDate(sdf.format(dateStringHarvest));
+//                MasterDataServices masterDataService = new MasterDataServices();
+//                int response = masterDataService.addCrop(cropAddBean);                
+//                
+//                if (response == SUCCESS) {
+//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+//                    redirectUrl = "/secured/crop/croplist?faces-redirect=true";
+//                } else {
+//                    if (response == DB_DUPLICATE) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_DUPLICATE));
+//                        redirectUrl = "/secured/crop/croplist?faces-redirect=true";
+//                    }
+//                    if (response == DB_SEVERE) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+//                        redirectUrl = "/secured/crop/croplist?faces-redirect=true";
+//                    }
+//                }
+//                f.addMessage(null, message);
+//            }
+//        }
+//        
+//        return redirectUrl;
+//    }
 
     public CropDTO getCropAddBean() {
         return cropAddBean;

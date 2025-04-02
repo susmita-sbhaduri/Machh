@@ -10,12 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  *
@@ -28,9 +25,7 @@ import java.util.Date;
     @NamedQuery(name = "Crop.findAll", query = "SELECT c FROM Crop c"),
     @NamedQuery(name = "Crop.findByCropcategory", query = "SELECT c FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory"),
     @NamedQuery(name = "Crop.findByCrop", query = "SELECT c FROM Crop c WHERE c.cropPK.crop = :crop"),
-    @NamedQuery(name = "Crop.findByDetails", query = "SELECT c FROM Crop c WHERE c.details = :details"),
-    @NamedQuery(name = "Crop.findBySowingdt", query = "SELECT c FROM Crop c WHERE c.sowingdt = :sowingdt"),
-    @NamedQuery(name = "Crop.findByHarvestingdt", query = "SELECT c FROM Crop c WHERE c.harvestingdt = :harvestingdt")})
+    @NamedQuery(name = "Crop.findByDetails", query = "SELECT c FROM Crop c WHERE c.details = :details")})
 public class Crop implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,12 +34,6 @@ public class Crop implements Serializable {
     @Size(max = 45)
     @Column(name = "details")
     private String details;
-    @Column(name = "sowingdt")
-    @Temporal(TemporalType.DATE)
-    private Date sowingdt;
-    @Column(name = "harvestingdt")
-    @Temporal(TemporalType.DATE)
-    private Date harvestingdt;
 
     public Crop() {
     }
@@ -71,22 +60,6 @@ public class Crop implements Serializable {
 
     public void setDetails(String details) {
         this.details = details;
-    }
-
-    public Date getSowingdt() {
-        return sowingdt;
-    }
-
-    public void setSowingdt(Date sowingdt) {
-        this.sowingdt = sowingdt;
-    }
-
-    public Date getHarvestingdt() {
-        return harvestingdt;
-    }
-
-    public void setHarvestingdt(Date harvestingdt) {
-        this.harvestingdt = harvestingdt;
     }
 
     @Override

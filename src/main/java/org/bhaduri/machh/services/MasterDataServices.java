@@ -111,142 +111,142 @@ public class MasterDataServices {
         }
     }
     
-    public List<CropDTO> getCropList() {
-        CropDAO cropdao = new CropDAO(utx, emf);  
-        List<CropDTO> recordList = new ArrayList<>();
-        CropDTO record = new CropDTO();
-        Date mysqlDate;
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        try {  
-            List<Crop> croplist = cropdao.getCropListAll();
-            for (int i = 0; i < croplist.size(); i++) {
-                record.setCropCategory(croplist.get(i).getCropPK().getCropcategory());
-                record.setCropName(croplist.get(i).getCropPK().getCrop());  
-                record.setDetails(croplist.get(i).getDetails());
-                if (croplist.get(i).getSowingdt() != null) {
-                    mysqlDate = croplist.get(i).getSowingdt();                    
-                    record.setSowingDate(formatter.format(mysqlDate));
-                }else{
-                    record.setSowingDate("");
-                }
-                if (croplist.get(i).getHarvestingdt() != null) {
-                    mysqlDate = croplist.get(i).getHarvestingdt();
-                    record.setHarvestDate(formatter.format(mysqlDate));
-                }else{
-                    record.setHarvestDate("");
-                }                               
-                recordList.add(record);
-                record = new CropDTO();
-            }        
-            return recordList;
-        }
-        catch (NoResultException e) {
-            System.out.println("No crops are found");            
-            return null;
-        }
-        catch (Exception exception) {
-            System.out.println(exception + " has occurred in getCropList.");
-            return null;
-        }
-    }
+//    public List<CropDTO> getCropList() {
+//        CropDAO cropdao = new CropDAO(utx, emf);  
+//        List<CropDTO> recordList = new ArrayList<>();
+//        CropDTO record = new CropDTO();
+//        Date mysqlDate;
+//        String pattern = "yyyy-MM-dd";
+//        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+//        try {  
+//            List<Crop> croplist = cropdao.getCropListAll();
+//            for (int i = 0; i < croplist.size(); i++) {
+//                record.setCropCategory(croplist.get(i).getCropPK().getCropcategory());
+//                record.setCropName(croplist.get(i).getCropPK().getCrop());  
+//                record.setDetails(croplist.get(i).getDetails());
+//                if (croplist.get(i).getSowingdt() != null) {
+//                    mysqlDate = croplist.get(i).getSowingdt();                    
+//                    record.setSowingDate(formatter.format(mysqlDate));
+//                }else{
+//                    record.setSowingDate("");
+//                }
+//                if (croplist.get(i).getHarvestingdt() != null) {
+//                    mysqlDate = croplist.get(i).getHarvestingdt();
+//                    record.setHarvestDate(formatter.format(mysqlDate));
+//                }else{
+//                    record.setHarvestDate("");
+//                }                               
+//                recordList.add(record);
+//                record = new CropDTO();
+//            }        
+//            return recordList;
+//        }
+//        catch (NoResultException e) {
+//            System.out.println("No crops are found");            
+//            return null;
+//        }
+//        catch (Exception exception) {
+//            System.out.println(exception + " has occurred in getCropList.");
+//            return null;
+//        }
+//    }
     
-    public CropDTO getCropsPerPk(String cropcategory, String cropname) {
-        CropDAO cropdao = new CropDAO(utx, emf);        
-        CropDTO record = new CropDTO();
-        Date mysqlDate;
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        try {
-            Crop croprec = cropdao.getCropPerPK(cropcategory, cropname);
-
-            record.setCropCategory(croprec.getCropPK().getCropcategory());
-            record.setCropName(croprec.getCropPK().getCrop());
-            record.setDetails(croprec.getDetails());
-            if (croprec.getSowingdt() != null) {
-                mysqlDate = croprec.getSowingdt();
-                record.setSowingDate(formatter.format(mysqlDate));
-            } else {
-                record.setSowingDate("");
-            }
-            if (croprec.getHarvestingdt() != null) {
-                mysqlDate = croprec.getHarvestingdt();
-                record.setHarvestDate(formatter.format(mysqlDate));
-            } else {
-                record.setHarvestDate("");
-            }
-
-            return record;
-        }
-        catch (NoResultException e) {
-            System.out.println("No crop record is found for cropcategory, cropname");            
-            return null;
-        }
-        catch (Exception exception) {
-            System.out.println(exception + " has occurred in getCropsPerPk.");
-            return null;
-        }
-    }
+//    public CropDTO getCropsPerPk(String cropcategory, String cropname) {
+//        CropDAO cropdao = new CropDAO(utx, emf);        
+//        CropDTO record = new CropDTO();
+//        Date mysqlDate;
+//        String pattern = "yyyy-MM-dd";
+//        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+//        try {
+//            Crop croprec = cropdao.getCropPerPK(cropcategory, cropname);
+//
+//            record.setCropCategory(croprec.getCropPK().getCropcategory());
+//            record.setCropName(croprec.getCropPK().getCrop());
+//            record.setDetails(croprec.getDetails());
+//            if (croprec.getSowingdt() != null) {
+//                mysqlDate = croprec.getSowingdt();
+//                record.setSowingDate(formatter.format(mysqlDate));
+//            } else {
+//                record.setSowingDate("");
+//            }
+//            if (croprec.getHarvestingdt() != null) {
+//                mysqlDate = croprec.getHarvestingdt();
+//                record.setHarvestDate(formatter.format(mysqlDate));
+//            } else {
+//                record.setHarvestDate("");
+//            }
+//
+//            return record;
+//        }
+//        catch (NoResultException e) {
+//            System.out.println("No crop record is found for cropcategory, cropname");            
+//            return null;
+//        }
+//        catch (Exception exception) {
+//            System.out.println(exception + " has occurred in getCropsPerPk.");
+//            return null;
+//        }
+//    }
     
-    public int editCrop(CropDTO cropdto) {
-        CropDAO cropdao = new CropDAO(utx, emf);          
-        
-        Date mysqlDate;
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        try {
-            CropPK croprecpk = new CropPK();
-            Crop croprec = new Crop();
-            croprecpk.setCropcategory(cropdto.getCropCategory());
-            croprecpk.setCrop(cropdto.getCropName());
-            croprec.setCropPK(croprecpk);
-            croprec.setDetails(cropdto.getDetails());
-            mysqlDate = formatter.parse(cropdto.getSowingDate());
-            croprec.setSowingdt(mysqlDate);
-            mysqlDate = formatter.parse(cropdto.getHarvestDate());
-            croprec.setHarvestingdt(mysqlDate);
-            cropdao.edit(croprec);
-            return SUCCESS;
-        }
-        catch (NoResultException e) {
-            System.out.println("No crop record is found for cropcategory, cropname");            
-            return DB_NON_EXISTING;
-        }
-        catch (Exception exception) {
-            System.out.println(exception + " has occurred in editCrop.");
-            return DB_SEVERE;
-        }
-    }
+//    public int editCrop(CropDTO cropdto) {
+//        CropDAO cropdao = new CropDAO(utx, emf);          
+//        
+//        Date mysqlDate;
+//        String pattern = "yyyy-MM-dd";
+//        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+//        try {
+//            CropPK croprecpk = new CropPK();
+//            Crop croprec = new Crop();
+//            croprecpk.setCropcategory(cropdto.getCropCategory());
+//            croprecpk.setCrop(cropdto.getCropName());
+//            croprec.setCropPK(croprecpk);
+//            croprec.setDetails(cropdto.getDetails());
+//            mysqlDate = formatter.parse(cropdto.getSowingDate());
+//            croprec.setSowingdt(mysqlDate);
+//            mysqlDate = formatter.parse(cropdto.getHarvestDate());
+//            croprec.setHarvestingdt(mysqlDate);
+//            cropdao.edit(croprec);
+//            return SUCCESS;
+//        }
+//        catch (NoResultException e) {
+//            System.out.println("No crop record is found for cropcategory, cropname");            
+//            return DB_NON_EXISTING;
+//        }
+//        catch (Exception exception) {
+//            System.out.println(exception + " has occurred in editCrop.");
+//            return DB_SEVERE;
+//        }
+//    }
     
-    public int addCrop(CropDTO cropdto) {
-        CropDAO cropdao = new CropDAO(utx, emf);         
-        
-        Date mysqlDate;
-        String pattern = "yyyy-MM-dd";
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        try {
-            CropPK croprecpk = new CropPK();
-            Crop croprec = new Crop();
-            croprecpk.setCropcategory(cropdto.getCropCategory());
-            croprecpk.setCrop(cropdto.getCropName());
-            croprec.setCropPK(croprecpk);
-            croprec.setDetails(cropdto.getDetails());
-            mysqlDate = formatter.parse(cropdto.getSowingDate());
-            croprec.setSowingdt(mysqlDate);
-            mysqlDate = formatter.parse(cropdto.getHarvestDate());
-            croprec.setHarvestingdt(mysqlDate);
-            cropdao.create(croprec);
-            return SUCCESS;
-        }
-        catch (PreexistingEntityException e) {
-            System.out.println("Record is already there for this cropcategory, cropname");            
-            return DB_DUPLICATE;
-        }
-        catch (Exception exception) {
-            System.out.println(exception + " has occurred in addCrop.");
-            return DB_SEVERE;
-        }
-    }
+//    public int addCrop(CropDTO cropdto) {
+//        CropDAO cropdao = new CropDAO(utx, emf);         
+//        
+//        Date mysqlDate;
+//        String pattern = "yyyy-MM-dd";
+//        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+//        try {
+//            CropPK croprecpk = new CropPK();
+//            Crop croprec = new Crop();
+//            croprecpk.setCropcategory(cropdto.getCropCategory());
+//            croprecpk.setCrop(cropdto.getCropName());
+//            croprec.setCropPK(croprecpk);
+//            croprec.setDetails(cropdto.getDetails());
+//            mysqlDate = formatter.parse(cropdto.getSowingDate());
+//            croprec.setSowingdt(mysqlDate);
+//            mysqlDate = formatter.parse(cropdto.getHarvestDate());
+//            croprec.setHarvestingdt(mysqlDate);
+//            cropdao.create(croprec);
+//            return SUCCESS;
+//        }
+//        catch (PreexistingEntityException e) {
+//            System.out.println("Record is already there for this cropcategory, cropname");            
+//            return DB_DUPLICATE;
+//        }
+//        catch (Exception exception) {
+//            System.out.println(exception + " has occurred in addCrop.");
+//            return DB_SEVERE;
+//        }
+//    }
     
     public List<String> getResCatForCrop(String cropcat, String cropname) {
         ResourceDAO resourcedao = new ResourceDAO(utx,emf);  
@@ -288,18 +288,18 @@ public class MasterDataServices {
         }
     }
     
-    public int existsSiteForCrop(String cropcategory, String cropname) {
-        SiteDAO sitedao = new SiteDAO(utx, emf);
-        try {
-            int countofsiteid = sitedao.listSiteForCrop(cropcategory, cropname);
-            return countofsiteid;
-        }
-        
-        catch (Exception exception) {
-            System.out.println(exception + " has occurred in existsSiteForCrop.");
-            return DB_SEVERE;
-        }
-    }
+//    public int existsSiteForCrop(String cropcategory, String cropname) {
+//        SiteDAO sitedao = new SiteDAO(utx, emf);
+//        try {
+//            int countofsiteid = sitedao.listSiteForCrop(cropcategory, cropname);
+//            return countofsiteid;
+//        }
+//        
+//        catch (Exception exception) {
+//            System.out.println(exception + " has occurred in existsSiteForCrop.");
+//            return DB_SEVERE;
+//        }
+//    }
     
     public int existsResourceForCrop(String cropcategory, String cropname) {
         ResourceDAO resourcedao = new ResourceDAO(utx, emf);
@@ -311,6 +311,27 @@ public class MasterDataServices {
         catch (Exception exception) {
             System.out.println(exception + " has occurred in existsResourceForCrop.");
             return DB_SEVERE;
+        }
+    }
+    
+    public List<String> getSiteNames() {
+        SiteDAO sitedao = new SiteDAO(utx, emf);  
+        List<String> recordList = new ArrayList<>();
+//        CropPk record = new CropPk();listSite
+        try {  
+            List<String> sitenames = sitedao.listSite();
+            for (int i = 0; i < sitenames.size(); i++) {               
+                recordList.add(sitenames.get(i));
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crop names are found for this crop category");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getSiteNames.");
+            return null;
         }
     }
 }

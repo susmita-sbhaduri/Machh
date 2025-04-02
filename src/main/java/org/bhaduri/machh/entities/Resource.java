@@ -25,8 +25,7 @@ import java.io.Serializable;
     @NamedQuery(name = "Resource.findAll", query = "SELECT r FROM Resource r"),
     @NamedQuery(name = "Resource.findByResourcecategory", query = "SELECT r FROM Resource r WHERE r.resourcePK.resourcecategory = :resourcecategory"),
     @NamedQuery(name = "Resource.findByResourcename", query = "SELECT r FROM Resource r WHERE r.resourcePK.resourcename = :resourcename"),
-    @NamedQuery(name = "Resource.findByCropcategory", query = "SELECT r FROM Resource r WHERE r.resourcePK.cropcategory = :cropcategory"),
-    @NamedQuery(name = "Resource.findByCrop", query = "SELECT r FROM Resource r WHERE r.resourcePK.crop = :crop"),
+    @NamedQuery(name = "Resource.findByRate", query = "SELECT r FROM Resource r WHERE r.rate = :rate"),
     @NamedQuery(name = "Resource.findByResourcelocation", query = "SELECT r FROM Resource r WHERE r.resourcelocation = :resourcelocation"),
     @NamedQuery(name = "Resource.findByResourcecontact", query = "SELECT r FROM Resource r WHERE r.resourcecontact = :resourcecontact"),
     @NamedQuery(name = "Resource.findByAvailibilitytime", query = "SELECT r FROM Resource r WHERE r.availibilitytime = :availibilitytime"),
@@ -36,6 +35,9 @@ public class Resource implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected ResourcePK resourcePK;
+    @Size(max = 100)
+    @Column(name = "rate")
+    private String rate;
     @Size(max = 100)
     @Column(name = "resourcelocation")
     private String resourcelocation;
@@ -56,8 +58,8 @@ public class Resource implements Serializable {
         this.resourcePK = resourcePK;
     }
 
-    public Resource(String resourcecategory, String resourcename, String cropcategory, String crop) {
-        this.resourcePK = new ResourcePK(resourcecategory, resourcename, cropcategory, crop);
+    public Resource(String resourcecategory, String resourcename) {
+        this.resourcePK = new ResourcePK(resourcecategory, resourcename);
     }
 
     public ResourcePK getResourcePK() {
@@ -66,6 +68,14 @@ public class Resource implements Serializable {
 
     public void setResourcePK(ResourcePK resourcePK) {
         this.resourcePK = resourcePK;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
     }
 
     public String getResourcelocation() {

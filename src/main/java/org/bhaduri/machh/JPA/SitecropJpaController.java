@@ -16,16 +16,16 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Crop;
-import org.bhaduri.machh.entities.CropPK;
+import org.bhaduri.machh.entities.Sitecrop;
+import org.bhaduri.machh.entities.SitecropPK;
 
 /**
  *
  * @author sb
  */
-public class CropJpaController implements Serializable {
+public class SitecropJpaController implements Serializable {
 
-    public CropJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public SitecropJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -36,15 +36,15 @@ public class CropJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Crop crop) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (crop.getCropPK() == null) {
-            crop.setCropPK(new CropPK());
+    public void create(Sitecrop sitecrop) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (sitecrop.getSitecropPK() == null) {
+            sitecrop.setSitecropPK(new SitecropPK());
         }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            em.persist(crop);
+            em.persist(sitecrop);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -52,8 +52,8 @@ public class CropJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findCrop(crop.getCropPK()) != null) {
-                throw new PreexistingEntityException("Crop " + crop + " already exists.", ex);
+            if (findSitecrop(sitecrop.getSitecropPK()) != null) {
+                throw new PreexistingEntityException("Sitecrop " + sitecrop + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -63,12 +63,12 @@ public class CropJpaController implements Serializable {
         }
     }
 
-    public void edit(Crop crop) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Sitecrop sitecrop) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            crop = em.merge(crop);
+            sitecrop = em.merge(sitecrop);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -78,9 +78,9 @@ public class CropJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                CropPK id = crop.getCropPK();
-                if (findCrop(id) == null) {
-                    throw new NonexistentEntityException("The crop with id " + id + " no longer exists.");
+                SitecropPK id = sitecrop.getSitecropPK();
+                if (findSitecrop(id) == null) {
+                    throw new NonexistentEntityException("The sitecrop with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -91,19 +91,19 @@ public class CropJpaController implements Serializable {
         }
     }
 
-    public void destroy(CropPK id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(SitecropPK id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Crop crop;
+            Sitecrop sitecrop;
             try {
-                crop = em.getReference(Crop.class, id);
-                crop.getCropPK();
+                sitecrop = em.getReference(Sitecrop.class, id);
+                sitecrop.getSitecropPK();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The crop with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The sitecrop with id " + id + " no longer exists.", enfe);
             }
-            em.remove(crop);
+            em.remove(sitecrop);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -119,19 +119,19 @@ public class CropJpaController implements Serializable {
         }
     }
 
-    public List<Crop> findCropEntities() {
-        return findCropEntities(true, -1, -1);
+    public List<Sitecrop> findSitecropEntities() {
+        return findSitecropEntities(true, -1, -1);
     }
 
-    public List<Crop> findCropEntities(int maxResults, int firstResult) {
-        return findCropEntities(false, maxResults, firstResult);
+    public List<Sitecrop> findSitecropEntities(int maxResults, int firstResult) {
+        return findSitecropEntities(false, maxResults, firstResult);
     }
 
-    private List<Crop> findCropEntities(boolean all, int maxResults, int firstResult) {
+    private List<Sitecrop> findSitecropEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Crop.class));
+            cq.select(cq.from(Sitecrop.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -143,20 +143,20 @@ public class CropJpaController implements Serializable {
         }
     }
 
-    public Crop findCrop(CropPK id) {
+    public Sitecrop findSitecrop(SitecropPK id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Crop.class, id);
+            return em.find(Sitecrop.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getCropCount() {
+    public int getSitecropCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Crop> rt = cq.from(Crop.class);
+            Root<Sitecrop> rt = cq.from(Sitecrop.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

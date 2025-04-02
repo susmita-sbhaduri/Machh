@@ -11,8 +11,10 @@
     <class>org.bhaduri.machh.entities.Crop</class>
     <class>org.bhaduri.machh.entities.Employee</class>
     <class>org.bhaduri.machh.entities.Operation</class>
-    <class>org.bhaduri.machh.entities.Resource</class>
-    <class>ororg.bhaduri.machh.entities.Resourcecategory</class>
+    <class>org.bhaduri.machh.entities.Resource</class>    
     <class>org.bhaduri.machh.entities.Site</class>
+    <class>org.bhaduri.machh.entities.Expense</class>
+    <class>org.bhaduri.machh.entities.Resourcecrop</class>
+    <class>org.bhaduri.machh.entities.Sitecrop</class>
   </persistence-unit>
 </persistence>

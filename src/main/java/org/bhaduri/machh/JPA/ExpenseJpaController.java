@@ -16,15 +16,16 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Resourcecategory;
+import org.bhaduri.machh.entities.Expense;
+import org.bhaduri.machh.entities.ExpensePK;
 
 /**
  *
  * @author sb
  */
-public class ResourcecategoryJpaController implements Serializable {
+public class ExpenseJpaController implements Serializable {
 
-    public ResourcecategoryJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public ExpenseJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -35,12 +36,15 @@ public class ResourcecategoryJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Resourcecategory resourcecategory) throws PreexistingEntityException, RollbackFailureException, Exception {
+    public void create(Expense expense) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (expense.getExpensePK() == null) {
+            expense.setExpensePK(new ExpensePK());
+        }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            em.persist(resourcecategory);
+            em.persist(expense);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -48,8 +52,8 @@ public class ResourcecategoryJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findResourcecategory(resourcecategory.getResourcecategory()) != null) {
-                throw new PreexistingEntityException("Resourcecategory " + resourcecategory + " already exists.", ex);
+            if (findExpense(expense.getExpensePK()) != null) {
+                throw new PreexistingEntityException("Expense " + expense + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -59,12 +63,12 @@ public class ResourcecategoryJpaController implements Serializable {
         }
     }
 
-    public void edit(Resourcecategory resourcecategory) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Expense expense) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            resourcecategory = em.merge(resourcecategory);
+            expense = em.merge(expense);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -74,9 +78,9 @@ public class ResourcecategoryJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = resourcecategory.getResourcecategory();
-                if (findResourcecategory(id) == null) {
-                    throw new NonexistentEntityException("The resourcecategory with id " + id + " no longer exists.");
+                ExpensePK id = expense.getExpensePK();
+                if (findExpense(id) == null) {
+                    throw new NonexistentEntityException("The expense with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -87,19 +91,19 @@ public class ResourcecategoryJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(ExpensePK id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Resourcecategory resourcecategory;
+            Expense expense;
             try {
-                resourcecategory = em.getReference(Resourcecategory.class, id);
-                resourcecategory.getResourcecategory();
+                expense = em.getReference(Expense.class, id);
+                expense.getExpensePK();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The resourcecategory with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The expense with id " + id + " no longer exists.", enfe);
             }
-            em.remove(resourcecategory);
+            em.remove(expense);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -115,19 +119,19 @@ public class ResourcecategoryJpaController implements Serializable {
         }
     }
 
-    public List<Resourcecategory> findResourcecategoryEntities() {
-        return findResourcecategoryEntities(true, -1, -1);
+    public List<Expense> findExpenseEntities() {
+        return findExpenseEntities(true, -1, -1);
     }
 
-    public List<Resourcecategory> findResourcecategoryEntities(int maxResults, int firstResult) {
-        return findResourcecategoryEntities(false, maxResults, firstResult);
+    public List<Expense> findExpenseEntities(int maxResults, int firstResult) {
+        return findExpenseEntities(false, maxResults, firstResult);
     }
 
-    private List<Resourcecategory> findResourcecategoryEntities(boolean all, int maxResults, int firstResult) {
+    private List<Expense> findExpenseEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Resourcecategory.class));
+            cq.select(cq.from(Expense.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -139,20 +143,20 @@ public class ResourcecategoryJpaController implements Serializable {
         }
     }
 
-    public Resourcecategory findResourcecategory(String id) {
+    public Expense findExpense(ExpensePK id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Resourcecategory.class, id);
+            return em.find(Expense.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getResourcecategoryCount() {
+    public int getExpenseCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Resourcecategory> rt = cq.from(Resourcecategory.class);
+            Root<Expense> rt = cq.from(Expense.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

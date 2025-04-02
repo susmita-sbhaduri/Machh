@@ -18,17 +18,20 @@
     <named-query name="Crop.listCropPerPK">
         <query>SELECT c FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory AND c.cropPK.crop =:cropname</query>
     </named-query>
-    <named-query name="Resource.listResCatPerCrop">
+<!--    <named-query name="Resource.listResCatPerCrop">
         <query>SELECT DISTINCT r.resourcePK.resourcecategory FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop</query>
-    </named-query>
-    <named-query name="Resource.listResDetPerCrop">
+    </named-query>-->
+<!--    <named-query name="Resource.listResDetPerCrop">
         <query>SELECT r.resourcePK.resourcename FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop AND r.resourcePK.resourcecategory =:resourcecategory</query>
-    </named-query>
-    <named-query name="Site.listSiteForCrop">
+    </named-query>-->
+<!--    <named-query name="Site.listSiteForCrop">
         <query>SELECT s.sitePK.id FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:crop</query>
-    </named-query>
-    <named-query name="Resource.listResourceForCrop">
+    </named-query>-->
+<!--    <named-query name="Resource.listResourceForCrop">
         <query>SELECT r.resourcePK.resourcename FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop</query>
+    </named-query>-->
+    <named-query name="Site.listSite">
+        <query>SELECT s.id FROM Site s</query>
     </named-query>
 <!--    <named-query name="Site.listSiteForCrop">
         <query>SELECT COUNT(s) FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:crop</query>

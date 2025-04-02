@@ -28,25 +28,13 @@ public class ResourcePK implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "resourcename")
     private String resourcename;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "cropcategory")
-    private String cropcategory;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "crop")
-    private String crop;
 
     public ResourcePK() {
     }
 
-    public ResourcePK(String resourcecategory, String resourcename, String cropcategory, String crop) {
+    public ResourcePK(String resourcecategory, String resourcename) {
         this.resourcecategory = resourcecategory;
         this.resourcename = resourcename;
-        this.cropcategory = cropcategory;
-        this.crop = crop;
     }
 
     public String getResourcecategory() {
@@ -65,29 +53,11 @@ public class ResourcePK implements Serializable {
         this.resourcename = resourcename;
     }
 
-    public String getCropcategory() {
-        return cropcategory;
-    }
-
-    public void setCropcategory(String cropcategory) {
-        this.cropcategory = cropcategory;
-    }
-
-    public String getCrop() {
-        return crop;
-    }
-
-    public void setCrop(String crop) {
-        this.crop = crop;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (resourcecategory != null ? resourcecategory.hashCode() : 0);
         hash += (resourcename != null ? resourcename.hashCode() : 0);
-        hash += (cropcategory != null ? cropcategory.hashCode() : 0);
-        hash += (crop != null ? crop.hashCode() : 0);
         return hash;
     }
 
@@ -104,18 +74,12 @@ public class ResourcePK implements Serializable {
         if ((this.resourcename == null && other.resourcename != null) || (this.resourcename != null && !this.resourcename.equals(other.resourcename))) {
             return false;
         }
-        if ((this.cropcategory == null && other.cropcategory != null) || (this.cropcategory != null && !this.cropcategory.equals(other.cropcategory))) {
-            return false;
-        }
-        if ((this.crop == null && other.crop != null) || (this.crop != null && !this.crop.equals(other.crop))) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.ResourcePK[ resourcecategory=" + resourcecategory + ", resourcename=" + resourcename + ", cropcategory=" + cropcategory + ", crop=" + crop + " ]";
+        return "org.bhaduri.machh.entities.ResourcePK[ resourcecategory=" + resourcecategory + ", resourcename=" + resourcename + " ]";
     }
     
 }
