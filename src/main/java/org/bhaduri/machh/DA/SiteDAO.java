@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
 import java.util.List;
 import org.bhaduri.machh.JPA.SiteJpaController;
+import org.bhaduri.machh.entities.Site;
 
 /**
  *
@@ -26,6 +27,14 @@ public class SiteDAO extends SiteJpaController{
         List<String> listofsite = query.getResultList();
         return listofsite;
     }
+    
+//    public List<Site> listSiteForId(String siteid) {
+//        EntityManager em = getEntityManager();
+//        TypedQuery<Site> query = em.createNamedQuery("Site.listSiteForId", Site.class);
+//        query.setParameter("id", siteid);
+//        List<Site> listofsite = query.getResultList();
+//        return listofsite;
+//    }
 //    public int listSiteForCrop(String cropcategory, String crop) {
 //        EntityManager em = getEntityManager();
 //        TypedQuery<String> query = em.createNamedQuery("Site.listSiteForCrop", String.class);

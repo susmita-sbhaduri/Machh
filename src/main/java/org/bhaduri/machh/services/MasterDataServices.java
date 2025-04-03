@@ -17,6 +17,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DA.CropDAO;
 import org.bhaduri.machh.DA.ResourceDAO;
+import org.bhaduri.machh.DA.SiteCropDAO;
 import org.bhaduri.machh.DA.SiteDAO;
 
 
@@ -29,12 +30,16 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
+import org.bhaduri.machh.DTO.SiteCropDTO;
+import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
 import org.bhaduri.machh.entities.CropPK;
+import org.bhaduri.machh.entities.Site;
+import org.bhaduri.machh.entities.Sitecrop;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
@@ -331,6 +336,32 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getSiteNames.");
+            return null;
+        }
+    }
+    
+    public List<SiteCropDTO> getSiteCropsPerId(String siteid) {
+        SiteCropDAO sitecropdao = new SiteCropDAO(utx, emf);  
+        List<SiteCropDTO> recordList = new ArrayList<>();
+        SiteCropDTO record = new SiteCropDTO();
+        try {  
+            List<Sitecrop> sitecrops = sitecropdao.listSitCropForId(siteid);
+            for (int i = 0; i < sitecrops.size(); i++) {                 
+                record.setSiteId(sitecrops.get(i).getSitecropPK().getSiteid());
+                record.setCropName(sitecrops.get(i).getSitecropPK().getCrop());
+                record.setSowingDate(sitecrops.get(i).getSitecropPK().getSowingdt());
+                record.setHarvestDate(sitecrops.get(i).getHarvestingdt());
+                recordList.add(record);
+                record = new SiteCropDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No sitecrop records are found for this site");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getSiteCropsPerId.");
             return null;
         }
     }

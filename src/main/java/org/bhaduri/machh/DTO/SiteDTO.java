@@ -12,8 +12,6 @@ import java.io.Serializable;
  */
 public class SiteDTO implements Serializable {
     private String siteID;
-    private String cropCategory;
-    private String cropName;
     private String siteType;
     private String siteSizeSqft;
     private String siteSizeKatha;
@@ -24,22 +22,6 @@ public class SiteDTO implements Serializable {
 
     public void setSiteID(String siteID) {
         this.siteID = siteID;
-    }
-
-    public String getCropCategory() {
-        return cropCategory;
-    }
-
-    public void setCropCategory(String cropCategory) {
-        this.cropCategory = cropCategory;
-    }
-
-    public String getCropName() {
-        return cropName;
-    }
-
-    public void setCropName(String cropName) {
-        this.cropName = cropName;
     }
 
     public String getSiteType() {

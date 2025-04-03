@@ -16,11 +16,32 @@
             <h:form id="cropsowform" style="text-align: center">
                 <p:panelGrid columns="2">
                     <p:outputLabel for="siteid" value="Site Name" />
-                    <p:selectOneMenu id="siteid" value="#{newCropSow.siteid}">
-                        <f:selectItems value="#{newCropSow.sites}" var="type" 
-                                       itemValue="#{type}" itemLabel="#{type}" />
+                    <p:selectOneMenu id="siteid" value="#{newCropSow.siteid}" >
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItems value="#{newCropSow.sites}" var="siteid" 
+                                       itemValue="#{siteid}" itemLabel="#{siteid}" />
+                        <p:ajax event="itemSelect" listener="#{newCropSow.onSiteChange}" 
+                                update="@form" process="@this"
+                    </p:selectOneMenu>
+                    
+                    <h:outputLabel for="cropcat" value="Crop Category" />
+                    <p:selectOneMenu id="cropcat" value="#{newCropSow.cropcat}" >
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItems value="#{newCropSow.cropcats}" var="cropcat" 
+                                       itemValue="#{cropcat}" itemLabel="#{cropcat}" />
+                        <p:ajax event="itemSelect" listener="#{newCropSow.onCropCatChange}" 
+                                update="@form" process="@this"/>
+                    </p:selectOneMenu>  
+
+                    <h:outputLabel for="cropname" value="Crop Name" />
+                    <p:selectOneMenu id="cropname" value="#{newCropSow.cropname}" >
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItems value="#{newCropSow.cropnames}" var="cropname" 
+                                       itemValue="#{cropname}" itemLabel="#{cropname}" />
                     </p:selectOneMenu>
 
+                    <h:outputLabel for="sdate" value="Sowing Date" />
+                    <p:datePicker id="sdate" value="#{newCropSow.dateStringSow}" pattern="yyyy-MM-dd"/>
                     <p:commandButton value="Add" icon="pi pi-check"
                                      action="#{newCropSow.save()}" />
                     <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
