@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
  *
@@ -26,41 +27,64 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(name = "Site.findAll", query = "SELECT s FROM Site s"),
     @NamedQuery(name = "Site.findById", query = "SELECT s FROM Site s WHERE s.id = :id"),
+    @NamedQuery(name = "Site.findBySitename", query = "SELECT s FROM Site s WHERE s.sitename = :sitename"),
     @NamedQuery(name = "Site.findBySitetype", query = "SELECT s FROM Site s WHERE s.sitetype = :sitetype"),
-    @NamedQuery(name = "Site.findBySizesqft", query = "SELECT s FROM Site s WHERE s.sizesqft = :sizesqft"),
-    @NamedQuery(name = "Site.findBySizekatha", query = "SELECT s FROM Site s WHERE s.sizekatha = :sizekatha")})
+    @NamedQuery(name = "Site.findBySize", query = "SELECT s FROM Site s WHERE s.size = :size"),
+    @NamedQuery(name = "Site.findByUnit", query = "SELECT s FROM Site s WHERE s.unit = :unit")})
 public class Site implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
     @Column(name = "id")
-    private String id;
-    @Size(max = 45)
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "sitename")
+    private String sitename;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "sitetype")
     private String sitetype;
-    @Size(max = 45)
-    @Column(name = "sizesqft")
-    private String sizesqft;
-    @Size(max = 45)
-    @Column(name = "sizekatha")
-    private String sizekatha;
+    @Column(name = "size")
+    private BigInteger size;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "unit")
+    private String unit;
 
     public Site() {
     }
 
-    public Site(String id) {
+    public Site(Integer id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Site(Integer id, String sitename, String sitetype, String unit) {
+        this.id = id;
+        this.sitename = sitename;
+        this.sitetype = sitetype;
+        this.unit = unit;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getSitename() {
+        return sitename;
+    }
+
+    public void setSitename(String sitename) {
+        this.sitename = sitename;
     }
 
     public String getSitetype() {
@@ -71,20 +95,20 @@ public class Site implements Serializable {
         this.sitetype = sitetype;
     }
 
-    public String getSizesqft() {
-        return sizesqft;
+    public BigInteger getSize() {
+        return size;
     }
 
-    public void setSizesqft(String sizesqft) {
-        this.sizesqft = sizesqft;
+    public void setSize(BigInteger size) {
+        this.size = size;
     }
 
-    public String getSizekatha() {
-        return sizekatha;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setSizekatha(String sizekatha) {
-        this.sizekatha = sizekatha;
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     @Override

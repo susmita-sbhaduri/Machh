@@ -17,7 +17,6 @@ import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
 import org.bhaduri.machh.entities.Crop;
-import org.bhaduri.machh.entities.CropPK;
 
 /**
  *
@@ -37,9 +36,6 @@ public class CropJpaController implements Serializable {
     }
 
     public void create(Crop crop) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (crop.getCropPK() == null) {
-            crop.setCropPK(new CropPK());
-        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -52,7 +48,7 @@ public class CropJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findCrop(crop.getCropPK()) != null) {
+            if (findCrop(crop.getCropid()) != null) {
                 throw new PreexistingEntityException("Crop " + crop + " already exists.", ex);
             }
             throw ex;
@@ -78,7 +74,7 @@ public class CropJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                CropPK id = crop.getCropPK();
+                Integer id = crop.getCropid();
                 if (findCrop(id) == null) {
                     throw new NonexistentEntityException("The crop with id " + id + " no longer exists.");
                 }
@@ -91,7 +87,7 @@ public class CropJpaController implements Serializable {
         }
     }
 
-    public void destroy(CropPK id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -99,7 +95,7 @@ public class CropJpaController implements Serializable {
             Crop crop;
             try {
                 crop = em.getReference(Crop.class, id);
-                crop.getCropPK();
+                crop.getCropid();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The crop with id " + id + " no longer exists.", enfe);
             }
@@ -143,7 +139,7 @@ public class CropJpaController implements Serializable {
         }
     }
 
-    public Crop findCrop(CropPK id) {
+    public Crop findCrop(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Crop.class, id);

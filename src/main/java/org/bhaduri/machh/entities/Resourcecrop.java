@@ -4,15 +4,20 @@
  */
 package org.bhaduri.machh.entities;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -24,62 +29,112 @@ import java.util.Date;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Resourcecrop.findAll", query = "SELECT r FROM Resourcecrop r"),
-    @NamedQuery(name = "Resourcecrop.findByResourcename", query = "SELECT r FROM Resourcecrop r WHERE r.resourcecropPK.resourcename = :resourcename"),
-    @NamedQuery(name = "Resourcecrop.findByCrop", query = "SELECT r FROM Resourcecrop r WHERE r.resourcecropPK.crop = :crop"),
-    @NamedQuery(name = "Resourcecrop.findByAquiredate", query = "SELECT r FROM Resourcecrop r WHERE r.resourcecropPK.aquiredate = :aquiredate"),
-    @NamedQuery(name = "Resourcecrop.findByInitialstock", query = "SELECT r FROM Resourcecrop r WHERE r.initialstock = :initialstock"),
-    @NamedQuery(name = "Resourcecrop.findByAvailablestock", query = "SELECT r FROM Resourcecrop r WHERE r.availablestock = :availablestock")})
+    @NamedQuery(name = "Resourcecrop.findByApplicationid", query = "SELECT r FROM Resourcecrop r WHERE r.applicationid = :applicationid"),
+    @NamedQuery(name = "Resourcecrop.findByResourceid", query = "SELECT r FROM Resourcecrop r WHERE r.resourceid = :resourceid"),
+    @NamedQuery(name = "Resourcecrop.findByHarvestid", query = "SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid"),
+    @NamedQuery(name = "Resourcecrop.findByAppldate", query = "SELECT r FROM Resourcecrop r WHERE r.appldate = :appldate"),
+    @NamedQuery(name = "Resourcecrop.findByAppliedamt", query = "SELECT r FROM Resourcecrop r WHERE r.appliedamt = :appliedamt"),
+    @NamedQuery(name = "Resourcecrop.findByUnit", query = "SELECT r FROM Resourcecrop r WHERE r.unit = :unit")})
 public class Resourcecrop implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ResourcecropPK resourcecropPK;
-    @Size(max = 45)
-    @Column(name = "initialstock")
-    private String initialstock;
-    @Size(max = 45)
-    @Column(name = "availablestock")
-    private String availablestock;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "applicationid")
+    private Integer applicationid;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "resourceid")
+    private int resourceid;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "harvestid")
+    private int harvestid;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "appldate")
+    @Temporal(TemporalType.DATE)
+    private Date appldate;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "appliedamt")
+    private BigDecimal appliedamt;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "unit")
+    private String unit;
 
     public Resourcecrop() {
     }
 
-    public Resourcecrop(ResourcecropPK resourcecropPK) {
-        this.resourcecropPK = resourcecropPK;
+    public Resourcecrop(Integer applicationid) {
+        this.applicationid = applicationid;
     }
 
-    public Resourcecrop(String resourcename, String crop, Date aquiredate) {
-        this.resourcecropPK = new ResourcecropPK(resourcename, crop, aquiredate);
+    public Resourcecrop(Integer applicationid, int resourceid, int harvestid, Date appldate, BigDecimal appliedamt, String unit) {
+        this.applicationid = applicationid;
+        this.resourceid = resourceid;
+        this.harvestid = harvestid;
+        this.appldate = appldate;
+        this.appliedamt = appliedamt;
+        this.unit = unit;
     }
 
-    public ResourcecropPK getResourcecropPK() {
-        return resourcecropPK;
+    public Integer getApplicationid() {
+        return applicationid;
     }
 
-    public void setResourcecropPK(ResourcecropPK resourcecropPK) {
-        this.resourcecropPK = resourcecropPK;
+    public void setApplicationid(Integer applicationid) {
+        this.applicationid = applicationid;
     }
 
-    public String getInitialstock() {
-        return initialstock;
+    public int getResourceid() {
+        return resourceid;
     }
 
-    public void setInitialstock(String initialstock) {
-        this.initialstock = initialstock;
+    public void setResourceid(int resourceid) {
+        this.resourceid = resourceid;
     }
 
-    public String getAvailablestock() {
-        return availablestock;
+    public int getHarvestid() {
+        return harvestid;
     }
 
-    public void setAvailablestock(String availablestock) {
-        this.availablestock = availablestock;
+    public void setHarvestid(int harvestid) {
+        this.harvestid = harvestid;
+    }
+
+    public Date getAppldate() {
+        return appldate;
+    }
+
+    public void setAppldate(Date appldate) {
+        this.appldate = appldate;
+    }
+
+    public BigDecimal getAppliedamt() {
+        return appliedamt;
+    }
+
+    public void setAppliedamt(BigDecimal appliedamt) {
+        this.appliedamt = appliedamt;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (resourcecropPK != null ? resourcecropPK.hashCode() : 0);
+        hash += (applicationid != null ? applicationid.hashCode() : 0);
         return hash;
     }
 
@@ -90,7 +145,7 @@ public class Resourcecrop implements Serializable {
             return false;
         }
         Resourcecrop other = (Resourcecrop) object;
-        if ((this.resourcecropPK == null && other.resourcecropPK != null) || (this.resourcecropPK != null && !this.resourcecropPK.equals(other.resourcecropPK))) {
+        if ((this.applicationid == null && other.applicationid != null) || (this.applicationid != null && !this.applicationid.equals(other.applicationid))) {
             return false;
         }
         return true;
@@ -98,7 +153,7 @@ public class Resourcecrop implements Serializable {
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.Resourcecrop[ resourcecropPK=" + resourcecropPK + " ]";
+        return "org.bhaduri.machh.entities.Resourcecrop[ applicationid=" + applicationid + " ]";
     }
     
 }

@@ -74,7 +74,7 @@ public class SiteJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = site.getId();
+                Integer id = site.getId();
                 if (findSite(id) == null) {
                     throw new NonexistentEntityException("The site with id " + id + " no longer exists.");
                 }
@@ -87,7 +87,7 @@ public class SiteJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -139,7 +139,7 @@ public class SiteJpaController implements Serializable {
         }
     }
 
-    public Site findSite(String id) {
+    public Site findSite(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Site.class, id);

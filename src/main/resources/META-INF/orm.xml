@@ -32,15 +32,15 @@
     </named-query>-->
     <named-query name="Site.listSite">
         <query>SELECT s.id FROM Site s</query>
-    </named-query>
-    <named-query name="Sitecrop.listSitCropForId">
-        <query>SELECT s FROM Sitecrop s WHERE s.sitecropPK.siteid = :siteid</query>
-    </named-query>
+    </named-query>    
 <!--    <named-query name="Site.listSiteForCrop">
         <query>SELECT COUNT(s) FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:crop</query>
     </named-query>-->
 <!--    <named-query name="Site.chkSiteForCrop">
         <query>SELECT CASE WHEN EXISTS (SELECT 1 FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:cropname) THEN TRUE ELSE FALSE END</query>
     </named-query>-->
+    <named-query name="Harvest.activeList">
+        <query>SELECT h FROM Harvest h WHERE h.harvestingdt IS NULL</query>
+    </named-query>
 </entity-mappings>
 

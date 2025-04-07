@@ -16,16 +16,15 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Sitecrop;
-import org.bhaduri.machh.entities.SitecropPK;
+import org.bhaduri.machh.entities.Harvest;
 
 /**
  *
  * @author sb
  */
-public class SitecropJpaController implements Serializable {
+public class HarvestJpaController implements Serializable {
 
-    public SitecropJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public HarvestJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -36,15 +35,12 @@ public class SitecropJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Sitecrop sitecrop) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (sitecrop.getSitecropPK() == null) {
-            sitecrop.setSitecropPK(new SitecropPK());
-        }
+    public void create(Harvest harvest) throws PreexistingEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            em.persist(sitecrop);
+            em.persist(harvest);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -52,8 +48,8 @@ public class SitecropJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findSitecrop(sitecrop.getSitecropPK()) != null) {
-                throw new PreexistingEntityException("Sitecrop " + sitecrop + " already exists.", ex);
+            if (findHarvest(harvest.getHarvestid()) != null) {
+                throw new PreexistingEntityException("Harvest " + harvest + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -63,12 +59,12 @@ public class SitecropJpaController implements Serializable {
         }
     }
 
-    public void edit(Sitecrop sitecrop) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Harvest harvest) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            sitecrop = em.merge(sitecrop);
+            harvest = em.merge(harvest);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -78,9 +74,9 @@ public class SitecropJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                SitecropPK id = sitecrop.getSitecropPK();
-                if (findSitecrop(id) == null) {
-                    throw new NonexistentEntityException("The sitecrop with id " + id + " no longer exists.");
+                Integer id = harvest.getHarvestid();
+                if (findHarvest(id) == null) {
+                    throw new NonexistentEntityException("The harvest with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -91,19 +87,19 @@ public class SitecropJpaController implements Serializable {
         }
     }
 
-    public void destroy(SitecropPK id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Sitecrop sitecrop;
+            Harvest harvest;
             try {
-                sitecrop = em.getReference(Sitecrop.class, id);
-                sitecrop.getSitecropPK();
+                harvest = em.getReference(Harvest.class, id);
+                harvest.getHarvestid();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The sitecrop with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The harvest with id " + id + " no longer exists.", enfe);
             }
-            em.remove(sitecrop);
+            em.remove(harvest);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -119,19 +115,19 @@ public class SitecropJpaController implements Serializable {
         }
     }
 
-    public List<Sitecrop> findSitecropEntities() {
-        return findSitecropEntities(true, -1, -1);
+    public List<Harvest> findHarvestEntities() {
+        return findHarvestEntities(true, -1, -1);
     }
 
-    public List<Sitecrop> findSitecropEntities(int maxResults, int firstResult) {
-        return findSitecropEntities(false, maxResults, firstResult);
+    public List<Harvest> findHarvestEntities(int maxResults, int firstResult) {
+        return findHarvestEntities(false, maxResults, firstResult);
     }
 
-    private List<Sitecrop> findSitecropEntities(boolean all, int maxResults, int firstResult) {
+    private List<Harvest> findHarvestEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Sitecrop.class));
+            cq.select(cq.from(Harvest.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -143,20 +139,20 @@ public class SitecropJpaController implements Serializable {
         }
     }
 
-    public Sitecrop findSitecrop(SitecropPK id) {
+    public Harvest findHarvest(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Sitecrop.class, id);
+            return em.find(Harvest.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getSitecropCount() {
+    public int getHarvestCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Sitecrop> rt = cq.from(Sitecrop.class);
+            Root<Harvest> rt = cq.from(Harvest.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

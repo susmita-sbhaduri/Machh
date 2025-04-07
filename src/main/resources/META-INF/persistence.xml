@@ -7,14 +7,16 @@
   <persistence-unit name="org.bhaduri_Machh_jar_1.0-SNAPSHOT" transaction-type="JTA">
     <jta-data-source>jdbc/farmdb</jta-data-source>
     <class>org.bhaduri.machh.entities.Users</class>
-    <class>org.bhaduri.machh.entities.Transaction</class>
     <class>org.bhaduri.machh.entities.Crop</class>
     <class>org.bhaduri.machh.entities.Employee</class>
     <class>org.bhaduri.machh.entities.Operation</class>
     <class>org.bhaduri.machh.entities.Resource</class>    
     <class>org.bhaduri.machh.entities.Site</class>
     <class>org.bhaduri.machh.entities.Expense</class>
+    <class>org.bhaduri.machh.entities.Resourceaquire</class>
     <class>org.bhaduri.machh.entities.Resourcecrop</class>
-    <class>org.bhaduri.machh.entities.Sitecrop</class>
+    <class>org.bhaduri.machh.entities.Harvest</class>
+    <class>org.bhaduri.machh.entities.Shop</class>
+    <class>org.bhaduri.machh.entities.Shopresource</class>
   </persistence-unit>
 </persistence>

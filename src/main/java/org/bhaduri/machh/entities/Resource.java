@@ -4,15 +4,18 @@
  */
 package org.bhaduri.machh.entities;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -23,97 +26,84 @@ import java.io.Serializable;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Resource.findAll", query = "SELECT r FROM Resource r"),
-    @NamedQuery(name = "Resource.findByResourcecategory", query = "SELECT r FROM Resource r WHERE r.resourcePK.resourcecategory = :resourcecategory"),
-    @NamedQuery(name = "Resource.findByResourcename", query = "SELECT r FROM Resource r WHERE r.resourcePK.resourcename = :resourcename"),
-    @NamedQuery(name = "Resource.findByRate", query = "SELECT r FROM Resource r WHERE r.rate = :rate"),
-    @NamedQuery(name = "Resource.findByResourcelocation", query = "SELECT r FROM Resource r WHERE r.resourcelocation = :resourcelocation"),
-    @NamedQuery(name = "Resource.findByResourcecontact", query = "SELECT r FROM Resource r WHERE r.resourcecontact = :resourcecontact"),
-    @NamedQuery(name = "Resource.findByAvailibilitytime", query = "SELECT r FROM Resource r WHERE r.availibilitytime = :availibilitytime"),
-    @NamedQuery(name = "Resource.findByTransportmeans", query = "SELECT r FROM Resource r WHERE r.transportmeans = :transportmeans")})
+    @NamedQuery(name = "Resource.findByResourceid", query = "SELECT r FROM Resource r WHERE r.resourceid = :resourceid"),
+    @NamedQuery(name = "Resource.findByResourcename", query = "SELECT r FROM Resource r WHERE r.resourcename = :resourcename"),
+    @NamedQuery(name = "Resource.findByAvailableamount", query = "SELECT r FROM Resource r WHERE r.availableamount = :availableamount"),
+    @NamedQuery(name = "Resource.findByUnit", query = "SELECT r FROM Resource r WHERE r.unit = :unit")})
 public class Resource implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected ResourcePK resourcePK;
-    @Size(max = 100)
-    @Column(name = "rate")
-    private String rate;
-    @Size(max = 100)
-    @Column(name = "resourcelocation")
-    private String resourcelocation;
-    @Size(max = 100)
-    @Column(name = "resourcecontact")
-    private String resourcecontact;
-    @Size(max = 100)
-    @Column(name = "availibilitytime")
-    private String availibilitytime;
-    @Size(max = 100)
-    @Column(name = "transportmeans")
-    private String transportmeans;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "resourceid")
+    private Integer resourceid;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "resourcename")
+    private String resourcename;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "availableamount")
+    private BigDecimal availableamount;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "unit")
+    private String unit;
 
     public Resource() {
     }
 
-    public Resource(ResourcePK resourcePK) {
-        this.resourcePK = resourcePK;
+    public Resource(Integer resourceid) {
+        this.resourceid = resourceid;
     }
 
-    public Resource(String resourcecategory, String resourcename) {
-        this.resourcePK = new ResourcePK(resourcecategory, resourcename);
+    public Resource(Integer resourceid, String resourcename, BigDecimal availableamount, String unit) {
+        this.resourceid = resourceid;
+        this.resourcename = resourcename;
+        this.availableamount = availableamount;
+        this.unit = unit;
     }
 
-    public ResourcePK getResourcePK() {
-        return resourcePK;
+    public Integer getResourceid() {
+        return resourceid;
     }
 
-    public void setResourcePK(ResourcePK resourcePK) {
-        this.resourcePK = resourcePK;
+    public void setResourceid(Integer resourceid) {
+        this.resourceid = resourceid;
     }
 
-    public String getRate() {
-        return rate;
+    public String getResourcename() {
+        return resourcename;
     }
 
-    public void setRate(String rate) {
-        this.rate = rate;
+    public void setResourcename(String resourcename) {
+        this.resourcename = resourcename;
     }
 
-    public String getResourcelocation() {
-        return resourcelocation;
+    public BigDecimal getAvailableamount() {
+        return availableamount;
     }
 
-    public void setResourcelocation(String resourcelocation) {
-        this.resourcelocation = resourcelocation;
+    public void setAvailableamount(BigDecimal availableamount) {
+        this.availableamount = availableamount;
     }
 
-    public String getResourcecontact() {
-        return resourcecontact;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setResourcecontact(String resourcecontact) {
-        this.resourcecontact = resourcecontact;
-    }
-
-    public String getAvailibilitytime() {
-        return availibilitytime;
-    }
-
-    public void setAvailibilitytime(String availibilitytime) {
-        this.availibilitytime = availibilitytime;
-    }
-
-    public String getTransportmeans() {
-        return transportmeans;
-    }
-
-    public void setTransportmeans(String transportmeans) {
-        this.transportmeans = transportmeans;
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (resourcePK != null ? resourcePK.hashCode() : 0);
+        hash += (resourceid != null ? resourceid.hashCode() : 0);
         return hash;
     }
 
@@ -124,7 +114,7 @@ public class Resource implements Serializable {
             return false;
         }
         Resource other = (Resource) object;
-        if ((this.resourcePK == null && other.resourcePK != null) || (this.resourcePK != null && !this.resourcePK.equals(other.resourcePK))) {
+        if ((this.resourceid == null && other.resourceid != null) || (this.resourceid != null && !this.resourceid.equals(other.resourceid))) {
             return false;
         }
         return true;
@@ -132,7 +122,7 @@ public class Resource implements Serializable {
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.Resource[ resourcePK=" + resourcePK + " ]";
+        return "org.bhaduri.machh.entities.Resource[ resourceid=" + resourceid + " ]";
     }
     
 }

@@ -17,7 +17,6 @@ import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
 import org.bhaduri.machh.entities.Expense;
-import org.bhaduri.machh.entities.ExpensePK;
 
 /**
  *
@@ -37,9 +36,6 @@ public class ExpenseJpaController implements Serializable {
     }
 
     public void create(Expense expense) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (expense.getExpensePK() == null) {
-            expense.setExpensePK(new ExpensePK());
-        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -52,7 +48,7 @@ public class ExpenseJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findExpense(expense.getExpensePK()) != null) {
+            if (findExpense(expense.getExpenseid()) != null) {
                 throw new PreexistingEntityException("Expense " + expense + " already exists.", ex);
             }
             throw ex;
@@ -78,7 +74,7 @@ public class ExpenseJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                ExpensePK id = expense.getExpensePK();
+                Integer id = expense.getExpenseid();
                 if (findExpense(id) == null) {
                     throw new NonexistentEntityException("The expense with id " + id + " no longer exists.");
                 }
@@ -91,7 +87,7 @@ public class ExpenseJpaController implements Serializable {
         }
     }
 
-    public void destroy(ExpensePK id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -99,7 +95,7 @@ public class ExpenseJpaController implements Serializable {
             Expense expense;
             try {
                 expense = em.getReference(Expense.class, id);
-                expense.getExpensePK();
+                expense.getExpenseid();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The expense with id " + id + " no longer exists.", enfe);
             }
@@ -143,7 +139,7 @@ public class ExpenseJpaController implements Serializable {
         }
     }
 
-    public Expense findExpense(ExpensePK id) {
+    public Expense findExpense(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Expense.class, id);

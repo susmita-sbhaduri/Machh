@@ -17,7 +17,6 @@ import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
 import org.bhaduri.machh.entities.Resource;
-import org.bhaduri.machh.entities.ResourcePK;
 
 /**
  *
@@ -37,9 +36,6 @@ public class ResourceJpaController implements Serializable {
     }
 
     public void create(Resource resource) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (resource.getResourcePK() == null) {
-            resource.setResourcePK(new ResourcePK());
-        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -52,7 +48,7 @@ public class ResourceJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findResource(resource.getResourcePK()) != null) {
+            if (findResource(resource.getResourceid()) != null) {
                 throw new PreexistingEntityException("Resource " + resource + " already exists.", ex);
             }
             throw ex;
@@ -78,7 +74,7 @@ public class ResourceJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                ResourcePK id = resource.getResourcePK();
+                Integer id = resource.getResourceid();
                 if (findResource(id) == null) {
                     throw new NonexistentEntityException("The resource with id " + id + " no longer exists.");
                 }
@@ -91,7 +87,7 @@ public class ResourceJpaController implements Serializable {
         }
     }
 
-    public void destroy(ResourcePK id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -99,7 +95,7 @@ public class ResourceJpaController implements Serializable {
             Resource resource;
             try {
                 resource = em.getReference(Resource.class, id);
-                resource.getResourcePK();
+                resource.getResourceid();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The resource with id " + id + " no longer exists.", enfe);
             }
@@ -143,7 +139,7 @@ public class ResourceJpaController implements Serializable {
         }
     }
 
-    public Resource findResource(ResourcePK id) {
+    public Resource findResource(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Resource.class, id);

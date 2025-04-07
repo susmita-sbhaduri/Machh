@@ -4,12 +4,14 @@
  */
 package org.bhaduri.machh.entities;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
@@ -23,14 +25,28 @@ import java.io.Serializable;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Crop.findAll", query = "SELECT c FROM Crop c"),
-    @NamedQuery(name = "Crop.findByCropcategory", query = "SELECT c FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory"),
-    @NamedQuery(name = "Crop.findByCrop", query = "SELECT c FROM Crop c WHERE c.cropPK.crop = :crop"),
+    @NamedQuery(name = "Crop.findByCropid", query = "SELECT c FROM Crop c WHERE c.cropid = :cropid"),
+    @NamedQuery(name = "Crop.findByCropcategory", query = "SELECT c FROM Crop c WHERE c.cropcategory = :cropcategory"),
+    @NamedQuery(name = "Crop.findByCrop", query = "SELECT c FROM Crop c WHERE c.crop = :crop"),
     @NamedQuery(name = "Crop.findByDetails", query = "SELECT c FROM Crop c WHERE c.details = :details")})
 public class Crop implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected CropPK cropPK;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "cropid")
+    private Integer cropid;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "cropcategory")
+    private String cropcategory;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "crop")
+    private String crop;
     @Size(max = 45)
     @Column(name = "details")
     private String details;
@@ -38,20 +54,38 @@ public class Crop implements Serializable {
     public Crop() {
     }
 
-    public Crop(CropPK cropPK) {
-        this.cropPK = cropPK;
+    public Crop(Integer cropid) {
+        this.cropid = cropid;
     }
 
-    public Crop(String cropcategory, String crop) {
-        this.cropPK = new CropPK(cropcategory, crop);
+    public Crop(Integer cropid, String cropcategory, String crop) {
+        this.cropid = cropid;
+        this.cropcategory = cropcategory;
+        this.crop = crop;
     }
 
-    public CropPK getCropPK() {
-        return cropPK;
+    public Integer getCropid() {
+        return cropid;
     }
 
-    public void setCropPK(CropPK cropPK) {
-        this.cropPK = cropPK;
+    public void setCropid(Integer cropid) {
+        this.cropid = cropid;
+    }
+
+    public String getCropcategory() {
+        return cropcategory;
+    }
+
+    public void setCropcategory(String cropcategory) {
+        this.cropcategory = cropcategory;
+    }
+
+    public String getCrop() {
+        return crop;
+    }
+
+    public void setCrop(String crop) {
+        this.crop = crop;
     }
 
     public String getDetails() {
@@ -65,7 +99,7 @@ public class Crop implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (cropPK != null ? cropPK.hashCode() : 0);
+        hash += (cropid != null ? cropid.hashCode() : 0);
         return hash;
     }
 
@@ -76,7 +110,7 @@ public class Crop implements Serializable {
             return false;
         }
         Crop other = (Crop) object;
-        if ((this.cropPK == null && other.cropPK != null) || (this.cropPK != null && !this.cropPK.equals(other.cropPK))) {
+        if ((this.cropid == null && other.cropid != null) || (this.cropid != null && !this.cropid.equals(other.cropid))) {
             return false;
         }
         return true;
@@ -84,7 +118,7 @@ public class Crop implements Serializable {
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.Crop[ cropPK=" + cropPK + " ]";
+        return "org.bhaduri.machh.entities.Crop[ cropid=" + cropid + " ]";
     }
     
 }

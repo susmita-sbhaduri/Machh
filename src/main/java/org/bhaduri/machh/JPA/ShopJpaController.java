@@ -16,16 +16,15 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Transaction;
-import org.bhaduri.machh.entities.TransactionPK;
+import org.bhaduri.machh.entities.Shop;
 
 /**
  *
  * @author sb
  */
-public class TransactionJpaController implements Serializable {
+public class ShopJpaController implements Serializable {
 
-    public TransactionJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public ShopJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -36,15 +35,12 @@ public class TransactionJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Transaction transaction) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (transaction.getTransactionPK() == null) {
-            transaction.setTransactionPK(new TransactionPK());
-        }
+    public void create(Shop shop) throws PreexistingEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            em.persist(transaction);
+            em.persist(shop);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -52,8 +48,8 @@ public class TransactionJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findTransaction(transaction.getTransactionPK()) != null) {
-                throw new PreexistingEntityException("Transaction " + transaction + " already exists.", ex);
+            if (findShop(shop.getShopid()) != null) {
+                throw new PreexistingEntityException("Shop " + shop + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -63,12 +59,12 @@ public class TransactionJpaController implements Serializable {
         }
     }
 
-    public void edit(Transaction transaction) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Shop shop) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            transaction = em.merge(transaction);
+            shop = em.merge(shop);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -78,9 +74,9 @@ public class TransactionJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                TransactionPK id = transaction.getTransactionPK();
-                if (findTransaction(id) == null) {
-                    throw new NonexistentEntityException("The transaction with id " + id + " no longer exists.");
+                Integer id = shop.getShopid();
+                if (findShop(id) == null) {
+                    throw new NonexistentEntityException("The shop with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -91,19 +87,19 @@ public class TransactionJpaController implements Serializable {
         }
     }
 
-    public void destroy(TransactionPK id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Transaction transaction;
+            Shop shop;
             try {
-                transaction = em.getReference(Transaction.class, id);
-                transaction.getTransactionPK();
+                shop = em.getReference(Shop.class, id);
+                shop.getShopid();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The transaction with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The shop with id " + id + " no longer exists.", enfe);
             }
-            em.remove(transaction);
+            em.remove(shop);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -119,19 +115,19 @@ public class TransactionJpaController implements Serializable {
         }
     }
 
-    public List<Transaction> findTransactionEntities() {
-        return findTransactionEntities(true, -1, -1);
+    public List<Shop> findShopEntities() {
+        return findShopEntities(true, -1, -1);
     }
 
-    public List<Transaction> findTransactionEntities(int maxResults, int firstResult) {
-        return findTransactionEntities(false, maxResults, firstResult);
+    public List<Shop> findShopEntities(int maxResults, int firstResult) {
+        return findShopEntities(false, maxResults, firstResult);
     }
 
-    private List<Transaction> findTransactionEntities(boolean all, int maxResults, int firstResult) {
+    private List<Shop> findShopEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Transaction.class));
+            cq.select(cq.from(Shop.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -143,20 +139,20 @@ public class TransactionJpaController implements Serializable {
         }
     }
 
-    public Transaction findTransaction(TransactionPK id) {
+    public Shop findShop(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Transaction.class, id);
+            return em.find(Shop.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getTransactionCount() {
+    public int getShopCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Transaction> rt = cq.from(Transaction.class);
+            Root<Shop> rt = cq.from(Shop.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

@@ -16,6 +16,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DA.CropDAO;
+import org.bhaduri.machh.DA.HarvestDAO;
 import org.bhaduri.machh.DA.ResourceDAO;
 import org.bhaduri.machh.DA.SiteCropDAO;
 import org.bhaduri.machh.DA.SiteDAO;
@@ -25,6 +26,7 @@ import org.bhaduri.machh.DA.SiteDAO;
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.CropPk;
+import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
@@ -38,6 +40,7 @@ import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
 import org.bhaduri.machh.entities.CropPK;
+import org.bhaduri.machh.entities.Harvest;
 import org.bhaduri.machh.entities.Site;
 import org.bhaduri.machh.entities.Sitecrop;
 
@@ -362,6 +365,36 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getSiteCropsPerId.");
+            return null;
+        }
+    }
+    
+      public List<HarvestDTO> getActiveHarvestList() {
+        HarvestDAO harvestdao = new HarvestDAO(utx, emf);  
+        List<HarvestDTO> recordList = new ArrayList<>();
+        HarvestDTO record = new HarvestDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Harvest> harvestlist = harvestdao.getActiveList();
+            for (int i = 0; i < harvestlist.size(); i++) {
+                record.setSiteName(harvestlist.get(i).getSiteid());
+                record.setCropName(harvestlist.get(i).getCrop());                           
+                mysqlDate = harvestlist.get(i).getSowingdt();                    
+                record.setSowingDate(formatter.format(mysqlDate));
+                                             
+                recordList.add(record);
+                record = new HarvestDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crops are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getCropList.");
             return null;
         }
     }
