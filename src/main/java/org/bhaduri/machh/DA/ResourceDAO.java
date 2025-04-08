@@ -12,7 +12,7 @@ import jakarta.persistence.TypedQuery;
 import java.util.List;
 import org.bhaduri.machh.JPA.ResourceJpaController;
 
-import org.bhaduri.machh.JPA.TransactionJpaController;
+
 import org.bhaduri.machh.entities.Resource;
 
 public class ResourceDAO extends ResourceJpaController{

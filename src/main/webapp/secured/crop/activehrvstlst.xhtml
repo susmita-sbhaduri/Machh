@@ -16,30 +16,30 @@
             <f:viewAction action="#{activeHarvestList.fillHarvestValues()}" />
         </f:metadata>
         
-        <div class="card">
-            <h:form id="harvestgrid" style="text-align: center">
-                <p:dataTable var="crop" value="#{activeHarvestList.crops}" reflow="true">
-                    <p:column headerText="Crop Category">
-                        <h:outputText value="#{activeHarvestList.cropCategory}" />
+        <div class="card">            
+            <h:form id="harvestgrid" style="text-align: center">                
+                <p:dataTable var="harvest" value="#{activeHarvestList.harvests}" reflow="true">
+                    <p:column headerText="Site Name">
+                        <h:outputText value="#{harvest.siteName}" />
                     </p:column>
                     <p:column headerText="Crop Name">
-                        <h:outputText value="#{activeHarvestList.cropName}" />
+                        <h:outputText value="#{harvest.cropName}" />
                     </p:column>
                     <p:column headerText="Sowing Date">
-                        <h:outputText value="#{activeHarvestList.sowingDate}" />
+                        <h:outputText value="#{harvest.sowingDate}" />
                     </p:column>
                     
 
                     <p:column exportable="false" ariaHeaderText="Actions">
-                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-pencil" title="Edit" 
-                                         action="#{activeHarvestList.goToEditCrop()}" >
-                            <f:setPropertyActionListener value="#{crop}" target="#{cropList.selectedCrop}" />
+                        <p:commandButton type="button" value="Acquire Resource" 
+                                         action="#{activeHarvestList.goAcquireResource()}" >
+                            <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />
                         </p:commandButton>
                     </p:column>
                     <p:column>    
-                        <p:commandButton  class="ui-button-warning rounded-button" icon="pi pi-trash" title="Delete" 
-                                          action="#{cropList.deleteCrop(crop)}" >
-                        <f:setPropertyActionListener value="#{crop}" target="#{cropList.selectedCrop}" />
+                        <p:commandButton  type="button" value="Apply Resource" 
+                                          action="#{activeHarvestList.goApplyResource()}" >
+                        <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />
                         </p:commandButton>
                     </p:column>
 

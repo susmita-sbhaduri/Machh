@@ -9,22 +9,22 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
 import java.util.List;
-import org.bhaduri.machh.JPA.SitecropJpaController;
-import org.bhaduri.machh.entities.Sitecrop;
+//import org.bhaduri.machh.JPA.SitecropJpaController;
+//import org.bhaduri.machh.entities.Sitecrop;
 
-public class SiteCropDAO extends SitecropJpaController{
-    
-    public SiteCropDAO(UserTransaction utx, EntityManagerFactory emf) {
-        super(utx, emf);
-    }  
-    
-    public List<Sitecrop> listSitCropForId(String siteid) {
-        EntityManager em = getEntityManager();
-        TypedQuery<Sitecrop> query = em.createNamedQuery("Sitecrop.listSitCropForId", Sitecrop.class);
-        query.setParameter("id", siteid);
-        List<Sitecrop> listofsite = query.getResultList();
-        return listofsite;
-    }
+//public class SiteCropDAO extends SitecropJpaController{
+//    
+//    public SiteCropDAO(UserTransaction utx, EntityManagerFactory emf) {
+//        super(utx, emf);
+//    }  
+//    
+//    public List<Sitecrop> listSitCropForId(String siteid) {
+//        EntityManager em = getEntityManager();
+//        TypedQuery<Sitecrop> query = em.createNamedQuery("Sitecrop.listSitCropForId", Sitecrop.class);
+//        query.setParameter("id", siteid);
+//        List<Sitecrop> listofsite = query.getResultList();
+//        return listofsite;
+//    }
 
-}
+//}
 

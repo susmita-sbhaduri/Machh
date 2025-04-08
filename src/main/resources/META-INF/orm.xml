@@ -6,18 +6,18 @@
     <named-query name="Users.getUserDetails">
         <query>SELECT u FROM Users u WHERE u.username = :username and u.password = :password</query>
     </named-query>
-    <named-query name="Crop.listAllCropCat">
+<!--    <named-query name="Crop.listAllCropCat">
         <query>SELECT DISTINCT c.cropPK.cropcategory FROM Crop c</query>
     </named-query>
     <named-query name="Crop.listNameByCat">
         <query>SELECT c.cropPK.crop FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory</query>
-    </named-query>
+    </named-query>-->
     <named-query name="Crop.listAll">
         <query>SELECT c FROM Crop c</query>
     </named-query>
-    <named-query name="Crop.listCropPerPK">
+<!--    <named-query name="Crop.listCropPerPK">
         <query>SELECT c FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory AND c.cropPK.crop =:cropname</query>
-    </named-query>
+    </named-query>-->
 <!--    <named-query name="Resource.listResCatPerCrop">
         <query>SELECT DISTINCT r.resourcePK.resourcecategory FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop</query>
     </named-query>-->
