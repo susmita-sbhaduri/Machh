@@ -10,14 +10,23 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.transaction.UserTransaction;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
-import org.bhaduri.machh.JPA.ResourceJpaController;
+import org.bhaduri.machh.JPA.FarmresourceJpaController;
 
 
-import org.bhaduri.machh.entities.Resource;
 
-public class ResourceDAO extends ResourceJpaController{
-    public ResourceDAO(UserTransaction utx, EntityManagerFactory emf) {
+import org.bhaduri.machh.entities.Farmresource;
+
+public class FarmresourceDAO extends FarmresourceJpaController{
+    public FarmresourceDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
+    }
+    
+    public Farmresource getResourceName(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Farmresource> query = em.createNamedQuery("Farmresource.resNameForId", Farmresource.class);
+        query.setParameter("resourceid", id);
+        Farmresource resrec = query.getSingleResult();
+        return resrec;
     }
     public List<String> listResCat(String cropcat, String cropname) {
         EntityManager em = getEntityManager();

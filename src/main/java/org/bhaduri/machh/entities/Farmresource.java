@@ -22,15 +22,15 @@ import java.math.BigDecimal;
  * @author sb
  */
 @Entity
-@Table(name = "resource")
+@Table(name = "farmresource")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Resource.findAll", query = "SELECT r FROM Resource r"),
-    @NamedQuery(name = "Resource.findByResourceid", query = "SELECT r FROM Resource r WHERE r.resourceid = :resourceid"),
-    @NamedQuery(name = "Resource.findByResourcename", query = "SELECT r FROM Resource r WHERE r.resourcename = :resourcename"),
-    @NamedQuery(name = "Resource.findByAvailableamount", query = "SELECT r FROM Resource r WHERE r.availableamount = :availableamount"),
-    @NamedQuery(name = "Resource.findByUnit", query = "SELECT r FROM Resource r WHERE r.unit = :unit")})
-public class Resource implements Serializable {
+    @NamedQuery(name = "Farmresource.findAll", query = "SELECT f FROM Farmresource f"),
+    @NamedQuery(name = "Farmresource.findByResourceid", query = "SELECT f FROM Farmresource f WHERE f.resourceid = :resourceid"),
+    @NamedQuery(name = "Farmresource.findByResourcename", query = "SELECT f FROM Farmresource f WHERE f.resourcename = :resourcename"),
+    @NamedQuery(name = "Farmresource.findByAvailableamount", query = "SELECT f FROM Farmresource f WHERE f.availableamount = :availableamount"),
+    @NamedQuery(name = "Farmresource.findByUnit", query = "SELECT f FROM Farmresource f WHERE f.unit = :unit")})
+public class Farmresource implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -54,14 +54,14 @@ public class Resource implements Serializable {
     @Column(name = "unit")
     private String unit;
 
-    public Resource() {
+    public Farmresource() {
     }
 
-    public Resource(Integer resourceid) {
+    public Farmresource(Integer resourceid) {
         this.resourceid = resourceid;
     }
 
-    public Resource(Integer resourceid, String resourcename, BigDecimal availableamount, String unit) {
+    public Farmresource(Integer resourceid, String resourcename, BigDecimal availableamount, String unit) {
         this.resourceid = resourceid;
         this.resourcename = resourcename;
         this.availableamount = availableamount;
@@ -110,10 +110,10 @@ public class Resource implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Resource)) {
+        if (!(object instanceof Farmresource)) {
             return false;
         }
-        Resource other = (Resource) object;
+        Farmresource other = (Farmresource) object;
         if ((this.resourceid == null && other.resourceid != null) || (this.resourceid != null && !this.resourceid.equals(other.resourceid))) {
             return false;
         }
@@ -122,7 +122,7 @@ public class Resource implements Serializable {
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.Resource[ resourceid=" + resourceid + " ]";
+        return "org.bhaduri.machh.entities.Farmresource[ resourceid=" + resourceid + " ]";
     }
     
 }

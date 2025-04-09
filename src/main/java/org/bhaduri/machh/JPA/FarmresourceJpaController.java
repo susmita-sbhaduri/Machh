@@ -16,15 +16,15 @@ import java.util.List;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
-import org.bhaduri.machh.entities.Resource;
+import org.bhaduri.machh.entities.Farmresource;
 
 /**
  *
  * @author sb
  */
-public class ResourceJpaController implements Serializable {
+public class FarmresourceJpaController implements Serializable {
 
-    public ResourceJpaController(UserTransaction utx, EntityManagerFactory emf) {
+    public FarmresourceJpaController(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
         this.emf = emf;
     }
@@ -35,12 +35,12 @@ public class ResourceJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Resource resource) throws PreexistingEntityException, RollbackFailureException, Exception {
+    public void create(Farmresource farmresource) throws PreexistingEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            em.persist(resource);
+            em.persist(farmresource);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -48,8 +48,8 @@ public class ResourceJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findResource(resource.getResourceid()) != null) {
-                throw new PreexistingEntityException("Resource " + resource + " already exists.", ex);
+            if (findFarmresource(farmresource.getResourceid()) != null) {
+                throw new PreexistingEntityException("Farmresource " + farmresource + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -59,12 +59,12 @@ public class ResourceJpaController implements Serializable {
         }
     }
 
-    public void edit(Resource resource) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Farmresource farmresource) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            resource = em.merge(resource);
+            farmresource = em.merge(farmresource);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -74,9 +74,9 @@ public class ResourceJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = resource.getResourceid();
-                if (findResource(id) == null) {
-                    throw new NonexistentEntityException("The resource with id " + id + " no longer exists.");
+                Integer id = farmresource.getResourceid();
+                if (findFarmresource(id) == null) {
+                    throw new NonexistentEntityException("The farmresource with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -92,14 +92,14 @@ public class ResourceJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            Resource resource;
+            Farmresource farmresource;
             try {
-                resource = em.getReference(Resource.class, id);
-                resource.getResourceid();
+                farmresource = em.getReference(Farmresource.class, id);
+                farmresource.getResourceid();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The resource with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The farmresource with id " + id + " no longer exists.", enfe);
             }
-            em.remove(resource);
+            em.remove(farmresource);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -115,19 +115,19 @@ public class ResourceJpaController implements Serializable {
         }
     }
 
-    public List<Resource> findResourceEntities() {
-        return findResourceEntities(true, -1, -1);
+    public List<Farmresource> findFarmresourceEntities() {
+        return findFarmresourceEntities(true, -1, -1);
     }
 
-    public List<Resource> findResourceEntities(int maxResults, int firstResult) {
-        return findResourceEntities(false, maxResults, firstResult);
+    public List<Farmresource> findFarmresourceEntities(int maxResults, int firstResult) {
+        return findFarmresourceEntities(false, maxResults, firstResult);
     }
 
-    private List<Resource> findResourceEntities(boolean all, int maxResults, int firstResult) {
+    private List<Farmresource> findFarmresourceEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Resource.class));
+            cq.select(cq.from(Farmresource.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -139,20 +139,20 @@ public class ResourceJpaController implements Serializable {
         }
     }
 
-    public Resource findResource(Integer id) {
+    public Farmresource findFarmresource(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Resource.class, id);
+            return em.find(Farmresource.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getResourceCount() {
+    public int getFarmresourceCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Resource> rt = cq.from(Resource.class);
+            Root<Farmresource> rt = cq.from(Farmresource.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -46,10 +47,11 @@ public class Shopresource implements Serializable {
     @NotNull
     @Column(name = "resourceid")
     private int resourceid;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Column(name = "rate")
-    private short rate;
+    private BigDecimal rate;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -63,7 +65,7 @@ public class Shopresource implements Serializable {
         this.resshoprefid = resshoprefid;
     }
 
-    public Shopresource(Integer resshoprefid, int shopid, int resourceid, short rate, String unit) {
+    public Shopresource(Integer resshoprefid, int shopid, int resourceid, BigDecimal rate, String unit) {
         this.resshoprefid = resshoprefid;
         this.shopid = shopid;
         this.resourceid = resourceid;
@@ -95,11 +97,11 @@ public class Shopresource implements Serializable {
         this.resourceid = resourceid;
     }
 
-    public short getRate() {
+    public BigDecimal getRate() {
         return rate;
     }
 
-    public void setRate(short rate) {
+    public void setRate(BigDecimal rate) {
         this.rate = rate;
     }
 

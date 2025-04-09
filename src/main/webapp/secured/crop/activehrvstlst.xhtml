@@ -12,6 +12,7 @@
         <p:growl id="growl" showDetail="true" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         &nbsp;&nbsp;&nbsp;
+        <p:button outcome="/secured/resource/acquireresource" value="Acquire Resource"/>
         <f:metadata>
             <f:viewAction action="#{activeHarvestList.fillHarvestValues()}" />
         </f:metadata>
@@ -29,13 +30,8 @@
                         <h:outputText value="#{harvest.sowingDate}" />
                     </p:column>
                     
-
-                    <p:column exportable="false" ariaHeaderText="Actions">
-                        <p:commandButton type="button" value="Acquire Resource" 
-                                         action="#{activeHarvestList.goAcquireResource()}" >
-                            <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />
-                        </p:commandButton>
-                    </p:column>
+                    
+                    
                     <p:column>    
                         <p:commandButton  type="button" value="Apply Resource" 
                                           action="#{activeHarvestList.goApplyResource()}" >

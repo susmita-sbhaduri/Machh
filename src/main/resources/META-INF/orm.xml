@@ -42,5 +42,14 @@
     <named-query name="Harvest.activeList">
         <query>SELECT h FROM Harvest h WHERE h.harvestingdt IS NULL</query>
     </named-query>
+    <named-query name="Shopresource.shopResList">
+        <query>SELECT s FROM Shopresource s</query>
+    </named-query>
+    <named-query name="Shop.shopNameForId">
+        <query>SELECT s FROM Shop s WHERE s.shopid = :shopid</query>
+    </named-query>
+    <named-query name="Farmresource.resNameForId">
+        <query>SELECT f FROM Farmresource f WHERE f.resourceid = :resourceid</query>
+    </named-query>
 </entity-mappings>
 

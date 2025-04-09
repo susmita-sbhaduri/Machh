@@ -43,11 +43,11 @@ public class ActiveHarvestList implements Serializable {
             return null;        
     }
     
-    public String goAcquireResource(){
-//        String redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();
-        String redirectUrl = "/secured/userhome";
-        return redirectUrl;
-    }
+//    public String goAcquireResource(){
+////        String redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();
+//        String redirectUrl = "/secured/resource/acquireresource";
+//        return redirectUrl;
+//    }
     
     public String goApplyResource(){
 //        String redirectUrl = "/secured/crop/cropedit?faces-redirect=true&cropcatEd=" + selectedCrop.getCropCategory()+ "&cropnameEd=" + selectedCrop.getCropName();

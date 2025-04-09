@@ -26,6 +26,7 @@ import java.io.Serializable;
 @NamedQueries({
     @NamedQuery(name = "Shop.findAll", query = "SELECT s FROM Shop s"),
     @NamedQuery(name = "Shop.findByShopid", query = "SELECT s FROM Shop s WHERE s.shopid = :shopid"),
+    @NamedQuery(name = "Shop.findByShopname", query = "SELECT s FROM Shop s WHERE s.shopname = :shopname"),
     @NamedQuery(name = "Shop.findByLocation", query = "SELECT s FROM Shop s WHERE s.location = :location"),
     @NamedQuery(name = "Shop.findByContact", query = "SELECT s FROM Shop s WHERE s.contact = :contact"),
     @NamedQuery(name = "Shop.findByAvailabilitytime", query = "SELECT s FROM Shop s WHERE s.availabilitytime = :availabilitytime")})
@@ -37,6 +38,11 @@ public class Shop implements Serializable {
     @NotNull
     @Column(name = "shopid")
     private Integer shopid;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "shopname")
+    private String shopname;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -58,8 +64,9 @@ public class Shop implements Serializable {
         this.shopid = shopid;
     }
 
-    public Shop(Integer shopid, String location, String contact) {
+    public Shop(Integer shopid, String shopname, String location, String contact) {
         this.shopid = shopid;
+        this.shopname = shopname;
         this.location = location;
         this.contact = contact;
     }
@@ -70,6 +77,14 @@ public class Shop implements Serializable {
 
     public void setShopid(Integer shopid) {
         this.shopid = shopid;
+    }
+
+    public String getShopname() {
+        return shopname;
+    }
+
+    public void setShopname(String shopname) {
+        this.shopname = shopname;
     }
 
     public String getLocation() {

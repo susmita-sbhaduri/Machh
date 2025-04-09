@@ -17,7 +17,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DA.CropDAO;
 import org.bhaduri.machh.DA.HarvestDAO;
-import org.bhaduri.machh.DA.ResourceDAO;
+import org.bhaduri.machh.DA.FarmresourceDAO;
+import org.bhaduri.machh.DA.ShopDAO;
+import org.bhaduri.machh.DA.ShopResDAO;
 //import org.bhaduri.machh.DA.SiteCropDAO;
 import org.bhaduri.machh.DA.SiteDAO;
 
@@ -25,13 +27,15 @@ import org.bhaduri.machh.DA.SiteDAO;
 
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
-import org.bhaduri.machh.DTO.CropPk;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
+import org.bhaduri.machh.DTO.FarmresourceDTO;
+import org.bhaduri.machh.DTO.ShopDTO;
+import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.DTO.SiteCropDTO;
 import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.entities.Users;
@@ -41,7 +45,10 @@ import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
 
 import org.bhaduri.machh.entities.Harvest;
+import org.bhaduri.machh.entities.Shop;
+import org.bhaduri.machh.entities.Shopresource;
 import org.bhaduri.machh.entities.Site;
+import org.bhaduri.machh.entities.Farmresource;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
@@ -256,7 +263,7 @@ public class MasterDataServices {
 //    }
     
     public List<String> getResCatForCrop(String cropcat, String cropname) {
-        ResourceDAO resourcedao = new ResourceDAO(utx,emf);  
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx,emf);  
         List<String> recordList = new ArrayList<>();
         try {  
             List<String> rescatforcrop = resourcedao.listResCat(cropcat, cropname);
@@ -276,7 +283,7 @@ public class MasterDataServices {
     }
     
     public List<String> getResDetForCrop(String cropcat, String cropname, String resourcecat) {
-        ResourceDAO resourcedao = new ResourceDAO(utx,emf);  
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx,emf);  
         List<String> recordList = new ArrayList<>();
         try {  
             List<String> rescatforcrop = resourcedao.listResDet(cropcat, cropname, resourcecat);
@@ -309,7 +316,7 @@ public class MasterDataServices {
 //    }
     
     public int existsResourceForCrop(String cropcategory, String cropname) {
-        ResourceDAO resourcedao = new ResourceDAO(utx, emf);
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);
         try {
             int count = resourcedao.listResourceForCrop(cropcategory, cropname);
             return count;
@@ -394,6 +401,78 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getActiveHarvestList.");
+            return null;
+        }
+    }
+    
+    public List<ShopResDTO> getShopResName() {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
+        List<ShopResDTO> recordList = new ArrayList<>();
+        ShopResDTO record = new ShopResDTO();
+        
+        try {  
+            List<Shopresource> shopreslist = shopresdao.getShopResList();
+            for (int i = 0; i < shopreslist.size(); i++) {
+                record.setShopName(getShopNameForId(shopreslist.get(i).getShopid()).getShopName());
+                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
+                record.setRate(shopreslist.get(i).getRate().floatValue());
+                record.setUnit(shopreslist.get(i).getUnit());
+                record.setReShopRefId(shopreslist.get(i).getResshoprefid());
+                recordList.add(record);
+                record = new ShopResDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No ShopResource records are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopResName().");
+            return null;
+        }
+    }  
+    
+    public ShopDTO getShopNameForId(int shopid) {
+        ShopDAO shopdao = new ShopDAO(utx, emf);        
+        ShopDTO record = new ShopDTO();
+        
+        try {  
+           Shop shoprec = shopdao.getShopName(shopid);           
+           record.setShopName(shoprec.getShopname());
+           record.setShopId(shopid);
+           record.setLocation(shoprec.getLocation());
+           record.setContact(shoprec.getContact());
+           record.setAvailabilityTime(shoprec.getAvailabilitytime());
+           return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No shop found for this shopid");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopNameForId(int shopid).");
+            return null;
+        }
+    }
+    
+    public FarmresourceDTO getResourceNameForId(int resourceid) {
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);        
+        FarmresourceDTO record = new FarmresourceDTO();        
+        try {  
+           Farmresource resrec = resourcedao.getResourceName(resourceid); 
+           record.setResourceId(resourceid);
+           record.setResourceName(resrec.getResourcename());
+           record.setAvailableAmt(resrec.getAvailableamount().floatValue());
+           record.setUnit(resrec.getUnit());
+           return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No resource found for this resourceid");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResourceNameForId(int resourceid).");
             return null;
         }
     }
