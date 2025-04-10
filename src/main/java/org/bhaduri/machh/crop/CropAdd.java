@@ -58,7 +58,6 @@ public class CropAdd implements Serializable {
 //                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Crop Name is required.", 
 //                "Crop Name is required.");
 //                f.addMessage("cropname", message);
-////              
 //                redirectUrl = "/secured/crop/croplist?faces-redirect=true";
 //            } else {
 //                cropAddBean = new CropDTO();

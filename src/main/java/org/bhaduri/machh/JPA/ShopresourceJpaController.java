@@ -17,6 +17,7 @@ import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.JPA.exceptions.RollbackFailureException;
 import org.bhaduri.machh.entities.Shopresource;
+import org.bhaduri.machh.entities.ShopresourcePK;
 
 /**
  *
@@ -36,6 +37,9 @@ public class ShopresourceJpaController implements Serializable {
     }
 
     public void create(Shopresource shopresource) throws PreexistingEntityException, RollbackFailureException, Exception {
+        if (shopresource.getShopresourcePK() == null) {
+            shopresource.setShopresourcePK(new ShopresourcePK());
+        }
         EntityManager em = null;
         try {
             utx.begin();
@@ -48,7 +52,7 @@ public class ShopresourceJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findShopresource(shopresource.getResshoprefid()) != null) {
+            if (findShopresource(shopresource.getShopresourcePK()) != null) {
                 throw new PreexistingEntityException("Shopresource " + shopresource + " already exists.", ex);
             }
             throw ex;
@@ -74,7 +78,7 @@ public class ShopresourceJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = shopresource.getResshoprefid();
+                ShopresourcePK id = shopresource.getShopresourcePK();
                 if (findShopresource(id) == null) {
                     throw new NonexistentEntityException("The shopresource with id " + id + " no longer exists.");
                 }
@@ -87,7 +91,7 @@ public class ShopresourceJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(ShopresourcePK id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -95,7 +99,7 @@ public class ShopresourceJpaController implements Serializable {
             Shopresource shopresource;
             try {
                 shopresource = em.getReference(Shopresource.class, id);
-                shopresource.getResshoprefid();
+                shopresource.getShopresourcePK();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The shopresource with id " + id + " no longer exists.", enfe);
             }
@@ -139,7 +143,7 @@ public class ShopresourceJpaController implements Serializable {
         }
     }
 
-    public Shopresource findShopresource(Integer id) {
+    public Shopresource findShopresource(ShopresourcePK id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Shopresource.class, id);

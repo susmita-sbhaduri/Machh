@@ -413,11 +413,9 @@ public class MasterDataServices {
         try {  
             List<Shopresource> shopreslist = shopresdao.getShopResList();
             for (int i = 0; i < shopreslist.size(); i++) {
-                record.setShopName(getShopNameForId(shopreslist.get(i).getShopid()).getShopName());
-                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
-                record.setRate(shopreslist.get(i).getRate().floatValue());
-                record.setUnit(shopreslist.get(i).getUnit());
-                record.setReShopRefId(shopreslist.get(i).getResshoprefid());
+                record.setShopName(getShopNameForId(shopreslist.get(i).getShopresourcePK().getShopid()).getShopName());
+                record.setResourceName(getResourceNameForId(shopreslist.get(i).getShopresourcePK().getResourceid()).getResourceName());
+                record.setRate(shopreslist.get(i).getRate().floatValue());              
                 recordList.add(record);
                 record = new ShopResDTO();
             }        
@@ -473,6 +471,32 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getResourceNameForId(int resourceid).");
+            return null;
+        }
+    }
+    
+     public List<FarmresourceDTO> getResourceList() {
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);        
+        FarmresourceDTO record = new FarmresourceDTO();
+        List<FarmresourceDTO> recordList = new ArrayList<>();
+        try {  
+            List<Farmresource> resourcelist = resourcedao.getAllResource();
+            for (int i = 0; i < resourcelist.size(); i++) {
+                record.setResourceId(resourcelist.get(i).getResourceid());
+                record.setResourceName(resourcelist.get(i).getResourcename());
+                record.setAvailableAmt(resourcelist.get(i).getAvailableamount().floatValue());
+                record.setUnit(resourcelist.get(i).getUnit());                         
+                recordList.add(record);
+                record = new FarmresourceDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No Resoureces are added");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResourceList().");
             return null;
         }
     }

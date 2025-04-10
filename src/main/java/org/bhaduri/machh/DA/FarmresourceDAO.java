@@ -11,9 +11,6 @@ import jakarta.transaction.UserTransaction;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import org.bhaduri.machh.JPA.FarmresourceJpaController;
-
-
-
 import org.bhaduri.machh.entities.Farmresource;
 
 public class FarmresourceDAO extends FarmresourceJpaController{
@@ -27,6 +24,13 @@ public class FarmresourceDAO extends FarmresourceJpaController{
         query.setParameter("resourceid", id);
         Farmresource resrec = query.getSingleResult();
         return resrec;
+    }
+    
+    public List<Farmresource> getAllResource() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Farmresource> query = em.createNamedQuery("Farmresource.listAll", Farmresource.class);            
+        List<Farmresource> listofresource = query.getResultList();
+        return listofresource;
     }
     public List<String> listResCat(String cropcat, String cropname) {
         EntityManager em = getEntityManager();

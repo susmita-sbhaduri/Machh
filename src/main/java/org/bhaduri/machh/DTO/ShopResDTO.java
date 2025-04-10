@@ -11,19 +11,13 @@ import java.io.Serializable;
  * @author sb
  */
 public class ShopResDTO implements Serializable {
-    private int reShopRefId;
+    
     private String shopName;
     private String resourceName;
     private float rate;
     private String unit;   
 
-    public int getReShopRefId() {
-        return reShopRefId;
-    }
-
-    public void setReShopRefId(int reShopRefId) {
-        this.reShopRefId = reShopRefId;
-    }
+   
 
     public String getShopName() {
         return shopName;

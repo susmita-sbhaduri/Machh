@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -32,8 +31,7 @@ import java.util.Date;
     @NamedQuery(name = "Resourceaquire.findByAquireid", query = "SELECT r FROM Resourceaquire r WHERE r.aquireid = :aquireid"),
     @NamedQuery(name = "Resourceaquire.findByResourceid", query = "SELECT r FROM Resourceaquire r WHERE r.resourceid = :resourceid"),
     @NamedQuery(name = "Resourceaquire.findByAquiredate", query = "SELECT r FROM Resourceaquire r WHERE r.aquiredate = :aquiredate"),
-    @NamedQuery(name = "Resourceaquire.findByAmount", query = "SELECT r FROM Resourceaquire r WHERE r.amount = :amount"),
-    @NamedQuery(name = "Resourceaquire.findByUnit", query = "SELECT r FROM Resourceaquire r WHERE r.unit = :unit")})
+    @NamedQuery(name = "Resourceaquire.findByAmount", query = "SELECT r FROM Resourceaquire r WHERE r.amount = :amount")})
 public class Resourceaquire implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,11 +54,6 @@ public class Resourceaquire implements Serializable {
     @NotNull
     @Column(name = "amount")
     private BigDecimal amount;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "unit")
-    private String unit;
 
     public Resourceaquire() {
     }
@@ -69,12 +62,11 @@ public class Resourceaquire implements Serializable {
         this.aquireid = aquireid;
     }
 
-    public Resourceaquire(Integer aquireid, int resourceid, Date aquiredate, BigDecimal amount, String unit) {
+    public Resourceaquire(Integer aquireid, int resourceid, Date aquiredate, BigDecimal amount) {
         this.aquireid = aquireid;
         this.resourceid = resourceid;
         this.aquiredate = aquiredate;
         this.amount = amount;
-        this.unit = unit;
     }
 
     public Integer getAquireid() {
@@ -107,14 +99,6 @@ public class Resourceaquire implements Serializable {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
     }
 
     @Override

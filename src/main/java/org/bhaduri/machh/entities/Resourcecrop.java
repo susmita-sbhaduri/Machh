@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -33,8 +32,7 @@ import java.util.Date;
     @NamedQuery(name = "Resourcecrop.findByResourceid", query = "SELECT r FROM Resourcecrop r WHERE r.resourceid = :resourceid"),
     @NamedQuery(name = "Resourcecrop.findByHarvestid", query = "SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid"),
     @NamedQuery(name = "Resourcecrop.findByAppldate", query = "SELECT r FROM Resourcecrop r WHERE r.appldate = :appldate"),
-    @NamedQuery(name = "Resourcecrop.findByAppliedamt", query = "SELECT r FROM Resourcecrop r WHERE r.appliedamt = :appliedamt"),
-    @NamedQuery(name = "Resourcecrop.findByUnit", query = "SELECT r FROM Resourcecrop r WHERE r.unit = :unit")})
+    @NamedQuery(name = "Resourcecrop.findByAppliedamt", query = "SELECT r FROM Resourcecrop r WHERE r.appliedamt = :appliedamt")})
 public class Resourcecrop implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -61,11 +59,6 @@ public class Resourcecrop implements Serializable {
     @NotNull
     @Column(name = "appliedamt")
     private BigDecimal appliedamt;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "unit")
-    private String unit;
 
     public Resourcecrop() {
     }
@@ -74,13 +67,12 @@ public class Resourcecrop implements Serializable {
         this.applicationid = applicationid;
     }
 
-    public Resourcecrop(Integer applicationid, int resourceid, int harvestid, Date appldate, BigDecimal appliedamt, String unit) {
+    public Resourcecrop(Integer applicationid, int resourceid, int harvestid, Date appldate, BigDecimal appliedamt) {
         this.applicationid = applicationid;
         this.resourceid = resourceid;
         this.harvestid = harvestid;
         this.appldate = appldate;
         this.appliedamt = appliedamt;
-        this.unit = unit;
     }
 
     public Integer getApplicationid() {
@@ -121,14 +113,6 @@ public class Resourcecrop implements Serializable {
 
     public void setAppliedamt(BigDecimal appliedamt) {
         this.appliedamt = appliedamt;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
     }
 
     @Override

@@ -8,16 +8,9 @@ import jakarta.annotation.PostConstruct;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
-import javax.naming.NamingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
-import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
 /**
@@ -60,14 +53,7 @@ public class NewCropSow implements Serializable {
         cropcats = masterDataService.getCropCat();        
     }
     
-    public void onCropCatChange() throws NamingException {
-        cropnames = new ArrayList<>();
-        MasterDataServices masterDataService = new MasterDataServices();
-        List<String> cropnamesforcat = masterDataService.getCropNameForCat(cropcat);
-        for (int i = 0; i < cropnamesforcat.size(); i++) {
-            cropnames.add(cropnamesforcat.get(i));
-        }
-    }
+    
     
     public void onSiteChange() throws NamingException {
         

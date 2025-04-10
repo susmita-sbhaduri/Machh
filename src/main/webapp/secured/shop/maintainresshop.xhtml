@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content"> 
+        <p:growl id="growl" showDetail="true" />
+        <h4>Maintain Shop Details.</h4>
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        <f:metadata>
+            <f:viewParam name="resourceId" value="#{maintainResShop.resourceId}"></f:viewParam>
+            <f:viewParam name="resourceName" value="#{maintainResShop.resourceName}"></f:viewParam>
+            <f:viewAction action="#{maintainResShop.fillShopDetails()}" />
+        </f:metadata>
+        <div class="card">
+            <h:form id="reshopform" style="text-align: center">
+                <p:panelGrid columns="2">
+                    <h:outputLabel for="resname" value="Resource Name" />
+                    <h:inputText id="resname" value="#{maintainResShop.resourceName}" readonly="true"/>
+                    <p:outputLabel for="remainingshops" value="Other Shop Names" />
+                    <p:selectOneMenu id="othershopid" value="#{maintainResShop.shopid}" >
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItems value="#{maintainResShop.shopids}" var="shopid" 
+                                       itemValue="#{shopid}" itemLabel="#{shopid}" />                       
+                    </p:selectOneMenu>
+                    <h:outputLabel for="rate" value="Rate" />
+                    <h:inputText id="rate" value="#{maintainResShop.rate}"/>
+                    
+                    <p:commandButton type="button" value="Add Shop" action="#{maintainResShop.updShopToRes()}"/>
+                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/crop/croplist" />
+                </p:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
