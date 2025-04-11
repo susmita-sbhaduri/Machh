@@ -24,21 +24,25 @@ public class MaintainResource implements Serializable {
     
     public MaintainResource() {
     }
-    public void fillResourceValues() throws NamingException {
+    public String fillResourceValues() throws NamingException {
+        String redirectUrl;
         MasterDataServices masterDataService = new MasterDataServices();
         existingresources = masterDataService.getResourceList();      
         
-        if(existingresources.isEmpty()){
-            
-        }       
+        if(existingresources.isEmpty()){            
+            redirectUrl = "/secured/userhome";
+            return redirectUrl;
+        } else {
+            DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
+            return null;    
+        }
     }
     
     
-    public String goToShopForRes() {
-        
-        String redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + selectedRes.getResourceId()+ 
-                "&resourceName=" + selectedRes.getResourceName();
+    public String goToShopForRes() {        
+        String redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + Integer.toString(selectedRes.getResourceId())+ "&resourceName=" + selectedRes.getResourceName();
         return redirectUrl;
+//        return "/secured/userhome";
     }
 
     public List<FarmresourceDTO> getExistingresources() {

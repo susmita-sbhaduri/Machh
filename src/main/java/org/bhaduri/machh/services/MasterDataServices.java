@@ -454,14 +454,48 @@ public class MasterDataServices {
         }
     }
     
+    public List<ShopDTO> getOtherShopsFor(int resourceId) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);
+        List<Integer> shopsforres = new ArrayList<>();
+        ShopDTO record = new ShopDTO();
+        List<ShopDTO> shoplist = new ArrayList<>();
+        List<ShopDTO> othershoplist = new ArrayList<>();
+        try {
+           shopsforres = shopresdao.getShopsForRes(resourceId);
+           shoplist = getShopList();
+           if(!shoplist.isEmpty()){
+               for (int i = 0; i < shoplist.size(); i++) {
+                   if (!shopsforres.contains(shoplist.get(i).getShopId())) {
+                       record.setShopId(shoplist.get(i).getShopId());
+                       record.setShopName(shoplist.get(i).getShopName());
+                       record.setLocation(shoplist.get(i).getLocation());
+                       record.setContact(shoplist.get(i).getContact());
+                       record.setAvailabilityTime(shoplist.get(i).getAvailabilityTime());
+                       othershoplist.add(record);
+                       record = new ShopDTO();
+                   }
+               }                
+            }        
+           return othershoplist;           
+        }
+        catch (NoResultException e) {
+            System.out.println("No shopres reference found for this resourceId");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getOtherShopsFor(int resourceId).");
+            return null;
+        }
+    }
+    
     public FarmresourceDTO getResourceNameForId(int resourceid) {
         FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);        
         FarmresourceDTO record = new FarmresourceDTO();        
         try {  
            Farmresource resrec = resourcedao.getResourceName(resourceid); 
-           record.setResourceId(resourceid);
+           record.setResourceId(Integer.toString(resourceid));
            record.setResourceName(resrec.getResourcename());
-           record.setAvailableAmt(resrec.getAvailableamount().floatValue());
+           record.setAvailableAmt(String.format("%.2f",resrec.getAvailableamount().floatValue()));
            record.setUnit(resrec.getUnit());
            return record;
         }
@@ -482,9 +516,9 @@ public class MasterDataServices {
         try {  
             List<Farmresource> resourcelist = resourcedao.getAllResource();
             for (int i = 0; i < resourcelist.size(); i++) {
-                record.setResourceId(resourcelist.get(i).getResourceid());
+                record.setResourceId(Integer.toString(resourcelist.get(i).getResourceid()));
                 record.setResourceName(resourcelist.get(i).getResourcename());
-                record.setAvailableAmt(resourcelist.get(i).getAvailableamount().floatValue());
+                record.setAvailableAmt(String.format("%.2f",resourcelist.get(i).getAvailableamount().floatValue()));
                 record.setUnit(resourcelist.get(i).getUnit());                         
                 recordList.add(record);
                 record = new FarmresourceDTO();
@@ -497,6 +531,33 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getResourceList().");
+            return null;
+        }
+    }
+     
+    public List<ShopDTO> getShopList() {
+        ShopDAO shopdao = new ShopDAO(utx, emf);        
+        ShopDTO record = new ShopDTO();
+        List<ShopDTO> recordList = new ArrayList<>();
+        try {  
+            List<Shop> shoplist = shopdao.getAllShops();
+            for (int i = 0; i < shoplist.size(); i++) {
+                record.setShopId(shoplist.get(i).getShopid());
+                record.setShopName(shoplist.get(i).getShopname());
+                record.setLocation(shoplist.get(i).getLocation());
+                record.setContact(shoplist.get(i).getContact());
+                record.setAvailabilityTime(shoplist.get(i).getAvailabilitytime());
+                recordList.add(record);
+                record = new ShopDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No Shops are added");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopList().");
             return null;
         }
     }

@@ -11,16 +11,16 @@ import java.io.Serializable;
  * @author sb
  */
 public class FarmresourceDTO implements Serializable {
-    private int resourceId;
+    private String resourceId;
     private String resourceName;
-    private float availableAmt;
+    private String availableAmt;
     private String unit;
 
-    public int getResourceId() {
+    public String getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(int resourceId) {
+    public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
 
@@ -32,11 +32,11 @@ public class FarmresourceDTO implements Serializable {
         this.resourceName = resourceName;
     }
 
-    public float getAvailableAmt() {
+    public String getAvailableAmt() {
         return availableAmt;
     }
 
-    public void setAvailableAmt(float availableAmt) {
+    public void setAvailableAmt(String availableAmt) {
         this.availableAmt = availableAmt;
     }
 
@@ -47,6 +47,5 @@ public class FarmresourceDTO implements Serializable {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-
     
 }

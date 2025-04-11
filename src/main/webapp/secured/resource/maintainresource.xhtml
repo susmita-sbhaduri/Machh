@@ -21,7 +21,7 @@
         <div class="card">            
             <h:form id="resourcegrid" style="text-align: center">                
                 <p:dataTable var="existingres" value="#{maintainResource.existingresources}" 
-                             reflow="true" emptyMessage="">
+                             reflow="true">
                     <p:column headerText="Resource Name">
                         <h:outputText value="#{existingres.resourceName}" />
                     </p:column>
@@ -31,10 +31,12 @@
                     <p:column headerText="Unit">
                         <h:outputText value="#{existingres.unit}" />
                     </p:column>                 
-                    <p:column>    
-                        <p:commandButton  type="button" value="Maintain Shop" 
-                                          action="#{maintainResource.goToShopForRes}" >
-                        <f:setPropertyActionListener value="#{existingres}" target="#{maintainResource.selectedRes}" />    
+                    <p:column>  
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Maintain Shop"
+                                         action="#{maintainResource.goToShopForRes()}" >
+                            <f:setPropertyActionListener value="#{existingres}" target="#{maintainResource.selectedRes}" />    
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>

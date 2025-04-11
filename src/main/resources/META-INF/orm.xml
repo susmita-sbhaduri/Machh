@@ -48,8 +48,14 @@
     <named-query name="Shopresource.shopResList">
         <query>SELECT s FROM Shopresource s</query>
     </named-query>
+    <named-query name="Shopresource.shopsPerRes">
+        <query>SELECT s.shopresourcePK.shopid FROM Shopresource s WHERE s.shopresourcePK.resourceid = :resourceid</query>
+    </named-query>
     <named-query name="Shop.shopNameForId">
         <query>SELECT s FROM Shop s WHERE s.shopid = :shopid</query>
+    </named-query>
+    <named-query name="Shop.allShops">
+        <query>SELECT s FROM Shop s</query>
     </named-query>
     <named-query name="Farmresource.resNameForId">
         <query>SELECT f FROM Farmresource f WHERE f.resourceid = :resourceid</query>

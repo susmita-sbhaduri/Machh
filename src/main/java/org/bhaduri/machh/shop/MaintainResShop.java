@@ -4,15 +4,15 @@
  */
 package org.bhaduri.machh.shop;
 
-import jakarta.annotation.PostConstruct;
+
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
+import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -23,34 +23,21 @@ import org.bhaduri.machh.services.MasterDataServices;
 @Named(value = "maintainResShop")
 @ViewScoped
 public class MaintainResShop implements Serializable {
-    private int resourceId;
+    private String resourceId;
     private String resourceName;
-    private String shopid;
+    private int shopid;
     private float rate;
-    private List<String> shopids;
+    private List<ShopDTO> shoplist;
     private ShopResDTO resShopUpdBean;
     
-    @PostConstruct
-    public void init() {
-        try {
-            fillShopNames();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    
     public MaintainResShop() {
     }
 
     public void fillShopDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
-        cropEditBean = masterDataService.getOtherShops(resourceId, resourceName); 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            dateStringSow = sdf.parse(cropEditBean.getSowingDate());
-            dateStringHarvest = sdf.parse(cropEditBean.getHarvestDate());
-        } catch (ParseException ex) {
-            Logger.getLogger(CropEdit.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        shoplist = masterDataService.getOtherShopsFor(resourceId); 
+               
     }
     
     public String updShopToRes() throws NamingException {  
@@ -58,8 +45,7 @@ public class MaintainResShop implements Serializable {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-        if (shopid == null || shopid.trim().isEmpty()) {
-            
+        if (shopid == 0) {            
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Shop name is required.",
                     "Shop name is required.");
             f.addMessage("shopid", message);
@@ -74,10 +60,12 @@ public class MaintainResShop implements Serializable {
             }
             else{
                 resShopUpdBean = new ShopResDTO();
-                
+                redirectUrl = "/secured/userhome?faces-redirect=true";
             }
         }
+        return redirectUrl;
     }
+
     public int getResourceId() {
         return resourceId;
     }
@@ -94,11 +82,11 @@ public class MaintainResShop implements Serializable {
         this.resourceName = resourceName;
     }
 
-    public String getShopid() {
+    public int getShopid() {
         return shopid;
     }
 
-    public void setShopid(String shopid) {
+    public void setShopid(int shopid) {
         this.shopid = shopid;
     }
 
@@ -110,12 +98,20 @@ public class MaintainResShop implements Serializable {
         this.rate = rate;
     }
 
-    public List<String> getShopids() {
-        return shopids;
+    public List<ShopDTO> getShoplist() {
+        return shoplist;
     }
 
-    public void setShopids(List<String> shopids) {
-        this.shopids = shopids;
+    public void setShoplist(List<ShopDTO> shoplist) {
+        this.shoplist = shoplist;
+    }
+
+    public ShopResDTO getResShopUpdBean() {
+        return resShopUpdBean;
+    }
+
+    public void setResShopUpdBean(ShopResDTO resShopUpdBean) {
+        this.resShopUpdBean = resShopUpdBean;
     }
     
 }

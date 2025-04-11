@@ -14,10 +14,7 @@ public class ShopResDTO implements Serializable {
     
     private String shopName;
     private String resourceName;
-    private float rate;
-    private String unit;   
-
-   
+    private float rate; 
 
     public String getShopName() {
         return shopName;
@@ -42,17 +39,6 @@ public class ShopResDTO implements Serializable {
     public void setRate(float rate) {
         this.rate = rate;
     }
-
     
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    
-    
 }

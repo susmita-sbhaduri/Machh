@@ -24,14 +24,15 @@
                     <p:outputLabel for="remainingshops" value="Other Shop Names" />
                     <p:selectOneMenu id="othershopid" value="#{maintainResShop.shopid}" >
                         <f:selectItem itemLabel="Select One" itemValue="" />
-                        <f:selectItems value="#{maintainResShop.shopids}" var="shopid" 
-                                       itemValue="#{shopid}" itemLabel="#{shopid}" />                       
+                        <f:selectItems value="#{maintainResShop.shoplist}" var="shop" 
+                                       itemValue="#{maintainResShop.shoplist.indexOf(shop)}" 
+                                       itemLabel="#{shop.shopName}" />
                     </p:selectOneMenu>
                     <h:outputLabel for="rate" value="Rate" />
                     <h:inputText id="rate" value="#{maintainResShop.rate}"/>
-                    
+
                     <p:commandButton type="button" value="Add Shop" action="#{maintainResShop.updShopToRes()}"/>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/crop/croplist" />
+                    <p:button outcome="/secured/userhome" value="cancel"/>
                 </p:panelGrid>
             </h:form>
         </div>

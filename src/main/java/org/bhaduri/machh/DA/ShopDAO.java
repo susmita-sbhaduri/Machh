@@ -11,7 +11,6 @@ import jakarta.transaction.UserTransaction;
 import java.util.List;
 import org.bhaduri.machh.JPA.ShopJpaController;
 import org.bhaduri.machh.entities.Shop;
-import org.bhaduri.machh.entities.Shopresource;
 
 /**
  *
@@ -29,5 +28,10 @@ public class ShopDAO extends ShopJpaController{
         Shop shoprec = query.getSingleResult();
         return shoprec;
     }
-    
+    public List<Shop> getAllShops() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Shop> query = em.createNamedQuery("Shop.allShops", Shop.class);            
+        List<Shop> listofshop = query.getResultList();
+        return listofshop;
+    }
 }
