@@ -12,9 +12,10 @@ import java.io.Serializable;
  */
 public class SiteDTO implements Serializable {
     private String siteID;
+    private String siteName;
     private String siteType;
-    private String siteSizeSqft;
-    private String siteSizeKatha;
+    private String size;
+    private String unit;
 
     public String getSiteID() {
         return siteID;
@@ -22,6 +23,14 @@ public class SiteDTO implements Serializable {
 
     public void setSiteID(String siteID) {
         this.siteID = siteID;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
     }
 
     public String getSiteType() {
@@ -32,21 +41,22 @@ public class SiteDTO implements Serializable {
         this.siteType = siteType;
     }
 
-    public String getSiteSizeSqft() {
-        return siteSizeSqft;
+    public String getSize() {
+        return size;
     }
 
-    public void setSiteSizeSqft(String siteSizeSqft) {
-        this.siteSizeSqft = siteSizeSqft;
+    public void setSize(String size) {
+        this.size = size;
     }
 
-    public String getSiteSizeKatha() {
-        return siteSizeKatha;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setSiteSizeKatha(String siteSizeKatha) {
-        this.siteSizeKatha = siteSizeKatha;
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
+
     
     
 }

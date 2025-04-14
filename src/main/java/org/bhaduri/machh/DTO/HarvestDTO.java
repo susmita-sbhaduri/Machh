@@ -11,17 +11,17 @@ import java.io.Serializable;
  * @author sb
  */
 public class HarvestDTO implements Serializable {
-    private int harvestid;
+    private String harvestid;
     private String siteName;
     private String cropName;
     private String sowingDate;
     private String harvestDate;
 
-    public int getHarvestid() {
+    public String getHarvestid() {
         return harvestid;
     }
 
-    public void setHarvestid(int harvestid) {
+    public void setHarvestid(String harvestid) {
         this.harvestid = harvestid;
     }
 

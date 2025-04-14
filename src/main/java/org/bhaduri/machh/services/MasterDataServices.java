@@ -561,4 +561,28 @@ public class MasterDataServices {
             return null;
         }
     }
+    
+    public SiteDTO getSiteNameForId(String siteid) {
+        SiteDAO sitedao = new SiteDAO(utx, emf);        
+        SiteDTO record = new SiteDTO();        
+        try {  
+           Site siterec = sitedao.getSiteName(Integer.parseInt(siteid)); 
+           record.setSiteID(siteid);
+           record.setSiteType(siterec.getSitetype());
+           record.setSiteName(siterec.getSitename());
+           if(siterec.getSize().floatValue()!=0){
+             record.setSize(String.format("%.2f",siterec.getSize().floatValue()));
+           }           
+           record.setUnit(siterec.getUnit());
+           return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No Site found for this siteid");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getSiteNameForId(String siteid).");
+            return null;
+        }        
+    }
 }

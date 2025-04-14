@@ -28,6 +28,13 @@ public class SiteDAO extends SiteJpaController{
         return listofsite;
     }
     
+    public Site getSiteName(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Site> query = em.createNamedQuery("Site.siteNameForId", Site.class); 
+        query.setParameter("id", id);
+        Site siterec = query.getSingleResult();
+        return siterec;
+    }
 //    public List<Site> listSiteForId(String siteid) {
 //        EntityManager em = getEntityManager();
 //        TypedQuery<Site> query = em.createNamedQuery("Site.listSiteForId", Site.class);
