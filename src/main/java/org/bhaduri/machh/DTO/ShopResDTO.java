@@ -11,10 +11,11 @@ import java.io.Serializable;
  * @author sb
  */
 public class ShopResDTO implements Serializable {
-    
+    private String shopId;
+    private String resourceId;
     private String shopName;
     private String resourceName;
-    private float rate; 
+    private String rate; 
 
     public String getShopName() {
         return shopName;
@@ -32,13 +33,28 @@ public class ShopResDTO implements Serializable {
         this.resourceName = resourceName;
     }
 
-    public float getRate() {
+    public String getRate() {
         return rate;
     }
 
-    public void setRate(float rate) {
+    public void setRate(String rate) {
         this.rate = rate;
     }
-    
 
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
+    }    
+    
 }

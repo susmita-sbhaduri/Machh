@@ -25,7 +25,7 @@ import org.bhaduri.machh.services.MasterDataServices;
 public class MaintainResShop implements Serializable {
     private String resourceId;
     private String resourceName;
-    private int shopid;
+    private int selectedShopid;
     private float rate;
     private List<ShopDTO> shoplist;
     private ShopResDTO resShopUpdBean;
@@ -37,7 +37,7 @@ public class MaintainResShop implements Serializable {
     public void fillShopDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         shoplist = masterDataService.getOtherShopsFor(resourceId); 
-               
+         System.out.println("debug");       
     }
     
     public String updShopToRes() throws NamingException {  
@@ -45,7 +45,9 @@ public class MaintainResShop implements Serializable {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-        if (shopid == 0) {            
+        ShopDTO selectedShop = shoplist.get(selectedShopid); 
+        
+        if (selectedShop.getShopId().isEmpty()) {            
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Shop name is required.",
                     "Shop name is required.");
             f.addMessage("shopid", message);
@@ -66,13 +68,15 @@ public class MaintainResShop implements Serializable {
         return redirectUrl;
     }
 
-    public int getResourceId() {
+    public String getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(int resourceId) {
+    public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
+
+    
 
     public String getResourceName() {
         return resourceName;
@@ -82,13 +86,15 @@ public class MaintainResShop implements Serializable {
         this.resourceName = resourceName;
     }
 
-    public int getShopid() {
-        return shopid;
+    public int getSelectedShopid() {
+        return selectedShopid;
     }
 
-    public void setShopid(int shopid) {
-        this.shopid = shopid;
+    public void setSelectedShopid(int selectedShopid) {
+        this.selectedShopid = selectedShopid;
     }
+
+    
 
     public float getRate() {
         return rate;

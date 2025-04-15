@@ -21,9 +21,8 @@
                 <p:panelGrid columns="2">
                     <h:outputLabel for="resname" value="Resource Name" />
                     <h:inputText id="resname" value="#{maintainResShop.resourceName}" readonly="true"/>
-                    <p:outputLabel for="remainingshops" value="Other Shop Names" />
-                    <p:selectOneMenu id="othershopid" value="#{maintainResShop.shopid}" >
-                        <f:selectItem itemLabel="Select One" itemValue="" />
+                    <p:outputLabel for="othershopid" value="Other Shop Names" />
+                    <p:selectOneMenu id="othershopid" value="#{maintainResShop.selectedShopid}" >
                         <f:selectItems value="#{maintainResShop.shoplist}" var="shop" 
                                        itemValue="#{maintainResShop.shoplist.indexOf(shop)}" 
                                        itemLabel="#{shop.shopName}" />
@@ -31,8 +30,11 @@
                     <h:outputLabel for="rate" value="Rate" />
                     <h:inputText id="rate" value="#{maintainResShop.rate}"/>
 
-                    <p:commandButton type="button" value="Add Shop" action="#{maintainResShop.updShopToRes()}"/>
-                    <p:button outcome="/secured/userhome" value="cancel"/>
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit"
+                                     value="Add Shop" 
+                                     action="#{maintainResShop.updShopToRes()}"/>
+                    <p:button outcome="/secured/resource/maintainresource" value="cancel"/>
                 </p:panelGrid>
             </h:form>
         </div>

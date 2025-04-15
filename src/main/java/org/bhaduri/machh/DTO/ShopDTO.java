@@ -11,19 +11,21 @@ import java.io.Serializable;
  * @author sb
  */
 public class ShopDTO implements Serializable {
-    private int shopId;
+    private String shopId;
     private String shopName;
     private String location;
     private String contact;
     private String availabilityTime;
 
-    public int getShopId() {
+    public String getShopId() {
         return shopId;
     }
 
-    public void setShopId(int shopId) {
+    public void setShopId(String shopId) {
         this.shopId = shopId;
     }
+
+    
 
     public String getShopName() {
         return shopName;

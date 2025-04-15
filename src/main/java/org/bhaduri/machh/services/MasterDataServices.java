@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import org.bhaduri.machh.DA.CropDAO;
 import org.bhaduri.machh.DA.HarvestDAO;
 import org.bhaduri.machh.DA.FarmresourceDAO;
@@ -413,9 +414,11 @@ public class MasterDataServices {
         try {  
             List<Shopresource> shopreslist = shopresdao.getShopResList();
             for (int i = 0; i < shopreslist.size(); i++) {
-                record.setShopName(getShopNameForId(shopreslist.get(i).getShopresourcePK().getShopid()).getShopName());
+                record.setShopId(String.valueOf(shopreslist.get(i).getShopresourcePK().getShopid()));
+                record.setResourceId(String.valueOf(shopreslist.get(i).getShopresourcePK().getResourceid()));
+                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopresourcePK().getShopid())).getShopName());
                 record.setResourceName(getResourceNameForId(shopreslist.get(i).getShopresourcePK().getResourceid()).getResourceName());
-                record.setRate(shopreslist.get(i).getRate().floatValue());              
+                record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
                 recordList.add(record);
                 record = new ShopResDTO();
             }        
@@ -429,14 +432,42 @@ public class MasterDataServices {
             System.out.println(exception + " has occurred in getShopResName().");
             return null;
         }
-    }  
+    }
     
-    public ShopDTO getShopNameForId(int shopid) {
+    public List<ShopResDTO> getShopResForResid(String resid) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
+        List<ShopResDTO> recordList = new ArrayList<>();
+        ShopResDTO record = new ShopResDTO();
+        
+        try {  
+            List<Shopresource> shopreslist = shopresdao.getShopsForRes(Integer.parseInt(resid));
+            for (int i = 0; i < shopreslist.size(); i++) {
+                record.setShopId(String.valueOf(shopreslist.get(i).getShopresourcePK().getShopid()));
+                record.setResourceId(String.valueOf(shopreslist.get(i).getShopresourcePK().getResourceid()));
+                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopresourcePK().getShopid())).getShopName());
+                record.setResourceName(getResourceNameForId(shopreslist.get(i).getShopresourcePK().getResourceid()).getResourceName());
+                record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
+                recordList.add(record);
+                record = new ShopResDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No ShopResource records are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopResName().");
+            return null;
+        }
+    }
+    
+    public ShopDTO getShopNameForId(String shopid) {
         ShopDAO shopdao = new ShopDAO(utx, emf);        
         ShopDTO record = new ShopDTO();
         
         try {  
-           Shop shoprec = shopdao.getShopName(shopid);           
+           Shop shoprec = shopdao.getShopName(Integer.parseInt(shopid));           
            record.setShopName(shoprec.getShopname());
            record.setShopId(shopid);
            record.setLocation(shoprec.getLocation());
@@ -454,18 +485,19 @@ public class MasterDataServices {
         }
     }
     
-    public List<ShopDTO> getOtherShopsFor(int resourceId) {
+    public List<ShopDTO> getOtherShopsFor(String resourceId) {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);
-        List<Integer> shopsforres = new ArrayList<>();
+        List<Integer> shopsforres;
         ShopDTO record = new ShopDTO();
-        List<ShopDTO> shoplist = new ArrayList<>();
+        List<ShopDTO> shoplist;
         List<ShopDTO> othershoplist = new ArrayList<>();
         try {
-           shopsforres = shopresdao.getShopsForRes(resourceId);
+           shopsforres = shopresdao.getShopsForRes(Integer.parseInt(resourceId));
            shoplist = getShopList();
+           
            if(!shoplist.isEmpty()){
                for (int i = 0; i < shoplist.size(); i++) {
-                   if (!shopsforres.contains(shoplist.get(i).getShopId())) {
+                   if (!shopsforres.contains(Integer.valueOf(shoplist.get(i).getShopId()))) {
                        record.setShopId(shoplist.get(i).getShopId());
                        record.setShopName(shoplist.get(i).getShopName());
                        record.setLocation(shoplist.get(i).getLocation());
@@ -473,6 +505,7 @@ public class MasterDataServices {
                        record.setAvailabilityTime(shoplist.get(i).getAvailabilityTime());
                        othershoplist.add(record);
                        record = new ShopDTO();
+                   } else {
                    }
                }                
             }        
@@ -542,7 +575,7 @@ public class MasterDataServices {
         try {  
             List<Shop> shoplist = shopdao.getAllShops();
             for (int i = 0; i < shoplist.size(); i++) {
-                record.setShopId(shoplist.get(i).getShopid());
+                record.setShopId(shoplist.get(i).getShopid().toString());
                 record.setShopName(shoplist.get(i).getShopname());
                 record.setLocation(shoplist.get(i).getLocation());
                 record.setContact(shoplist.get(i).getContact());

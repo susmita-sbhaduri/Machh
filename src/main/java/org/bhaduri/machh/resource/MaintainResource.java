@@ -33,14 +33,13 @@ public class MaintainResource implements Serializable {
             redirectUrl = "/secured/userhome";
             return redirectUrl;
         } else {
-            DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
             return null;    
         }
     }
     
     
     public String goToShopForRes() {        
-        String redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + Integer.toString(selectedRes.getResourceId())+ "&resourceName=" + selectedRes.getResourceName();
+        String redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + selectedRes.getResourceId()+ "&resourceName=" + selectedRes.getResourceName();
         return redirectUrl;
 //        return "/secured/userhome";
     }

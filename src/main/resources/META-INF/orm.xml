@@ -54,6 +54,7 @@
     <named-query name="Shopresource.shopsPerRes">
         <query>SELECT s.shopresourcePK.shopid FROM Shopresource s WHERE s.shopresourcePK.resourceid = :resourceid</query>
     </named-query>
+    
     <named-query name="Shop.shopNameForId">
         <query>SELECT s FROM Shop s WHERE s.shopid = :shopid</query>
     </named-query>
