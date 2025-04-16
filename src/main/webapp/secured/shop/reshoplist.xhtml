@@ -7,12 +7,13 @@
                 xmlns:f="jakarta.faces.core"
                 xmlns:h="jakarta.faces.html">
 
-   <ui:define name="content">
+    <ui:define name="content">
         <h4>Shop Details.</h4>
         <p:growl id="growl" showDetail="true" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        
-        
+        &nbsp;&nbsp;&nbsp;
+
+
         <f:metadata>
             <f:viewParam name="resourceId" value="#{reShopList.resourceId}"></f:viewParam>
             <f:viewParam name="resourceName" value="#{reShopList.resourceName}"></f:viewParam>
@@ -20,25 +21,47 @@
         </f:metadata>
 
         <div class="card">            
-            <h:form id="shopgrid" style="text-align: center">                
+            <h:form id="shopgrid" style="text-align: center"> 
+
                 <p:dataTable var="existingshop" value="#{reShopList.existingshops}" 
                              reflow="true">
+
                     <f:facet name="header">
-                        <h:outputText value="My DataTable Heading" style="font-weight: bold; font-size: 16px;" />
+                        <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                            <!-- Heading text -->
+                            <h:outputText value="#{reShopList.resourceName}" 
+                                          style="font-weight: bold; font-size: 20px; margin-right: 10px;
+                                          outline: 2px solid blue;
+                                          outline-offset: 2px;" />
+
+                            <p:commandButton styleClass="blue-button" 
+                                             icon="fa fa-edit" 
+                                             value="Add Shop"
+                                             action="#{reShopList.goToAddShopForRes()}" />
+                        </h:panelGroup>
                     </f:facet>
+
                     <p:column headerText="Shop Name">
                         <h:outputText value="#{existingshop.shopName}" />
                     </p:column>
                     <p:column headerText="Rate">
                         <h:outputText value="#{existingshop.rate}" />
                     </p:column>
-                                   
+
                     <p:column>  
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
-                                         value="Add Shop"
-                                         action="#{reShopList.goToAddShopForRes()}" >
-                            <f:setPropertyActionListener value="#{existingshop}" target="#{reShopList.selectedShop}" />    
+                                         value="Edit Shop"
+                                         action="#{reShopList.goToEditShopForRes()}" >
+                            <f:setPropertyActionListener value="#{existingshop}" target="#{reShopList.selectedResShop}" />    
+                        </p:commandButton>
+                    </p:column>
+                    <p:column>  
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Delete Shop"
+                                         action="#{reShopList.goToDeleteShopForRes()}" >
+                            <f:setPropertyActionListener value="#{existingshop}" target="#{reShopList.selectedResShop}" />    
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>

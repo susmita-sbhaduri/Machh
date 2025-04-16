@@ -12,10 +12,7 @@ import java.util.List;
 import org.bhaduri.machh.JPA.ShopresourceJpaController;
 import org.bhaduri.machh.entities.Shopresource;
 
-/**
- *
- * @author sb
- */
+
 public class ShopResDAO extends ShopresourceJpaController{
     
     public ShopResDAO(UserTransaction utx, EntityManagerFactory emf) {

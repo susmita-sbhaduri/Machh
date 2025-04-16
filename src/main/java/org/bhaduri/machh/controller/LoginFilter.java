@@ -38,7 +38,7 @@ public class LoginFilter implements Filter{
             contextPath = contextPath+"/secured/SessionExpired.xhtml";
             ((HttpServletResponse)response).sendRedirect(contextPath);
         }
-         HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         if (!req.getRequestURI().startsWith(req.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) { // Skip JSF resources (CSS/JS/Images/etc)
             res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.

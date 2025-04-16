@@ -27,14 +27,20 @@
                                        itemValue="#{maintainResShop.shoplist.indexOf(shop)}" 
                                        itemLabel="#{shop.shopName}" />
                     </p:selectOneMenu>
-                    <h:outputLabel for="rate" value="Rate" />
-                    <h:inputText id="rate" value="#{maintainResShop.rate}"/>
+                    <p:outputLabel for="rate" value="Rate" />
+                    <p:inputText id="rate" value="#{maintainResShop.rate}">
+                                 <f:convertNumber pattern="#0.00" />
+                                 <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>             
 
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit"
                                      value="Add Shop" 
                                      action="#{maintainResShop.updShopToRes()}"/>
-                    <p:button outcome="/secured/resource/maintainresource" value="cancel"/>
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit"
+                                     value="Cancel" 
+                                     action="#{maintainResShop.goToReShopList()}"/>                    
                 </p:panelGrid>
             </h:form>
         </div>

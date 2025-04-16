@@ -39,7 +39,7 @@ public class MaintainResource implements Serializable {
     
     
     public String goToShopForRes() {        
-        String redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + selectedRes.getResourceId()+ "&resourceName=" + selectedRes.getResourceName();
+        String redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + selectedRes.getResourceId()+ "&resourceName=" + selectedRes.getResourceName();
         return redirectUrl;
 //        return "/secured/userhome";
     }

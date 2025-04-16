@@ -12,6 +12,9 @@ import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.services.MasterDataServices;
@@ -34,40 +37,77 @@ public class MaintainResShop implements Serializable {
     public MaintainResShop() {
     }
 
-    public void fillShopDetails() throws NamingException {
+    public String fillShopDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         shoplist = masterDataService.getOtherShopsFor(resourceId); 
-         System.out.println("debug");       
-    }
-    
-    public String updShopToRes() throws NamingException {  
         String redirectUrl;
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true); 
+        if (shoplist.isEmpty()) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Shop remains to be attached.",
+                    "No Shop remains to be attached.");
+            f.addMessage("othershopid", message);
+            redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
+            return redirectUrl;
+        }
+        else return null;
+    }
+    
+    public String updShopToRes() throws NamingException {
+        String redirectUrl;
+        FacesMessage message = null;
+        FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-        ShopDTO selectedShop = shoplist.get(selectedShopid); 
-        
-        if (selectedShop.getShopId().isEmpty()) {            
+        ShopDTO selectedShop = shoplist.get(selectedShopid);
+
+        if (selectedShop.getShopId().isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Shop name is required.",
                     "Shop name is required.");
-            f.addMessage("shopid", message);
-            redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
-//            return redirectUrl;
+            f.addMessage("othershopid", message);
+            redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
+
         } else {
             if (rate == 0) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate is required.", 
-                "Resource Rate is required.");
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate is required.",
+                        "Resource Rate is required.");
                 f.addMessage("rate", message);
-                redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
-            }
-            else{
+                redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
+            } else {
                 resShopUpdBean = new ShopResDTO();
-                redirectUrl = "/secured/userhome?faces-redirect=true";
+                MasterDataServices masterDataService = new MasterDataServices();
+                resShopUpdBean.setShopId(selectedShop.getShopId());
+                resShopUpdBean.setShopName(selectedShop.getShopName());
+                resShopUpdBean.setResourceId(resourceId);
+                resShopUpdBean.setResourceName(resourceName);
+                resShopUpdBean.setRate(String.format("%.2f", rate));
+                int response = masterDataService.addShopResource(resShopUpdBean);
+                redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
+                if (response == SUCCESS) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+
+                } else {
+                    if (response == DB_DUPLICATE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_DUPLICATE));
+
+                    }
+                    if (response == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+
+                    }
+                }
+                f.addMessage(null, message);
             }
         }
         return redirectUrl;
     }
-
+    
+    public String goToReShopList() {        
+        String redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
+        return redirectUrl;
+//        return "/secured/userhome";
+    }
+    
     public String getResourceId() {
         return resourceId;
     }

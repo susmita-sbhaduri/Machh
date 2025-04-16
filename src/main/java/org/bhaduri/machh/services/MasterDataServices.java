@@ -9,6 +9,7 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.UserTransaction;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,6 +51,7 @@ import org.bhaduri.machh.entities.Shop;
 import org.bhaduri.machh.entities.Shopresource;
 import org.bhaduri.machh.entities.Site;
 import org.bhaduri.machh.entities.Farmresource;
+import org.bhaduri.machh.entities.ShopresourcePK;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
@@ -440,7 +442,7 @@ public class MasterDataServices {
         ShopResDTO record = new ShopResDTO();
         
         try {  
-            List<Shopresource> shopreslist = shopresdao.getShopsForRes(Integer.parseInt(resid));
+            List<Shopresource> shopreslist = shopresdao.getShopDtlssForRes(Integer.parseInt(resid));
             for (int i = 0; i < shopreslist.size(); i++) {
                 record.setShopId(String.valueOf(shopreslist.get(i).getShopresourcePK().getShopid()));
                 record.setResourceId(String.valueOf(shopreslist.get(i).getShopresourcePK().getResourceid()));
@@ -617,5 +619,26 @@ public class MasterDataServices {
             System.out.println(exception + " has occurred in getSiteNameForId(String siteid).");
             return null;
         }        
+    }
+    public int addShopResource(ShopResDTO shopres) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
+        try {
+            ShopresourcePK shoprespk = new ShopresourcePK();
+            Shopresource shopresrec = new Shopresource();
+            shoprespk.setResourceid(Integer.parseInt(shopres.getResourceId()));
+            shoprespk.setShopid(Integer.parseInt(shopres.getShopId()));
+            shopresrec.setShopresourcePK(shoprespk);
+            shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
+            shopresdao.create(shopresrec);
+            return SUCCESS;
+        }
+        catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this ShopResource record");            
+            return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addShopResource(ShopResDTO shopres).");
+            return DB_SEVERE;
+        }
     }
 }
