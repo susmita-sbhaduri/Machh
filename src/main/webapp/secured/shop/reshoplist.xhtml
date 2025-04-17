@@ -9,10 +9,12 @@
 
     <ui:define name="content">
         <h4>Shop Details.</h4>
+        <h8>To add new shop to this resource first ADD that SHOP from the menu.</h8>
+        <br></br>
+        <br></br>
         <p:growl id="growl" showDetail="true" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         &nbsp;&nbsp;&nbsp;
-
 
         <f:metadata>
             <f:viewParam name="resourceId" value="#{reShopList.resourceId}"></f:viewParam>
@@ -36,7 +38,7 @@
 
                             <p:commandButton styleClass="blue-button" 
                                              icon="fa fa-edit" 
-                                             value="Add Shop"
+                                             value="Add Existing Shop"
                                              action="#{reShopList.goToAddShopForRes()}" />
                         </h:panelGroup>
                     </f:facet>

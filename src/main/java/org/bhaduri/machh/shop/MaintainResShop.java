@@ -47,7 +47,8 @@ public class MaintainResShop implements Serializable {
         if (shoplist.isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Shop remains to be attached.",
                     "No Shop remains to be attached.");
-            f.addMessage("othershopid", message);
+//            f.addMessage("othershopid", message);
+            f.addMessage(null, message);
             redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
             return redirectUrl;
         }
@@ -69,8 +70,8 @@ public class MaintainResShop implements Serializable {
 
         } else {
             if (rate == 0) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate is required.",
-                        "Resource Rate is required.");
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate cannot be 0.",
+                        "Resource Rate cannot be 0.");
                 f.addMessage("rate", message);
                 redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
             } else {

@@ -43,6 +43,7 @@ import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
+import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
 
@@ -638,6 +639,28 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in addShopResource(ShopResDTO shopres).");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int deleteShopForRes(ShopResDTO shopres) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
+        try {
+            ShopresourcePK shoprespk = new ShopresourcePK();
+//            Shopresource shopresrec = new Shopresource();
+            shoprespk.setResourceid(Integer.parseInt(shopres.getResourceId()));
+            shoprespk.setShopid(Integer.parseInt(shopres.getShopId()));
+//            shopresrec.setShopresourcePK(shoprespk);
+//            shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
+            shopresdao.destroy(shoprespk);
+            return SUCCESS;
+        }
+        catch (NonexistentEntityException e) {
+            System.out.println("Record for this ShopResource does not exist");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in deleteShopForRes(ShopResDTO shopres).");
             return DB_SEVERE;
         }
     }
