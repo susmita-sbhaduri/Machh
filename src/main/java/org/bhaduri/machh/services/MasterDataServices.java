@@ -664,4 +664,50 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
+    
+    public int editShopForRes(ShopResDTO shopres) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);
+        try {
+            ShopresourcePK shoprespk = new ShopresourcePK();
+            Shopresource shopresrec = new Shopresource();
+            shoprespk.setResourceid(Integer.parseInt(shopres.getResourceId()));
+            shoprespk.setShopid(Integer.parseInt(shopres.getShopId()));
+            shopresrec.setShopresourcePK(shoprespk);
+            shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
+            shopresdao.edit(shopresrec);
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("No shopresource record is found for shioid and resourceid");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in editShopForRes(ShopResDTO shopres).");
+            return DB_SEVERE;
+        }
+    }
+    
+    public ShopResDTO getResShopForPk(String resourceId, String shopId) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);
+        ShopResDTO record = new ShopResDTO();
+        
+        try {
+            Shopresource shopresrec = shopresdao.getShopResSingle(Integer.parseInt(resourceId), Integer.parseInt(shopId));
+
+            record.setShopId(String.valueOf(shopresrec.getShopresourcePK().getShopid()));
+            record.setResourceId(String.valueOf(shopresrec.getShopresourcePK().getResourceid()));
+            record.setShopName(getShopNameForId(String.valueOf(shopresrec.getShopresourcePK().getShopid())).getShopName());
+            record.setResourceName(getResourceNameForId(shopresrec.getShopresourcePK().getResourceid()).getResourceName());
+            record.setRate(String.format("%.2f", shopresrec.getRate().floatValue()));
+            return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No ShopResource record is found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResShopForPk.");
+            return null;
+        }
+    }
 }

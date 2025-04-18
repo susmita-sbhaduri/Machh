@@ -11,7 +11,6 @@ import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
@@ -53,28 +52,27 @@ public class ReShopList implements Serializable {
         FacesMessage message = null;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-        
-        if(existingshops.size()>1){
-        MasterDataServices masterDataService = new MasterDataServices();
-        int response = masterDataService.deleteShopForRes(selectedResShop);
+
+        if (existingshops.size() > 1) {
+            MasterDataServices masterDataService = new MasterDataServices();
+            int response = masterDataService.deleteShopForRes(selectedResShop);
 //        String redirectUrl;
 //        FacesMessage message = null;
 //        FacesContext f = FacesContext.getCurrentInstance();
 //        f.getExternalContext().getFlash().setKeepMessages(true);
-        if (response == SUCCESS) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+            if (response == SUCCESS) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+            } else {
+                if (response == DB_NON_EXISTING) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
+                }
+                if (response == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+                }
+            }
+            f.addMessage(null, message);
         } else {
-            if (response == DB_NON_EXISTING) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
-            }
-            if (response == DB_SEVERE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
-            }
-        }
-        f.addMessage(null, message);
-        }
-        else{
-             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atleast one shop should be there for existing Resource.",
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atleast one shop should be there for existing Resource.",
                     "Atleast one shop should be there for existing Resource.");
 //            f.addMessage("othershopid", message);
             f.addMessage(null, message);
@@ -82,9 +80,25 @@ public class ReShopList implements Serializable {
         return redirectUrl;
     }
 
-    public String goToEditShopForRes() {
-        String redirectUrl = "/secured/userhome";
+    public String goToEditShopForRes() throws NamingException {
+        String redirectUrl = "/secured/shop/reshopedit?faces-redirect=true&resourceId=" + selectedResShop.getResourceId() + "&shopId=" + selectedResShop.getShopId();
         return redirectUrl;
+//        FacesMessage message = null;
+//        FacesContext f = FacesContext.getCurrentInstance();
+//        f.getExternalContext().getFlash().setKeepMessages(true);
+//        MasterDataServices masterDataService = new MasterDataServices();
+//        int response = masterDataService.editShopForRes(selectedResShop);
+//        if (response == SUCCESS) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+//        } else {
+//            if (response == DB_NON_EXISTING) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
+//            }
+//            if (response == DB_SEVERE) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+//            }
+//        }
+//        f.addMessage(null, message);
     }
     public ShopResDTO getSelectedResShop() {
         return selectedResShop;
