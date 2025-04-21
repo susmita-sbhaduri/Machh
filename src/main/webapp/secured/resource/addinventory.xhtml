@@ -24,9 +24,9 @@
                     <h:outputLabel for="resname" value="Resource Name"/>
                     <h:inputText id="resname" value="#{resourceAdd.resname}" />
                     <p:outputLabel for="shopid" value="Shop Names" />
-                    <p:selectOneMenu id="shopid" value="#{resourceAdd.selectedShopid}" >
+                    <p:selectOneMenu id="shopid" value="#{resourceAdd.selectedIndex}" >
                         <f:selectItems value="#{resourceAdd.shoplist}" var="shop" 
-                                       itemValue="#{shop.shopId}" 
+                                       itemValue="#{resourceAdd.shoplist.indexOf(shop)}" 
                                        itemLabel="#{shop.shopName}" />
                     </p:selectOneMenu>
                     <p:outputLabel for="rate" value="Rate" />
@@ -41,7 +41,7 @@
                                      value="Save"
                                      action="#{resourceAdd.goToSaveRes()}" >                        
                     </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/home" />
+                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/resource/maintainresource" />
                 </p:panelGrid>
             </h:form>
         </div>
