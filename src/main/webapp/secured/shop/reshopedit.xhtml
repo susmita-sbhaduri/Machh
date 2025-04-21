@@ -23,20 +23,24 @@
             <h:form id="resshopgrid" style="text-align: center"> 
                 <p:panelGrid columns="2">
                     <h:outputLabel for="resname" value="Resource Name" />
-                    <h:inputText id="resname" value="#{reShopEdit.cropEditBean.cropCategory}" readonly="true"/>
-                    <h:outputLabel for="cropname" value="Shop Name" />
-                    <h:inputText id="cropname" value="#{cropEdit.editBean.cropName}" readonly="true"/>
+                    <h:inputText id="resname" value="#{reShopEdit.editBean.resourceName}" readonly="true"/>
+                    <h:outputLabel for="shopname" value="Shop Name" />
+                    <h:inputText id="shopname" value="#{reShopEdit.editBean.shopName}" readonly="true"/>
                     <p:outputLabel for="rate" value="Rate" />
-                    <p:inputText id="rate" value="#{maintainResShop.rate}">
+                    <p:inputText id="rate" value="#{reShopEdit.rate}">
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
                                      value="Edit Shop"
-                                     action="#{reShopList.goToEditShopForRes()}" >                        
+                                     action="#{reShopEdit.goToSaveShopRes()}" >                        
                     </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Cancel"
+                                     action="#{reShopEdit.goToShopForRes()}" >                        
+                    </p:commandButton>
                 </p:panelGrid>
             </h:form>
         </div>

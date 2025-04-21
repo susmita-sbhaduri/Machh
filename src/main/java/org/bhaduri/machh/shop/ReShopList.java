@@ -83,22 +83,7 @@ public class ReShopList implements Serializable {
     public String goToEditShopForRes() throws NamingException {
         String redirectUrl = "/secured/shop/reshopedit?faces-redirect=true&resourceId=" + selectedResShop.getResourceId() + "&shopId=" + selectedResShop.getShopId();
         return redirectUrl;
-//        FacesMessage message = null;
-//        FacesContext f = FacesContext.getCurrentInstance();
-//        f.getExternalContext().getFlash().setKeepMessages(true);
-//        MasterDataServices masterDataService = new MasterDataServices();
-//        int response = masterDataService.editShopForRes(selectedResShop);
-//        if (response == SUCCESS) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
-//        } else {
-//            if (response == DB_NON_EXISTING) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
-//            }
-//            if (response == DB_SEVERE) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
-//            }
-//        }
-//        f.addMessage(null, message);
+
     }
     public ShopResDTO getSelectedResShop() {
         return selectedResShop;

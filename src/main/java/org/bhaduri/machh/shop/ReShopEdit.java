@@ -4,10 +4,15 @@
  */
 package org.bhaduri.machh.shop;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import javax.naming.NamingException;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -28,8 +33,33 @@ public class ReShopEdit implements Serializable {
     }
     public void fillDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
-        editBean = masterDataService.getResShopForPk(resourceId, resourceId); 
+        editBean = masterDataService.getResShopForPk(resourceId, shopId); 
         rate = Float.parseFloat(editBean.getRate());        
+    }
+    public String goToSaveShopRes() throws NamingException {
+        FacesMessage message = null;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        MasterDataServices masterDataService = new MasterDataServices();
+        int response = masterDataService.editShopForRes(editBean);
+        if (response == SUCCESS) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
+        } else {
+            if (response == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
+            }
+            if (response == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+            }
+        }
+        f.addMessage(null, message);
+        String redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + editBean.getResourceId() + "&resourceName=" + editBean.getResourceName();
+        return redirectUrl;
+    }
+    
+    public String goToShopForRes(){
+        String redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + editBean.getResourceId() + "&resourceName=" + editBean.getResourceName();
+        return redirectUrl;
     }
 
     public String getResourceId() {
