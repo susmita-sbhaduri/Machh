@@ -41,6 +41,7 @@ public class ReShopEdit implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         MasterDataServices masterDataService = new MasterDataServices();
+        editBean.setRate(String.format("%.2f",rate));
         int response = masterDataService.editShopForRes(editBean);
         if (response == SUCCESS) {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));

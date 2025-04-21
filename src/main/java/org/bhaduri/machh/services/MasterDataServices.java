@@ -12,6 +12,7 @@ import jakarta.transaction.UserTransaction;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.naming.InitialContext;
@@ -570,7 +571,19 @@ public class MasterDataServices {
             return null;
         }
     }
-     
+    public String getNextIdForRes(){
+        List<FarmresourceDTO> reclist = getResourceList();
+        List<Integer> resIdList =  new ArrayList<>();
+        if(!reclist.isEmpty()){
+            for (int i = 0; i < reclist.size(); i++) {
+                resIdList.add(i, Integer.valueOf(reclist.get(i).getResourceId()));
+            }
+            int maxVal = Collections.max(resIdList);
+            return String.valueOf(maxVal+1);
+        }
+        else return null;
+    }
+    
     public List<ShopDTO> getShopList() {
         ShopDAO shopdao = new ShopDAO(utx, emf);        
         ShopDTO record = new ShopDTO();
