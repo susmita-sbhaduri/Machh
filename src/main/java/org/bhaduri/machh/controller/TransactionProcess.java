@@ -82,14 +82,14 @@ public class TransactionProcess implements Serializable{
     public void onCropAllChange() throws NamingException {
 
         resourcecategories = new ArrayList<>();
-        MasterDataServices masterDataService = new MasterDataServices();
-        List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
-        for (int i = 0; i < rescatforcrop.size(); i++) {
-            resourcecategories.add(rescatforcrop.get(i));
-        }
-        if (rescatforcrop.isEmpty()) {
-            resourcecategories.add("None");
-        }
+//        MasterDataServices masterDataService = new MasterDataServices();
+//        List<String> rescatforcrop = masterDataService.getResCatForCrop(cropcategory, cropname);
+//        for (int i = 0; i < rescatforcrop.size(); i++) {
+//            resourcecategories.add(rescatforcrop.get(i));
+//        }
+//        if (rescatforcrop.isEmpty()) {
+//            resourcecategories.add("None");
+//        }
 
     }
     
@@ -97,11 +97,11 @@ public class TransactionProcess implements Serializable{
 
         resourcenames = new ArrayList<>();
         MasterDataServices masterDataService = new MasterDataServices();
-        List<String> resnamespercat
-                = masterDataService.getResDetForCrop(cropcategory, cropname, resourcecat);
-        for (int i = 0; i < resnamespercat.size(); i++) {
-            resourcenames.add(resnamespercat.get(i));
-        }
+//        List<String> resnamespercat
+//                = masterDataService.getResDetForCrop(cropcategory, cropname, resourcecat);
+//        for (int i = 0; i < resnamespercat.size(); i++) {
+//            resourcenames.add(resnamespercat.get(i));
+//        }
 
     }
     

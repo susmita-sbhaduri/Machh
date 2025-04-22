@@ -16,6 +16,7 @@ public class ShopResDTO implements Serializable {
     private String shopName;
     private String resourceName;
     private String rate; 
+    private String unit;
 
     public String getShopName() {
         return shopName;
@@ -56,5 +57,14 @@ public class ShopResDTO implements Serializable {
     public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }    
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+    
     
 }

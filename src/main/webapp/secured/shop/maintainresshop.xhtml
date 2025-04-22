@@ -13,7 +13,7 @@
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         <f:metadata>
             <f:viewParam name="resourceId" value="#{maintainResShop.resourceId}"></f:viewParam>
-            <f:viewParam name="resourceName" value="#{maintainResShop.resourceName}"></f:viewParam>
+            <f:viewParam name="resourceName" value="#{maintainResShop.resourceName}"></f:viewParam>           
             <f:viewAction action="#{maintainResShop.fillShopDetails()}" />
         </f:metadata>
         <div class="card">
@@ -31,7 +31,9 @@
                     <p:inputText id="rate" value="#{maintainResShop.rate}">
                                  <f:convertNumber pattern="#0.00" />
                                  <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>             
+                    </p:inputText>    
+                    <h:outputLabel for="unit" value="Per Unit" />
+                    <h:inputText id="unit" value="#{maintainResShop.resourceUnit}" readonly="true"/>
 
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit"

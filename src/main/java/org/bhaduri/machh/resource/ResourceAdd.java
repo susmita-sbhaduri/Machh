@@ -11,6 +11,8 @@ import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
+import org.bhaduri.machh.DTO.FarmresourceDTO;
+import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
@@ -55,59 +57,70 @@ public class ResourceAdd implements Serializable {
         else return null;
     }
     
-    public String goToSaveRes() throws NamingException{
-        String redirectUrl = "/secured/home";
+    public String goToSaveRes() throws NamingException {
+        String redirectUrl = "/secured/resource/addinventory?faces-redirect=true";
         FacesMessage message = null;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         ShopDTO selectedShop = shoplist.get(selectedIndex);
 
+        if (resname.isBlank()) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource name cannot be empty.",
+                    "Resource name cannot be empty.");
+            f.addMessage("unit", message);
+            return redirectUrl;
+        }
+
         if (selectedShop.getShopId().isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "First add shop.",
                     "First add shop.");
             f.addMessage("shopid", message);
+            return redirectUrl;
+        }
+        if (rate == 0) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate cannot be 0.",
+                    "Resource Rate cannot be 0.");
+            f.addMessage("rate", message);
+            return redirectUrl;
+        }
+
+        if (unit.isBlank()) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unit cannot be empty.",
+                    "Unit cannot be empty.");
+            f.addMessage("unit", message);
+            return redirectUrl;
+        }
+        redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+        MasterDataServices masterDataService = new MasterDataServices();
+        FarmresourceDTO resAddBean = new FarmresourceDTO();
+        resAddBean.setResourceId(resid);
+        resAddBean.setResourceName(resname);
+        resAddBean.setUnit(unit);
+        int resres = masterDataService.addResource(resAddBean);
+
+        ShopResDTO resShopUpdBean = new ShopResDTO();
+        resShopUpdBean.setShopId(selectedShop.getShopId());
+        resShopUpdBean.setShopName(selectedShop.getShopName());
+        resShopUpdBean.setResourceId(resid);
+        resShopUpdBean.setResourceName(resname);
+        resShopUpdBean.setRate(String.format("%.2f", rate));
+        int shopres = masterDataService.addShopResource(resShopUpdBean);
+        if (resres == SUCCESS && shopres == SUCCESS) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Inventory added", Integer.toString(SUCCESS));
             redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
         } else {
-            if (rate == 0) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate cannot be 0.",
-                        "Resource Rate cannot be 0.");
-                f.addMessage("rate", message);
-                redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
-            } else {
-                if (unit.isBlank()) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unit cannot be empty.",
-                            "Unit cannot be empty.");
-                    f.addMessage("unit", message);
-                    redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
-                } else {
-                
-                    ShopResDTO resShopUpdBean = new ShopResDTO();
-                    MasterDataServices masterDataService = new MasterDataServices();
-                    resShopUpdBean.setShopId(selectedShop.getShopId());
-                    resShopUpdBean.setShopName(selectedShop.getShopName());
-                    resShopUpdBean.setResourceId(resid);
-                    resShopUpdBean.setResourceName(resname);
-                    resShopUpdBean.setRate(String.format("%.2f", rate));
-                    int response = masterDataService.addShopResource(resShopUpdBean);
-                    redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
-                if (response == SUCCESS) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
-
-                } else {
-                    if (response == DB_DUPLICATE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_DUPLICATE));
-
-                    }
-                    if (response == DB_SEVERE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
-
-                    }
-                }
-                f.addMessage(null, message);
+            if (resres == DB_DUPLICATE || shopres == DB_DUPLICATE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Duplicate record", Integer.toString(DB_DUPLICATE));
+            }
+            if (resres == DB_SEVERE || shopres == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
             }
         }
+        f.addMessage(null, message);
         return redirectUrl;
     }
+
+    
     public ResourceAdd() {
     }
 
@@ -127,13 +140,13 @@ public class ResourceAdd implements Serializable {
         this.resname = resname;
     }
 
-    public String getSelectedShopid() {
-        return selectedShopid;
+    public int getSelectedIndex() {
+        return selectedIndex;
     }
 
-    public void setSelectedShopid(String selectedShopid) {
-        this.selectedShopid = selectedShopid;
-    }
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedIndex = selectedIndex;
+    }    
 
     public List<ShopDTO> getShoplist() {
         return shoplist;

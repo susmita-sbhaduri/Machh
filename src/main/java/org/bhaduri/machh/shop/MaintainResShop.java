@@ -32,6 +32,7 @@ public class MaintainResShop implements Serializable {
     private float rate;
     private List<ShopDTO> shoplist;
     private ShopResDTO resShopUpdBean;
+    private String resourceUnit;
     
     
     public MaintainResShop() {
@@ -40,6 +41,7 @@ public class MaintainResShop implements Serializable {
     public String fillShopDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         shoplist = masterDataService.getOtherShopsFor(resourceId); 
+        resourceUnit = masterDataService.getResourceNameForId(Integer.parseInt(resourceId)).getUnit();
         String redirectUrl;
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
@@ -47,7 +49,6 @@ public class MaintainResShop implements Serializable {
         if (shoplist.isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Shop remains to be attached.",
                     "No Shop remains to be attached.");
-//            f.addMessage("othershopid", message);
             f.addMessage(null, message);
             redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
             return redirectUrl;
@@ -103,6 +104,8 @@ public class MaintainResShop implements Serializable {
         return redirectUrl;
     }
     
+    
+    
     public String goToReShopList() {        
         String redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
         return redirectUrl;
@@ -135,6 +138,15 @@ public class MaintainResShop implements Serializable {
         this.selectedShopid = selectedShopid;
     }
 
+    public String getResourceUnit() {
+        return resourceUnit;
+    }
+
+    public void setResourceUnit(String resourceUnit) {
+        this.resourceUnit = resourceUnit;
+    }
+
+    
     
 
     public float getRate() {

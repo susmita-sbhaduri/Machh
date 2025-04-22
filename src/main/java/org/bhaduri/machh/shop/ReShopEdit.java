@@ -28,13 +28,15 @@ public class ReShopEdit implements Serializable {
     private String shopId;
     private ShopResDTO editBean;
     private float rate;
+    private String unit;
     
     public ReShopEdit() {
     }
     public void fillDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         editBean = masterDataService.getResShopForPk(resourceId, shopId); 
-        rate = Float.parseFloat(editBean.getRate());        
+        rate = Float.parseFloat(editBean.getRate());
+        unit = masterDataService.getResourceNameForId(Integer.parseInt(resourceId)).getUnit();
     }
     public String goToSaveShopRes() throws NamingException {
         FacesMessage message = null;
@@ -93,6 +95,14 @@ public class ReShopEdit implements Serializable {
 
     public void setRate(float rate) {
         this.rate = rate;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
     
 }

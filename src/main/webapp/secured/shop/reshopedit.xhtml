@@ -31,9 +31,11 @@
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
+                    <h:outputLabel for="unit" value="Per Unit" />
+                    <h:inputText id="unit" value="#{reShopEdit.unit}" readonly="true"/>
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
-                                     value="Edit Shop"
+                                     value="Save"
                                      action="#{reShopEdit.goToSaveShopRes()}" >                        
                     </p:commandButton>
                     <p:commandButton styleClass="blue-button" 

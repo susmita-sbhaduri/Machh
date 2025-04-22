@@ -56,10 +56,6 @@ public class ReShopList implements Serializable {
         if (existingshops.size() > 1) {
             MasterDataServices masterDataService = new MasterDataServices();
             int response = masterDataService.deleteShopForRes(selectedResShop);
-//        String redirectUrl;
-//        FacesMessage message = null;
-//        FacesContext f = FacesContext.getCurrentInstance();
-//        f.getExternalContext().getFlash().setKeepMessages(true);
             if (response == SUCCESS) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
             } else {
@@ -74,7 +70,6 @@ public class ReShopList implements Serializable {
         } else {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atleast one shop should be there for existing Resource.",
                     "Atleast one shop should be there for existing Resource.");
-//            f.addMessage("othershopid", message);
             f.addMessage(null, message);
         }
         return redirectUrl;
