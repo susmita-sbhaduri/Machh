@@ -43,8 +43,7 @@ public class MaintainResource implements Serializable {
     }
     
     public String deleteRes() throws NamingException {
-        String redirectUrl = "/secured/shop/maintainresshop?faces-redirect=true&resourceId=" + 
-                selectedRes.getResourceId()+ "&resourceName=" + selectedRes.getResourceName();
+        String redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
         FacesMessage message = null;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
@@ -52,25 +51,18 @@ public class MaintainResource implements Serializable {
         int shopres = masterDataService.deleteShopResForResid(selectedRes.getResourceId());
         int res = masterDataService.delResource(selectedRes);
         
-        if (existingshops.size() > 1) {
-            MasterDataServices masterDataService = new MasterDataServices();
-            int response = masterDataService.deleteShopForRes(selectedResShop);
-            if (response == SUCCESS) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", Integer.toString(SUCCESS));
-            } else {
-                if (response == DB_NON_EXISTING) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_NON_EXISTING));
-                }
-                if (response == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
-                }
-            }
-            f.addMessage(null, message);
+        if (res == SUCCESS && shopres == SUCCESS) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Inventory deleted", Integer.toString(SUCCESS));
+//            redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
         } else {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Atleast one shop should be there for existing Resource.",
-                    "Atleast one shop should be there for existing Resource.");
-            f.addMessage(null, message);
+            if (res == DB_NON_EXISTING || shopres == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Record does not exist", Integer.toString(DB_NON_EXISTING));
+            }
+            if (res == DB_SEVERE || shopres == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+            }
         }
+        f.addMessage(null, message);
         return redirectUrl;
     }
     

@@ -6,6 +6,7 @@ package org.bhaduri.machh.DA;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
 import java.util.List;
@@ -14,9 +15,10 @@ import org.bhaduri.machh.entities.Shopresource;
 
 
 public class ShopResDAO extends ShopresourceJpaController{
-    
+    private UserTransaction myUtx;
     public ShopResDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
+        this.myUtx = utx; // store reference for your own use
     }
     public List<Shopresource> getShopResList() {
         EntityManager em = getEntityManager();
@@ -49,4 +51,26 @@ public class ShopResDAO extends ShopresourceJpaController{
         Shopresource singlerec = query.getSingleResult();
         return singlerec;
     }
+    
+    public int delForResid(int resid) throws Exception {
+        EntityManager em = null;
+        int rowsDeleted = 0;
+        try {
+            myUtx.begin();
+            em = getEntityManager();
+//            Query query = em.createQuery("DELETE FROM Shopresource s WHERE s.shopresourcePK.resourceid = :resourceid");
+            Query query = em.createNamedQuery("Shopresource.delForResid");
+            query.setParameter("resourceid", resid);
+            rowsDeleted = query.executeUpdate();
+            myUtx.commit();
+        } catch (Exception ex) {
+            if (myUtx != null) myUtx.rollback();
+            throw ex;
+        } finally {
+            if (em != null) em.close();
+        }
+        return rowsDeleted;
+    }
 }
+
+

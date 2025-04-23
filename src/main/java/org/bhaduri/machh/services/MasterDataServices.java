@@ -496,18 +496,12 @@ public class MasterDataServices {
     public int deleteShopResForResid(String resid) {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
         try {
-            ShopresourcePK shoprespk = new ShopresourcePK();
-//            Shopresource shopresrec = new Shopresource();
-            shoprespk.setResourceid(Integer.parseInt(resid));
-//            shoprespk.setShopid(Integer.parseInt(shopres.getShopId()));
-//            shopresrec.setShopresourcePK(shoprespk);
-//            shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
-            shopresdao.destroy(shoprespk);
-            return SUCCESS;
-        }
-        catch (NonexistentEntityException e) {
-            System.out.println("Record for this Resource id does not exist in Shopresource");            
-            return DB_NON_EXISTING;
+            int rowsDeleted = shopresdao.delForResid(Integer.parseInt(resid));
+            if(rowsDeleted>0){
+                return SUCCESS;
+            } else {
+                return DB_NON_EXISTING;
+            }
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in deleteShopResForResid(String resid).");
