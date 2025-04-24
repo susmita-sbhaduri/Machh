@@ -71,6 +71,12 @@ public class MaintainResource implements Serializable {
         return redirectUrl;
 //        return "/secured/userhome";
     }
+    
+    public String acquireRes() {        
+        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true";
+        return redirectUrl;
+//        return "/secured/userhome";
+    }
 
     public List<FarmresourceDTO> getExistingresources() {
         return existingresources;
