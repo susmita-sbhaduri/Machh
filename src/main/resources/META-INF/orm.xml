@@ -72,5 +72,8 @@
     <named-query name="Farmresource.resNameForId">
         <query>SELECT f FROM Farmresource f WHERE f.resourceid = :resourceid</query>
     </named-query>
+    <named-query name="Resourceaquire.getMaxAqid">
+        <query>SELECT MAX(r.aquireid) FROM Resourceaquire r</query>
+    </named-query>
 </entity-mappings>
 

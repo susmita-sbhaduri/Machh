@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 import org.bhaduri.machh.DA.CropDAO;
 import org.bhaduri.machh.DA.HarvestDAO;
 import org.bhaduri.machh.DA.FarmresourceDAO;
+import org.bhaduri.machh.DA.ResAcquireDAO;
 import org.bhaduri.machh.DA.ShopDAO;
 import org.bhaduri.machh.DA.ShopResDAO;
 //import org.bhaduri.machh.DA.SiteCropDAO;
@@ -395,6 +396,21 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in delResource(FarmresourceDTO res).");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int getNextIdForResAquire(){
+        ResAcquireDAO resourcedao = new ResAcquireDAO(utx, emf);
+        try {
+            return resourcedao.getMaxAqId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getNextIdForResAquire().");
             return DB_SEVERE;
         }
     }

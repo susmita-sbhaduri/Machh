@@ -9,17 +9,17 @@
 
     <ui:define name="content">
         <h4>Acquire Resource.</h4>
-        <p:growl id="growl" showDetail="true" />
+        <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         &nbsp;&nbsp;&nbsp;
-        <p:button value="Update Existing" outcome="/secured/userhome"/>
+        <p:button value="Cancel" outcome="/secured/resource/maintainresource"/>
         <f:metadata>
             <f:viewAction action="#{acquireResource.fillResourceValues()}" />
         </f:metadata>
         <div class="card">
             <h:form id="resaddform" style="text-align: center">
                 <p:panelGrid columns="2">
-                    <h:outputLabel for="resid" value="Available Resources" />
+                    <h:outputLabel for="resid" value="Available Resources(select one)" />
                     <p:selectOneRadio id="resid" value="#{acquireResource.selectedRes}">
                         <f:selectItems value="#{acquireResource.existingresources}" 
                                        var="res"
@@ -27,7 +27,7 @@
                         <p:ajax event="change" listener="#{acquireResource.onResourceIdselect}" 
                                 update="shopid" process="@this"/>  
                     </p:selectOneRadio>
-                    <p:outputLabel for="shopid" value="Shop where found" />
+                    <p:outputLabel for="shopid" value="Shops where found(select one)" />
                     <p:selectOneRadio id="shopid" value="#{acquireResource.selectedShop}">
                         <f:selectItems value="#{acquireResource.shopForSelectedRes}" 
                                        var="shop"
@@ -35,17 +35,34 @@
                         <p:ajax event="change" listener="#{acquireResource.onShopResSelect}" 
                                 update="@form" process="@this"/>
                     </p:selectOneRadio>
-                    
+
                     <h:outputLabel for="rate" value="Rate" />
                     <h:inputText id="rate" value="#{acquireResource.rate}" readonly="true"/>
                     <h:outputLabel for="unit" value="per Unit" />
                     <h:inputText id="unit" value="#{acquireResource.unit}" readonly="true"/>
+                    <h:outputLabel for="pdate" value="Purchase Date" />
+                    <p:datePicker id="pdate" value="#{acquireResource.purchaseDt}" pattern="yyyy-MM-dd"/>
+                    <p:outputLabel for="amount" value="Amount" />
+                    <p:inputText id="amount" value="#{acquireResource.amount}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>
+
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{resourceAdd.goToSaveRes()}" >                        
+                                     value="Review"
+                                     action="#{acquireResource.goToReviewRes()}" 
+                                     update="growl saveBtn" > 
                     </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/resource/maintainresource" />
+                    
+                    <p:commandButton id="saveBtn"
+                                     styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Save"
+                                     action="#{acquireResource.goToSaveRes()}" 
+                                     disabled="#{acquireResource.saveDisabled}"> 
+                    </p:commandButton>
+
                 </p:panelGrid>
             </h:form>
         </div>
