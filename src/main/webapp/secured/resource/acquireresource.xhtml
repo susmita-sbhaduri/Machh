@@ -14,20 +14,14 @@
         &nbsp;&nbsp;&nbsp;
         <p:button value="Cancel" outcome="/secured/resource/maintainresource"/>
         <f:metadata>
+            <f:viewParam name="selectedRes" value="#{acquireResource.selectedRes}"></f:viewParam>
             <f:viewAction action="#{acquireResource.fillResourceValues()}" />
         </f:metadata>
         <div class="card">
             <h:form id="resaddform" style="text-align: center">
                 <p:panelGrid columns="2">
-                    <h:outputLabel for="resid" value="Available Resources(select one)" />
-                    <p:selectOneRadio id="resid" value="#{acquireResource.selectedRes}">
-                        <f:selectItems value="#{acquireResource.existingresources}" 
-                                       var="res"
-                                       itemLabel="#{res.resourceName}" itemValue="#{res.resourceId}" />
-                        <p:ajax event="change" listener="#{acquireResource.onResourceIdselect}" 
-                                update="shopid" process="@this"/>  
-                    </p:selectOneRadio>
-                    <p:outputLabel for="shopid" value="Shops where found(select one)" />
+
+                    <h:outputLabel for="shopid" value="Shops where found(select one)" />
                     <p:selectOneRadio id="shopid" value="#{acquireResource.selectedShop}">
                         <f:selectItems value="#{acquireResource.shopForSelectedRes}" 
                                        var="shop"

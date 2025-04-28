@@ -73,7 +73,7 @@ public class MaintainResource implements Serializable {
     }
     
     public String acquireRes() {        
-        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true";
+        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="+ selectedRes.getResourceId();
         return redirectUrl;
 //        return "/secured/userhome";
     }

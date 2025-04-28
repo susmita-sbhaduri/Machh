@@ -106,7 +106,7 @@ public class ResourceAdd implements Serializable {
         resShopUpdBean.setRate(String.format("%.2f", rate));
         int shopres = masterDataService.addShopResource(resShopUpdBean);
         if (resres == SUCCESS && shopres == SUCCESS) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Inventory added", Integer.toString(SUCCESS));
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource added", Integer.toString(SUCCESS));
             redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
         } else {
             if (resres == DB_DUPLICATE || shopres == DB_DUPLICATE) {

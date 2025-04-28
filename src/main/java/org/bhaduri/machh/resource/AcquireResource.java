@@ -15,8 +15,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
+import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ResAcquireDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.services.MasterDataServices;
@@ -43,21 +47,23 @@ public class AcquireResource implements Serializable {
     public AcquireResource() {
     }
 
-    public String fillResourceValues() throws NamingException {
-        String redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
-        FacesMessage message;
-        FacesContext f = FacesContext.getCurrentInstance();
-        f.getExternalContext().getFlash().setKeepMessages(true);
+    public void fillResourceValues() throws NamingException {
+//        String redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+//        FacesMessage message;
+//        FacesContext f = FacesContext.getCurrentInstance();
+//        f.getExternalContext().getFlash().setKeepMessages(true);
+//        MasterDataServices masterDataService = new MasterDataServices();
+//        existingresources = masterDataService.getResourceList();
+//        if (existingresources.isEmpty()) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Before acquiring resource should be added.",
+//                    "Before acquiring resource should be added.");
+//            f.addMessage("resid", message);
+//            return redirectUrl;
+//        } else {
+//            return null;
+//        }
         MasterDataServices masterDataService = new MasterDataServices();
-        existingresources = masterDataService.getResourceList();
-        if (existingresources.isEmpty()) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Before acquiring resource should be added.",
-                    "Before acquiring resource should be added.");
-            f.addMessage("resid", message);
-            return redirectUrl;
-        } else {
-            return null;
-        }
+        shopForSelectedRes = masterDataService.getShopResForResid(selectedRes);
     }
 
     public void onResourceIdselect() throws NamingException {
@@ -77,7 +83,7 @@ public class AcquireResource implements Serializable {
     }
 
     public String goToReviewRes() {
-        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true";
+//        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true";
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();        
 //        f.getExternalContext().getFlash().setKeepMessages(true);
@@ -111,9 +117,13 @@ public class AcquireResource implements Serializable {
         return null;
     }
 
-    public void goToSaveRes() throws NamingException {
+    public String goToSaveRes() throws NamingException {
          
         String redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+        FacesMessage message = null;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        
         MasterDataServices masterDataService = new MasterDataServices();
         ResAcquireDTO resAcquireRec = new ResAcquireDTO();
         float calculatedAmount = Float.parseFloat(rate)*amount;
@@ -128,8 +138,48 @@ public class AcquireResource implements Serializable {
         resAcquireRec.setResoureId(selectedShopRes.getResourceId());
         resAcquireRec.setAmount(String.format("%.2f", calculatedAmount));
         resAcquireRec.setAcquireDate(sdf.format(purchaseDt));
+        int acqres = masterDataService.addAcquireResource(resAcquireRec);
         
-        System.out.println("Fired! Selected: " + selectedRes);
+        ExpenseDTO expenseRec = new ExpenseDTO();
+        int expenseid = masterDataService.getNextIdForExpense();
+        if(expenseid==0 || expenseid == DB_SEVERE){
+            expenseRec.setExpenseId("1");
+        }
+        else{
+            expenseRec.setExpenseId(String.valueOf(expenseid+1));
+        }
+        expenseRec.setDate(sdf.format(purchaseDt));
+        expenseRec.setExpenseType("RES");
+        expenseRec.setExpenseRefId(selectedShopRes.getResourceId());
+        expenseRec.setExpenditure(String.format("%.2f", calculatedAmount));
+        expenseRec.setCommString("");
+        int expres = masterDataService.addExpenseRecord(expenseRec);
+        
+        FarmresourceDTO resourceRec = new FarmresourceDTO();
+        resourceRec = masterDataService.getResourceNameForId(Integer.parseInt(
+                selectedShopRes.getResourceId()));
+        calculatedAmount = calculatedAmount+Float.parseFloat(resourceRec.getAvailableAmt());
+        resourceRec.setAvailableAmt(String.format("%.2f", calculatedAmount));
+        int resres = masterDataService.editResource(resourceRec);
+        
+        if (acqres == SUCCESS && expres == SUCCESS && resres == SUCCESS) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Inventory added", Integer.toString(SUCCESS));
+            f.addMessage(null, message);
+        } else {
+            if (acqres == DB_DUPLICATE || expres == DB_DUPLICATE || resres == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Duplicate record Or record doesn't exist for update", Integer.toString(DB_DUPLICATE));
+                f.addMessage(null, message);
+                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true";
+                return redirectUrl;
+            }
+            if (acqres == DB_SEVERE || expres == DB_SEVERE || resres == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+                f.addMessage(null, message);
+                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true";
+                return redirectUrl;
+            }
+        }
+        return redirectUrl;
     }
 
     public String getSelectedRes() {

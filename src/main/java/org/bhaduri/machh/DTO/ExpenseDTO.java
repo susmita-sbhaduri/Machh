@@ -10,12 +10,13 @@ import java.io.Serializable;
  *
  * @author sb
  */
-public class Expense implements Serializable {
+public class ExpenseDTO implements Serializable {
     private String expenseId;
     private String date;
     private String expenseType;
     private String expenseRefId;
     private String expenditure;
+    private String commString;
 
     public String getExpenseId() {
         return expenseId;
@@ -56,7 +57,13 @@ public class Expense implements Serializable {
     public void setExpenditure(String expenditure) {
         this.expenditure = expenditure;
     }
-    
-    
-    
+
+    public String getCommString() {
+        return commString;
+    }
+
+    public void setCommString(String commString) {
+        this.commString = commString;
+    }
+       
 }

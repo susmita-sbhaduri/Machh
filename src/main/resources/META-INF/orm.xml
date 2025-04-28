@@ -75,5 +75,8 @@
     <named-query name="Resourceaquire.getMaxAqid">
         <query>SELECT MAX(r.aquireid) FROM Resourceaquire r</query>
     </named-query>
+    <named-query name="Expense.getMaxExpId">
+        <query>SELECT MAX(e.expenseid) FROM Expense e</query>
+    </named-query>
 </entity-mappings>
 

@@ -19,6 +19,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.bhaduri.machh.DA.CropDAO;
+import org.bhaduri.machh.DA.ExpenseDAO;
 import org.bhaduri.machh.DA.HarvestDAO;
 import org.bhaduri.machh.DA.FarmresourceDAO;
 import org.bhaduri.machh.DA.ResAcquireDAO;
@@ -31,6 +32,7 @@ import org.bhaduri.machh.DA.SiteDAO;
 
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
+import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 
@@ -38,6 +40,7 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
+import org.bhaduri.machh.DTO.ResAcquireDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.DTO.SiteCropDTO;
@@ -48,12 +51,14 @@ import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
+import org.bhaduri.machh.entities.Expense;
 
 import org.bhaduri.machh.entities.Harvest;
 import org.bhaduri.machh.entities.Shop;
 import org.bhaduri.machh.entities.Shopresource;
 import org.bhaduri.machh.entities.Site;
 import org.bhaduri.machh.entities.Farmresource;
+import org.bhaduri.machh.entities.Resourceaquire;
 import org.bhaduri.machh.entities.ShopresourcePK;
 
 public class MasterDataServices {
@@ -382,6 +387,29 @@ public class MasterDataServices {
         }
     }
     
+    public int editResource(FarmresourceDTO res) {
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);                
+        try {
+            Farmresource recentity = new Farmresource();
+//            recentity.setResourceid(Integer.valueOf(res.getResourceId()));
+//            recentity.setResourcename(res.getResourceName());
+//            recentity.setAvailableamount(BigDecimal.valueOf(Double.parseDouble
+//            (res.getAvailableAmt())));
+//            recentity.setUnit(res.getUnit());
+            
+            resourcedao.edit(recentity);
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("This Resource record does not exist");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in editResource(FarmresourceDTO res).");
+            return DB_SEVERE;
+        }
+    }
+    
     public int delResource(FarmresourceDTO res) {
         FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);                
         try {
@@ -415,6 +443,30 @@ public class MasterDataServices {
         }
     }
     
+    public int addAcquireResource(ResAcquireDTO acqres) {
+        ResAcquireDAO acqresdao = new ResAcquireDAO(utx, emf); 
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Resourceaquire rec = new Resourceaquire();
+            rec.setAquireid(Integer.valueOf(acqres.getAcquireId()));
+            rec.setResourceid(Integer.parseInt(acqres.getResoureId()));
+            rec.setAmount(BigDecimal.valueOf(Double.parseDouble(acqres.getAmount())));
+            mysqlDate = formatter.parse(acqres.getAcquireDate());
+            rec.setAquiredate(mysqlDate);
+            acqresdao.create(rec);
+            return SUCCESS;
+        }
+        catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this ResourceAcquire record");            
+            return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addAcquireResource(ResAcquireDTO acqres).");
+            return DB_SEVERE;
+        }
+    }
     public List<ShopDTO> getShopList() {
         ShopDAO shopdao = new ShopDAO(utx, emf);        
         ShopDTO record = new ShopDTO();
@@ -491,11 +543,8 @@ public class MasterDataServices {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
         try {
             ShopresourcePK shoprespk = new ShopresourcePK();
-//            Shopresource shopresrec = new Shopresource();
             shoprespk.setResourceid(Integer.parseInt(shopres.getResourceId()));
             shoprespk.setShopid(Integer.parseInt(shopres.getShopId()));
-//            shopresrec.setShopresourcePK(shoprespk);
-//            shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
             shopresdao.destroy(shoprespk);
             return SUCCESS;
         }
@@ -571,6 +620,47 @@ public class MasterDataServices {
         }
     }
     
+    public int getNextIdForExpense(){
+        ExpenseDAO expensedao = new ExpenseDAO(utx, emf);
+        try {
+            return expensedao.getMaxExpId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in expense table");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getNextIdForExpense().");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int addExpenseRecord(ExpenseDTO exrec) {
+        ExpenseDAO expdao = new ExpenseDAO(utx, emf); 
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Expense rec = new Expense();
+            rec.setExpenseid(Integer.valueOf(exrec.getExpenseId()));
+            mysqlDate = formatter.parse(exrec.getDate());
+            rec.setDate(mysqlDate);
+            rec.setExpensetype(exrec.getExpenseType());
+            rec.setExpenserefid(Integer.valueOf(exrec.getExpenseRefId()));
+            rec.setExpediture(BigDecimal.valueOf(Double.parseDouble(exrec.getExpenditure())));
+            rec.setComments(exrec.getCommString());
+            expdao.create(rec);
+            return SUCCESS;
+        }
+        catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this Expense record");            
+            return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addExpenseRecord(ExpenseDTO exrec).");
+            return DB_SEVERE;
+        }
+    }
     
 // **********************commented   
 //    public List<SiteCropDTO> getSiteCropsPerId(String siteid) {
