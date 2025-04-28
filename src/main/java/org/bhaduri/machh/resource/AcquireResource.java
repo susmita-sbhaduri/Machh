@@ -87,12 +87,12 @@ public class AcquireResource implements Serializable {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();        
 //        f.getExternalContext().getFlash().setKeepMessages(true);
-        if (selectedRes == null || selectedRes.trim().isEmpty()) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select one resource.",
-                    "Select one resource.");
-            f.addMessage("resid", message);
-            return null;
-        }
+//        if (selectedRes == null || selectedRes.trim().isEmpty()) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select one resource.",
+//                    "Select one resource.");
+//            f.addMessage("resid", message);
+//            return null;
+//        }
 
         if (selectedShop == null || selectedShop.trim().isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select one shop.",
