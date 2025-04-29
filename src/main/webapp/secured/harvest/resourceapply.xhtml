@@ -22,8 +22,10 @@
                 <p:panelGrid columns="2">
                     <h:outputLabel for="site" value="Site" />
                     <h:inputText id="site" value="#{resourceApply.site}" readonly="true"/>
-                    <h:outputLabel for="crop" value="Crop" />
-                    <h:inputText id="crop" value="#{resourceApply.crop}" readonly="true"/>
+                    <h:outputLabel for="cropcat" value="Crop Category" />
+                    <h:inputText id="cropcat" value="#{resourceApply.cropcat}" readonly="true"/>
+                    <h:outputLabel for="cropname" value="Crop Name" />
+                    <h:inputText id="cropname" value="#{resourceApply.cropname}" readonly="true"/>
                    
                     <h:outputLabel for="resid" value="Available Resources" />
                     <p:selectOneRadio id="resid" value="#{resourceApply.selectedRes}">
@@ -39,8 +41,8 @@
                     <h:outputLabel for="unit" value="Unit" />
                     <h:inputText id="unit" value="#{resourceApply.unit}" readonly="true"/>
                     
-                    <p:outputLabel for="amount" value="Amount to be Applied" />
-                    <p:inputText id="amount" value="#{resourceApply.amount}">
+                    <p:outputLabel for="amtapplied" value="Amount to be Applied" />
+                    <p:inputText id="amtapplied" value="#{resourceApply.amtapplied}">
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
@@ -49,18 +51,12 @@
                     <p:datePicker id="adate" value="#{resourceApply.applyDt}" pattern="yyyy-MM-dd"/>
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
-                                     value="Review First"
-                                     action="#{acquireResource.goToReviewRes()}" 
-                                     update="growl saveBtn" > 
+                                     value="Apply"
+                                     action="#{resourceApply.goToApplyRes()}" >
+                                     
                     </p:commandButton>
                     
-                    <p:commandButton id="saveBtn"
-                                     styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{acquireResource.goToSaveRes()}" 
-                                     disabled="#{acquireResource.saveDisabled}"> 
-                    </p:commandButton>
+                    
 
                 </p:panelGrid>
             </h:form>

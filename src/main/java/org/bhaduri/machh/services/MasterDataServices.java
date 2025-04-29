@@ -189,6 +189,36 @@ public class MasterDataServices {
             return null;
         }
     }
+     
+    public List<HarvestDTO> getHarvestListForId(String harvestid) {
+        HarvestDAO harvestdao = new HarvestDAO(utx, emf);  
+        List<HarvestDTO> recordList = new ArrayList<>();
+        HarvestDTO record = new HarvestDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Harvest> harvestlist = harvestdao.getActiveList();
+            for (int i = 0; i < harvestlist.size(); i++) {
+                record.setSiteName(harvestlist.get(i).getSiteid());
+                record.setCropName(harvestlist.get(i).getCrop());                           
+                mysqlDate = harvestlist.get(i).getSowingdt();                    
+                record.setSowingDate(formatter.format(mysqlDate));
+                                             
+                recordList.add(record);
+                record = new HarvestDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crops are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getActiveHarvestList.");
+            return null;
+        }
+    }  
     
     public List<ShopResDTO> getShopResName() {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
