@@ -391,11 +391,11 @@ public class MasterDataServices {
         FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);                
         try {
             Farmresource recentity = new Farmresource();
-//            recentity.setResourceid(Integer.valueOf(res.getResourceId()));
-//            recentity.setResourcename(res.getResourceName());
-//            recentity.setAvailableamount(BigDecimal.valueOf(Double.parseDouble
-//            (res.getAvailableAmt())));
-//            recentity.setUnit(res.getUnit());
+            recentity.setResourceid(Integer.valueOf(res.getResourceId()));
+            recentity.setResourcename(res.getResourceName());
+            recentity.setAvailableamount(BigDecimal.valueOf(Double.parseDouble
+            (res.getAvailableAmt())));
+            recentity.setUnit(res.getUnit());
             
             resourcedao.edit(recentity);
             return SUCCESS;
@@ -467,6 +467,25 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
+    
+    public int delAcquireResource(ResAcquireDTO acqres) {
+        ResAcquireDAO acqresdao = new ResAcquireDAO(utx, emf);                
+        try {
+            Resourceaquire rec = new Resourceaquire();
+            rec.setAquireid(Integer.valueOf(acqres.getAcquireId())); 
+            acqresdao.destroy(rec.getAquireid());
+            return SUCCESS;
+        }
+        catch (NonexistentEntityException e) {
+            System.out.println("Record for this resourceacquire does not exist");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in delAcquireResource(ResAcquireDTO acqres).");
+            return DB_SEVERE;
+        }
+    }
+    
     public List<ShopDTO> getShopList() {
         ShopDAO shopdao = new ShopDAO(utx, emf);        
         ShopDTO record = new ShopDTO();
@@ -658,6 +677,24 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in addExpenseRecord(ExpenseDTO exrec).");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int delExpenseRecord(ExpenseDTO exrec) {
+        ExpenseDAO expdao = new ExpenseDAO(utx, emf);                 
+        try {
+            Expense rec = new Expense();
+            rec.setExpenseid(Integer.valueOf(exrec.getExpenseId())); 
+            expdao.destroy(rec.getExpenseid());
+            return SUCCESS;
+        }
+        catch (NonexistentEntityException e) {
+            System.out.println("Record for this expense record does not exist");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in delExpenseRecord(ExpenseDTO exrec).");
             return DB_SEVERE;
         }
     }
