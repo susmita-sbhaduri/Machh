@@ -8,10 +8,10 @@
     </named-query>
 <!--    <named-query name="Crop.listAllCropCat">
         <query>SELECT DISTINCT c.cropPK.cropcategory FROM Crop c</query>
-    </named-query>
-    <named-query name="Crop.listNameByCat">
-        <query>SELECT c.cropPK.crop FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory</query>
     </named-query>-->
+    <named-query name="Crop.cropPerPK">
+        <query>SELECT c FROM Crop c WHERE c.cropid = :cropid</query>
+    </named-query>
     <named-query name="Crop.listAll">
         <query>SELECT c FROM Crop c</query>
     </named-query>
@@ -47,6 +47,9 @@
     </named-query>-->
     <named-query name="Harvest.activeList">
         <query>SELECT h FROM Harvest h WHERE h.harvestingdt IS NULL</query>
+    </named-query>
+    <named-query name="Harvest.harvestPerId">
+        <query>SELECT h FROM Harvest h WHERE h.harvestid = :harvestid</query>
     </named-query>
     <named-query name="Shopresource.shopResList">
         <query>SELECT s FROM Shopresource s</query>

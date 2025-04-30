@@ -12,23 +12,24 @@
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         &nbsp;&nbsp;&nbsp;
-        <p:button value="Cancel" outcome="/secured/harvest/activehrvstlst"/>
+
         <f:metadata>
             <f:viewParam name="selectedHarvest" value="#{resourceApply.selectedHarvest}"></f:viewParam>
             <f:viewAction action="#{resourceApply.fillValues()}" />
         </f:metadata>
         <div class="card">
             <h:form id="resappform" style="text-align: center">
-                <p:panelGrid columns="2">
-                    <h:outputLabel for="site" value="Site" />
-                    <h:inputText id="site" value="#{resourceApply.site}" readonly="true"/>
-                    <h:outputLabel for="cropcat" value="Crop Category" />
-                    <h:inputText id="cropcat" value="#{resourceApply.cropcat}" readonly="true"/>
-                    <h:outputLabel for="cropname" value="Crop Name" />
-                    <h:inputText id="cropname" value="#{resourceApply.cropname}" readonly="true"/>
-                   
+                <p:panelGrid columns="4">
+                    <h:outputLabel value="Site" />
+                    <h:outputText value="#{resourceApply.site}" style="font-weight:bold;"/>
+                    <h:outputLabel value="Crop Category" />
+                    <h:outputText value="#{resourceApply.cropcat}" style="font-weight:bold;"/>
+                    <h:outputLabel value="Crop Name" />
+                    <h:outputText value="#{resourceApply.cropname}" style="font-weight:bold;"/>
+
                     <h:outputLabel for="resid" value="Available Resources" />
-                    <p:selectOneRadio id="resid" value="#{resourceApply.selectedRes}">
+                    <p:selectOneRadio id="resid" value="#{resourceApply.selectedRes}"
+                                      layout="pageDirection">
                         <f:selectItems value="#{resourceApply.existingresources}" 
                                        var="res"
                                        itemLabel="#{res.resourceName}" itemValue="#{res.resourceId}"/>
@@ -40,24 +41,33 @@
                     <h:inputText id="amount" value="#{resourceApply.amount}" readonly="true"/>
                     <h:outputLabel for="unit" value="Unit" />
                     <h:inputText id="unit" value="#{resourceApply.unit}" readonly="true"/>
-                    
+
                     <p:outputLabel for="amtapplied" value="Amount to be Applied" />
                     <p:inputText id="amtapplied" value="#{resourceApply.amtapplied}">
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
-                    
+
                     <h:outputLabel for="adate" value="Apply Date" />
                     <p:datePicker id="adate" value="#{resourceApply.applyDt}" pattern="yyyy-MM-dd"/>
+
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
                                      value="Apply"
-                                     action="#{resourceApply.goToApplyRes()}" >
-                                     
+                                     action="#{resourceApply.goToApplyRes()}" >                                     
                     </p:commandButton>
                     
-                    
-
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Apply Again"
+                                     action="#{resourceApply.goToApplyResAgain()}" >                                     
+                    </p:commandButton>                    
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Review"
+                                     action="#{resourceApply.goToSubmitRes()}" >                                     
+                    </p:commandButton>
+                    <p:button value="Cancel" outcome="/secured/harvest/activehrvstlst"/>
                 </p:panelGrid>
             </h:form>
         </div>

@@ -15,7 +15,7 @@
         <f:metadata>
             <f:viewAction action="#{activeHarvestList.fillHarvestValues()}" />
         </f:metadata>
-        
+
         <div class="card">            
             <h:form id="harvestgrid" style="text-align: center">                
                 <p:dataTable var="harvest" value="#{activeHarvestList.harvests}" reflow="true">
@@ -28,13 +28,12 @@
                     <p:column headerText="Sowing Date">
                         <h:outputText value="#{harvest.sowingDate}" />
                     </p:column>
-                    
-                    
-                    
-                    <p:column>    
-                        <p:commandButton  type="button" value="Apply Resource" 
-                                          action="#{activeHarvestList.goApplyResource()}" >
-                        <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Apply Resource"
+                                         action="#{activeHarvestList.goApplyResource()}" >
+                            <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
                         </p:commandButton>
                     </p:column>
 

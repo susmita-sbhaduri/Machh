@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
@@ -30,7 +29,7 @@ import java.util.Date;
     @NamedQuery(name = "Harvest.findAll", query = "SELECT h FROM Harvest h"),
     @NamedQuery(name = "Harvest.findByHarvestid", query = "SELECT h FROM Harvest h WHERE h.harvestid = :harvestid"),
     @NamedQuery(name = "Harvest.findBySiteid", query = "SELECT h FROM Harvest h WHERE h.siteid = :siteid"),
-    @NamedQuery(name = "Harvest.findByCrop", query = "SELECT h FROM Harvest h WHERE h.crop = :crop"),
+    @NamedQuery(name = "Harvest.findByCropid", query = "SELECT h FROM Harvest h WHERE h.cropid = :cropid"),
     @NamedQuery(name = "Harvest.findBySowingdt", query = "SELECT h FROM Harvest h WHERE h.sowingdt = :sowingdt"),
     @NamedQuery(name = "Harvest.findByHarvestingdt", query = "SELECT h FROM Harvest h WHERE h.harvestingdt = :harvestingdt")})
 public class Harvest implements Serializable {
@@ -43,14 +42,12 @@ public class Harvest implements Serializable {
     private Integer harvestid;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
     @Column(name = "siteid")
-    private String siteid;
+    private int siteid;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "crop")
-    private String crop;
+    @Column(name = "cropid")
+    private int cropid;
     @Basic(optional = false)
     @NotNull
     @Column(name = "sowingdt")
@@ -67,10 +64,10 @@ public class Harvest implements Serializable {
         this.harvestid = harvestid;
     }
 
-    public Harvest(Integer harvestid, String siteid, String crop, Date sowingdt) {
+    public Harvest(Integer harvestid, int siteid, int cropid, Date sowingdt) {
         this.harvestid = harvestid;
         this.siteid = siteid;
-        this.crop = crop;
+        this.cropid = cropid;
         this.sowingdt = sowingdt;
     }
 
@@ -82,20 +79,20 @@ public class Harvest implements Serializable {
         this.harvestid = harvestid;
     }
 
-    public String getSiteid() {
+    public int getSiteid() {
         return siteid;
     }
 
-    public void setSiteid(String siteid) {
+    public void setSiteid(int siteid) {
         this.siteid = siteid;
     }
 
-    public String getCrop() {
-        return crop;
+    public int getCropid() {
+        return cropid;
     }
 
-    public void setCrop(String crop) {
-        this.crop = crop;
+    public void setCropid(int cropid) {
+        this.cropid = cropid;
     }
 
     public Date getSowingdt() {

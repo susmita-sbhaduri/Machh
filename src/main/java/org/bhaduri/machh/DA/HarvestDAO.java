@@ -28,4 +28,12 @@ public class HarvestDAO extends CropJpaController{
         List<Harvest> activecroplist = query.getResultList();
         return activecroplist;
     }
+    
+    public Harvest getHarvestForId(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Harvest> query = em.createNamedQuery("Harvest.harvestPerId", Harvest.class);  
+        query.setParameter("harvestid", id); 
+        Harvest rec = query.getSingleResult();
+        return rec;
+    }
 }

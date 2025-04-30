@@ -170,8 +170,17 @@ public class MasterDataServices {
         try {  
             List<Harvest> harvestlist = harvestdao.getActiveList();
             for (int i = 0; i < harvestlist.size(); i++) {
-                record.setSiteName(harvestlist.get(i).getSiteid());
-                record.setCropName(harvestlist.get(i).getCrop());                           
+                record.setHarvestid(String.valueOf(harvestlist.get(i).getHarvestid()));
+                record.setSiteid(String.valueOf(harvestlist.get(i).getSiteid()));
+                record.setSiteName(getSiteNameForId(String.valueOf(harvestlist.get(i).getSiteid()))
+                        .getSiteName());
+                
+                record.setCropid(String.valueOf(harvestlist.get(i).getCropid()));
+                record.setCropName(getCropPerPk(String.valueOf(harvestlist.get(i).getCropid()))
+                        .getCropName());
+                record.setCropCategory(getCropPerPk(String.valueOf(harvestlist.get(i).getCropid()))
+                        .getCropCategory());
+                
                 mysqlDate = harvestlist.get(i).getSowingdt();                    
                 record.setSowingDate(formatter.format(mysqlDate));
                                              
@@ -190,32 +199,39 @@ public class MasterDataServices {
         }
     }
      
-    public List<HarvestDTO> getHarvestListForId(String harvestid) {
-        HarvestDAO harvestdao = new HarvestDAO(utx, emf);  
-        List<HarvestDTO> recordList = new ArrayList<>();
+    public HarvestDTO getHarvestRecForId(String harvestid) {
+        HarvestDAO harvestdao = new HarvestDAO(utx, emf);
         HarvestDTO record = new HarvestDTO();
         Date mysqlDate;
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        try {  
-            List<Harvest> harvestlist = harvestdao.getActiveList();
-            for (int i = 0; i < harvestlist.size(); i++) {
-                record.setSiteName(harvestlist.get(i).getSiteid());
-                record.setCropName(harvestlist.get(i).getCrop());                           
-                mysqlDate = harvestlist.get(i).getSowingdt();                    
-                record.setSowingDate(formatter.format(mysqlDate));
-                                             
-                recordList.add(record);
-                record = new HarvestDTO();
-            }        
-            return recordList;
-        }
-        catch (NoResultException e) {
-            System.out.println("No crops are found");            
+        try {
+            Harvest harvestrec = harvestdao.getHarvestForId(Integer.parseInt(harvestid));
+
+            record.setSiteid(String.valueOf(harvestrec.getSiteid()));
+            record.setSiteName(getSiteNameForId(String.valueOf(harvestrec.getSiteid()))
+                    .getSiteName());
+            
+            record.setCropid(String.valueOf(harvestrec.getCropid()));
+            record.setCropName(getCropPerPk(String.valueOf(harvestrec.getCropid()))
+                    .getCropName());
+            record.setCropCategory(getCropPerPk(String.valueOf(harvestrec.getCropid()))
+                    .getCropCategory());
+            
+            mysqlDate = harvestrec.getSowingdt();
+            record.setSowingDate(formatter.format(mysqlDate));
+            mysqlDate = harvestrec.getHarvestingdt();
+            if (mysqlDate != null) {
+                record.setHarvestDate(formatter.format(mysqlDate));
+            } else {
+                record.setHarvestDate("");
+            }
+            return record;
+        } catch (NoResultException e) {
+            System.out.println("No harvest record found for the given harvestid.");
             return null;
-        }
-        catch (Exception exception) {
-            System.out.println(exception + " has occurred in getActiveHarvestList.");
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getHarvestRecForId(String harvestid).");
             return null;
         }
     }  
@@ -729,6 +745,25 @@ public class MasterDataServices {
         }
     }
     
+    public CropDTO getCropPerPk(String cropid) {
+        CropDAO cropdao = new CropDAO(utx, emf);
+        CropDTO record = new CropDTO();
+
+        try {
+            Crop croprec = cropdao.getCropPerPK(Integer.parseInt(cropid));
+            record.setCropCategory(croprec.getCropcategory());
+            record.setCropName(croprec.getCrop());
+            record.setDetails(croprec.getDetails());
+            return record;
+        } catch (NoResultException e) {
+            System.out.println("No crop record is found for this cropid.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getCropPerPk(String cropid).");
+            return null;
+        }
+    }
+
 // **********************commented   
 //    public List<SiteCropDTO> getSiteCropsPerId(String siteid) {
 //        SiteCropDAO sitecropdao = new SiteCropDAO(utx, emf);  

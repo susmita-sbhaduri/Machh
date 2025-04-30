@@ -46,8 +46,8 @@ public class ActiveHarvestList implements Serializable {
 
     
     public String goApplyResource(){
-        String redirectUrl = "/secured/crop/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest.getHarvestid();
-//        String redirectUrl = "/secured/userhome";
+        String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest.getHarvestid();
+//        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
         return redirectUrl;
     }
 

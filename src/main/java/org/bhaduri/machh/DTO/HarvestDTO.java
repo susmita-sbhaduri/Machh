@@ -12,8 +12,11 @@ import java.io.Serializable;
  */
 public class HarvestDTO implements Serializable {
     private String harvestid;
+    private String siteid;
     private String siteName;
+    private String cropid;
     private String cropName;
+    private String cropCategory;
     private String sowingDate;
     private String harvestDate;
 
@@ -55,6 +58,30 @@ public class HarvestDTO implements Serializable {
 
     public void setHarvestDate(String harvestDate) {
         this.harvestDate = harvestDate;
+    }
+
+    public String getSiteid() {
+        return siteid;
+    }
+
+    public void setSiteid(String siteid) {
+        this.siteid = siteid;
+    }
+
+    public String getCropid() {
+        return cropid;
+    }
+
+    public void setCropid(String cropid) {
+        this.cropid = cropid;
+    }
+
+    public String getCropCategory() {
+        return cropCategory;
+    }
+
+    public void setCropCategory(String cropCategory) {
+        this.cropCategory = cropCategory;
     }
 
     
