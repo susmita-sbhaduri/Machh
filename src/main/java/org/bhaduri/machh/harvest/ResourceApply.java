@@ -15,6 +15,7 @@ import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
+import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.services.MasterDataServices;
@@ -54,8 +55,10 @@ public class ResourceApply implements Serializable {
     
     public void onResSelect() throws NamingException {        
         MasterDataServices masterDataService = new MasterDataServices();
-        amount = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes)).getAvailableAmt();
-        unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes)).getUnit();
+        amount = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
+                .getAvailableAmt();
+        unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
+                .getUnit();
     }
     
     public void goToSubmitRes() {
@@ -67,33 +70,43 @@ public class ResourceApply implements Serializable {
         String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest;
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
         if (selectedRes == null || selectedRes.trim().isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select one resource.",
                     "Select one resource.");
             f.addMessage("resid", message);
             return redirectUrl;
+//            return null;
         }
         if (amtapplied == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Apply non-zero amount of resource.",
                     "Apply non-zero amount of resource.");
             f.addMessage("amtapplied", message);
-            return redirectUrl;
+//            return redirectUrl;
+            return null;
         } else {
             float remainingAmt = Float.parseFloat(amount) - amtapplied;
             if (remainingAmt == 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Strored resource would be finished after this application.",
                         "Strored resource would be finished after this application.");
-                f.addMessage("amount", message);
+                f.addMessage("amtapplied", message);
                 return null;
             }
             if (remainingAmt < 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource cannot be applied.",
                         "Strored resource is less than applied resource.");
-                f.addMessage("amount", message);
-                return redirectUrl;
+                f.addMessage("amtapplied", message);
+//                return redirectUrl;
+                return null;
             }
         }
-        
+        ResourceCropDTO resourceCrop = new ResourceCropDTO();
+        resourceCrop.setResourceId(selectedRes);
+        resourceCrop.setHarvestId(selectedHarvest);
+        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource applied successfully.",
+                        "Resource applied successfully.");
+                f.addMessage(null, message);
+        return null;
         
     }
     
