@@ -13,6 +13,7 @@ import java.io.Serializable;
 public class ResourceCropDTO implements Serializable {
     private String applicationId;
     private String resourceId;
+    private String resourceName;
     private String harvestId;
     private String applicationDt;
     private String appliedAmount;
@@ -31,6 +32,14 @@ public class ResourceCropDTO implements Serializable {
 
     public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 
     public String getHarvestId() {
@@ -56,5 +65,7 @@ public class ResourceCropDTO implements Serializable {
     public void setAppliedAmount(String appliedAmount) {
         this.appliedAmount = appliedAmount;
     }
+
+    
     
 }

@@ -8,21 +8,19 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
-import org.bhaduri.machh.JPA.ResourceaquireJpaController;
-import org.bhaduri.machh.entities.Resourceaquire;
-
+import org.bhaduri.machh.JPA.ResourcecropJpaController;
 
 /**
  *
  * @author sb
  */
-public class ResAcquireDAO extends ResourceaquireJpaController{
-    public ResAcquireDAO(UserTransaction utx, EntityManagerFactory emf) {
+public class ResourceCropDAO extends ResourcecropJpaController{
+    public ResourceCropDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
     }
-    public int getMaxAqId() {
+    public int getMaxResCropId() {
         EntityManager em = getEntityManager();
-        TypedQuery<Integer> query = em.createNamedQuery("Resourceaquire.getMaxAqid", Integer.class);        
+        TypedQuery<Integer> query = em.createNamedQuery("Resourcecrop.getMaxResCropId", Integer.class);        
         return query.getSingleResult();
     }
 }

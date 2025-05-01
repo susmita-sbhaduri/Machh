@@ -243,7 +243,7 @@ public class AcquireResource implements Serializable {
 //        int resres = masterDataService.editResource(resourceRec);
         
         if (sqlFlag==3) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Inventory added", Integer.toString(SUCCESS));
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Resource acquired successfully");
             f.addMessage(null, message);
         }
         return redirectUrl;

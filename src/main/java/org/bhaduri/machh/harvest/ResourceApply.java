@@ -9,12 +9,17 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.SiteDTO;
@@ -61,12 +66,12 @@ public class ResourceApply implements Serializable {
                 .getUnit();
     }
     
-    public void goToSubmitRes() {
-        System.out.println("No crop categories are found." + selectedRes);
-        
+    public String goToSubmitRes() {
+        String redirectUrl = "/secured/harvest/appliedresperharvest?faces-redirect=true&appliedHarvest=" + selectedHarvest;
+        return redirectUrl; 
     }
     
-    public String goToApplyRes() {
+    public String goToApplyRes() throws NamingException {
         String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest;
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
@@ -82,38 +87,97 @@ public class ResourceApply implements Serializable {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Apply non-zero amount of resource.",
                     "Apply non-zero amount of resource.");
             f.addMessage("amtapplied", message);
-//            return redirectUrl;
-            return null;
+            return redirectUrl;
+//            return null;
         } else {
             float remainingAmt = Float.parseFloat(amount) - amtapplied;
             if (remainingAmt == 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Strored resource would be finished after this application.",
                         "Strored resource would be finished after this application.");
                 f.addMessage("amtapplied", message);
-                return null;
+//                return null;
             }
             if (remainingAmt < 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource cannot be applied.",
                         "Strored resource is less than applied resource.");
                 f.addMessage("amtapplied", message);
-//                return redirectUrl;
-                return null;
+                return redirectUrl;
+//                return null;
             }
         }
+        int sqlFlag = 0;
         ResourceCropDTO resourceCrop = new ResourceCropDTO();
+        MasterDataServices masterDataService = new MasterDataServices();
+        int applicationid = masterDataService.getMaxIdForResCrop();
+        if (applicationid == 0 || applicationid == DB_SEVERE) {
+            resourceCrop.setApplicationId("1");
+        } else {
+            resourceCrop.setApplicationId(String.valueOf(applicationid + 1));
+        }
         resourceCrop.setResourceId(selectedRes);
         resourceCrop.setHarvestId(selectedHarvest);
-        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource applied successfully.",
-                        "Resource applied successfully.");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        resourceCrop.setAppliedAmount(String.format("%.2f", amtapplied));
+        resourceCrop.setApplicationDt(sdf.format(applyDt));
+        
+        FarmresourceDTO resourceRec = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes));
+        float remainingAmt = Float.parseFloat(amount) - amtapplied;
+        resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
+        
+        int rescropres = masterDataService.addResCropRecord(resourceCrop);
+        
+        if (rescropres == SUCCESS) {
+            sqlFlag = sqlFlag + 1;
+        } else {
+            if (rescropres == DB_DUPLICATE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource already applied with this application ID=" + resourceCrop.getApplicationId()
+                        , Integer.toString(DB_DUPLICATE));
                 f.addMessage(null, message);
-        return null;
+            }
+            if (rescropres == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on applying resource", Integer.toString(DB_SEVERE));
+                f.addMessage(null, message);
+            } 
+            redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+            return redirectUrl;
+        }
+        
+        
+        if (sqlFlag == 1) {
+            int resres = masterDataService.editResource(resourceRec);
+            if (resres == SUCCESS) {
+                sqlFlag = sqlFlag + 1;
+            } else {
+                if (resres == DB_NON_EXISTING) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource record does not exist", Integer.toString(DB_NON_EXISTING));
+                    f.addMessage(null, message);
+                }
+                if (resres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resource update", Integer.toString(DB_SEVERE));
+                    f.addMessage(null, message);
+                }
+                int delres = masterDataService.delResCropRecord(resourceCrop);
+                if (delres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "resourcecrop record could not be deleted", Integer.toString(DB_SEVERE));
+                    f.addMessage(null, message);
+                }
+                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+                return redirectUrl;
+            }
+        }
+        if (sqlFlag == 2) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                    "Resource applied successfully with application ID=" + resourceCrop.getApplicationId());
+            f.addMessage(null, message);
+        }
+        return redirectUrl;
         
     }
     
-    public String goToApplyResAgain(){
-        String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest;
-        return redirectUrl;
-    }
+//    public String goToApplyResAgain(){
+//        String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest;
+//        return redirectUrl;
+//    }
     public String getSelectedRes() {
         return selectedRes;
     }

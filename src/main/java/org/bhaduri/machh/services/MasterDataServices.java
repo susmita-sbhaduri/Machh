@@ -23,6 +23,7 @@ import org.bhaduri.machh.DA.ExpenseDAO;
 import org.bhaduri.machh.DA.HarvestDAO;
 import org.bhaduri.machh.DA.FarmresourceDAO;
 import org.bhaduri.machh.DA.ResAcquireDAO;
+import org.bhaduri.machh.DA.ResourceCropDAO;
 import org.bhaduri.machh.DA.ShopDAO;
 import org.bhaduri.machh.DA.ShopResDAO;
 //import org.bhaduri.machh.DA.SiteCropDAO;
@@ -41,6 +42,7 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.ResAcquireDTO;
+import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.DTO.SiteCropDTO;
@@ -59,6 +61,7 @@ import org.bhaduri.machh.entities.Shopresource;
 import org.bhaduri.machh.entities.Site;
 import org.bhaduri.machh.entities.Farmresource;
 import org.bhaduri.machh.entities.Resourceaquire;
+import org.bhaduri.machh.entities.Resourcecrop;
 import org.bhaduri.machh.entities.ShopresourcePK;
 
 public class MasterDataServices {
@@ -763,7 +766,66 @@ public class MasterDataServices {
             return null;
         }
     }
-
+    
+    public int getMaxIdForResCrop(){
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
+        try {
+            return rescropdao.getMaxResCropId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in resourcecrop table");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getMaxIdForResCrop().");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int addResCropRecord(ResourceCropDTO rescroprec) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf); 
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Resourcecrop rec = new Resourcecrop();
+            rec.setApplicationid(Integer.valueOf(rescroprec.getApplicationId()));
+            rec.setHarvestid(Integer.parseInt(rescroprec.getHarvestId()));
+            rec.setResourceid(Integer.parseInt(rescroprec.getResourceId()));
+            mysqlDate = formatter.parse(rescroprec.getApplicationDt());
+            rec.setAppldate(mysqlDate);
+            rec.setAppliedamt(BigDecimal.valueOf(Double.parseDouble(rescroprec.getAppliedAmount())));
+            
+            rescropdao.create(rec);
+            return SUCCESS;
+        }
+        catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this resourcecrop record");            
+            return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addResCropRecord(ResourceCropDTO rescroprec).");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int delResCropRecord(ResourceCropDTO rescroprec) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);                 
+        try {
+            Resourcecrop rec = new Resourcecrop();
+            rec.setApplicationid(Integer.valueOf(rescroprec.getApplicationId())); 
+            rescropdao.destroy(rec.getApplicationid());
+            return SUCCESS;
+        }
+        catch (NonexistentEntityException e) {
+            System.out.println("This resourcecrop record does not exist");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " delResCropRecord(ResourceCropDTO rescroprec).");
+            return DB_SEVERE;
+        }
+    }
 // **********************commented   
 //    public List<SiteCropDTO> getSiteCropsPerId(String siteid) {
 //        SiteCropDAO sitecropdao = new SiteCropDAO(utx, emf);  
