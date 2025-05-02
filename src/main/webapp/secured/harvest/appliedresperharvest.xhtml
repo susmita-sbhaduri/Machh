@@ -21,52 +21,53 @@
 
         <div class="card">            
             <h:form id="harvestgrid" style="text-align: center">                
-                <p:dataTable var="harvest" value="#{appliedResForHarvest.appliedresources}" reflow="true">
+                <p:dataTable var="appliedresource" value="#{appliedResForHarvest.appliedresources}" reflow="true">
                     <f:facet name="header">
                         <h:panelGroup layout="block" style="display: flex; align-items: center;">
                             <!-- Heading text -->
                             <!-- Static Colon -->
                             <h:outputText value="Site:" style="font-size: 20px; margin: 0 5px;" />
                             <h:outputText value="#{appliedResForHarvest.sitename}" 
-                                          style="font-weight: bold; font-size: 20px;
-                             padding: 4px;
-                             outline: 2px solid blue;
-                             outline-offset: 2px;" />
-
+                                          style="font-weight: bold; font-size: 20px;" />
+                            <h:outputText value=",Crop Category:" style="font-size: 20px; margin: 0 5px;" />
                             <h:outputText value="#{appliedResForHarvest.cropcat}" 
-                                          style="font-weight: bold; font-size: 20px;
-                             padding: 4px;
-                             outline: 2px solid blue;
-                             outline-offset: 2px;" />
+                                          style="font-weight: bold; font-size: 20px;" />
 
                             <!-- Static Colon -->
-                            <h:outputText value=":" style="font-size: 20px; margin: 0 5px;" />
+                            <h:outputText value="-" style="font-size: 20px; margin: 0 5px;" />
 
                             <h:outputText value="#{appliedResForHarvest.cropname}" 
-                                          style="font-weight: bold; font-size: 20px;
-                             padding: 4px;
-                             outline: 2px solid blue;
-                             outline-offset: 2px;" />
+                                          style="font-weight: bold; font-size: 20px;" />
                         </h:panelGroup>
                     </f:facet>
                     <p:column headerText="Application ID">
                         <h:outputText value="#{appliedresource.applicationId}" />
                     </p:column>
                     <p:column headerText="Resource Name">
-                        <h:outputText value="#{appliedresource.}" />
+                        <h:outputText value="#{appliedresource.resourceName}" />
                     </p:column>
-                    <p:column headerText="Sowing Date">
-                        <h:outputText value="#{harvest.sowingDate}" />
+                    <p:column headerText="Application Date">
+                        <h:outputText value="#{appliedresource.applicationDt}" />
+                    </p:column>
+                    <p:column headerText="Applied Amount">
+                        <h:outputText value="#{appliedresource.appliedAmount}" />
                     </p:column>
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
-                                         value="Apply Resource"
-                                         action="#{activeHarvestList.goApplyResource()}" >
-                            <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
+                                         value="Edit"
+                                         action="#{appliedResForHarvest.editResource()}" >
+                            <f:setPropertyActionListener value="#{appliedresource}" target="#{appliedResForHarvest.appliedRes}" />    
                         </p:commandButton>
                     </p:column>
-
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Delete"
+                                         action="#{appliedResForHarvest.deleteResource()}" >
+                            <f:setPropertyActionListener value="#{appliedresource}" target="#{appliedResForHarvest.appliedRes}" />    
+                        </p:commandButton>
+                    </p:column>
                 </p:dataTable>
             </h:form>
         </div>

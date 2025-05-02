@@ -8,7 +8,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
+import java.util.List;
 import org.bhaduri.machh.JPA.ResourcecropJpaController;
+import org.bhaduri.machh.entities.Resourcecrop;
 
 /**
  *
@@ -22,5 +24,11 @@ public class ResourceCropDAO extends ResourcecropJpaController{
         EntityManager em = getEntityManager();
         TypedQuery<Integer> query = em.createNamedQuery("Resourcecrop.getMaxResCropId", Integer.class);        
         return query.getSingleResult();
+    }
+    public List<Resourcecrop> getResCropHarvest(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Resourcecrop> query = em.createNamedQuery("Resourcecrop.getResCropHarvest", Resourcecrop.class);        
+        query.setParameter("harvestid", id);
+        return query.getResultList();
     }
 }

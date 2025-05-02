@@ -31,13 +31,15 @@ public class ActiveHarvestList implements Serializable {
     public String fillHarvestValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         harvests = masterDataService.getActiveHarvestList();
-        String redirectUrl;
-//        FacesMessage message;
-//        FacesContext f = FacesContext.getCurrentInstance();
+        String redirectUrl = "/secured/userhome?faces-redirect=true";
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
         
-        if(harvests.isEmpty()){
-            
-            redirectUrl = "/secured/errorpage";
+        if(harvests==null){
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                    "No active harvests.");
+            f.addMessage(null, message);
             return redirectUrl;
         } else 
             return null;        

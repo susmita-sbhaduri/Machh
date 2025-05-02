@@ -782,6 +782,37 @@ public class MasterDataServices {
         }
     }
     
+    public List<ResourceCropDTO> getResCropForHarvest(String harvestid) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
+        List<ResourceCropDTO> recordlist = new ArrayList<>();
+        ResourceCropDTO record = new ResourceCropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            List<Resourcecrop> reclist = rescropdao.getResCropHarvest(Integer.parseInt(harvestid));
+            
+            for (int i = 0; i < reclist.size(); i++) {
+                record.setApplicationId(reclist.get(i).getApplicationid().toString());
+                record.setHarvestId(reclist.get(i).getApplicationid().toString());
+                record.setResourceId(reclist.get(i).getApplicationid().toString());
+                record.setResourceName(getResourceNameForId(reclist.get(i).getApplicationid())
+                        .getResourceName());
+                mysqlDate = reclist.get(i).getAppldate();
+                record.setApplicationDt(formatter.format(mysqlDate));
+                record.setAppliedAmount(String.format("%.2f", reclist.get(i).getAppliedamt().floatValue()));
+                recordlist.add(record);
+                record = new ResourceCropDTO();
+            }  
+            return recordlist;
+        } catch (NoResultException e) {
+            System.out.println("No resourcecrop record is found for this harvest.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
+            return null;
+        }
+    }
     public int addResCropRecord(ResourceCropDTO rescroprec) {
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf); 
         Date mysqlDate;
