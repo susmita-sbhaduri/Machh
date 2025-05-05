@@ -782,6 +782,34 @@ public class MasterDataServices {
         }
     }
     
+    public ResourceCropDTO getResCropForId(String appliedid) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);       
+        ResourceCropDTO record = new ResourceCropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Resourcecrop rec = rescropdao.getResCropHarvestId(Integer.parseInt(appliedid));
+
+            record.setApplicationId(rec.getApplicationid().toString());
+            record.setHarvestId(Integer.toString(rec.getHarvestid()));
+            record.setResourceId(Integer.toString(rec.getResourceid()));
+            record.setResourceName(getResourceNameForId(rec.getResourceid())
+                    .getResourceName());
+            mysqlDate = rec.getAppldate();
+            record.setApplicationDt(formatter.format(mysqlDate));
+            record.setAppliedAmount(String.format("%.2f", rec.getAppliedamt().floatValue()));
+
+            return record;
+        } catch (NoResultException e) {
+            System.out.println("No resourcecrop record is found for this application Id.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResCropForId(String appliedid).");
+            return null;
+        }
+    }
+    
     public List<ResourceCropDTO> getResCropForHarvest(String harvestid) {
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
         List<ResourceCropDTO> recordlist = new ArrayList<>();
@@ -794,9 +822,9 @@ public class MasterDataServices {
             
             for (int i = 0; i < reclist.size(); i++) {
                 record.setApplicationId(reclist.get(i).getApplicationid().toString());
-                record.setHarvestId(reclist.get(i).getApplicationid().toString());
-                record.setResourceId(reclist.get(i).getApplicationid().toString());
-                record.setResourceName(getResourceNameForId(reclist.get(i).getApplicationid())
+                record.setHarvestId(Integer.toString(reclist.get(i).getHarvestid()));
+                record.setResourceId(Integer.toString(reclist.get(i).getResourceid()));
+                record.setResourceName(getResourceNameForId(reclist.get(i).getResourceid())
                         .getResourceName());
                 mysqlDate = reclist.get(i).getAppldate();
                 record.setApplicationDt(formatter.format(mysqlDate));
@@ -836,6 +864,33 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in addResCropRecord(ResourceCropDTO rescroprec).");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int editResCropRecord(ResourceCropDTO rescroprec) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf); 
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Resourcecrop rec = new Resourcecrop();
+            rec.setApplicationid(Integer.valueOf(rescroprec.getApplicationId()));
+            rec.setHarvestid(Integer.parseInt(rescroprec.getHarvestId()));
+            rec.setResourceid(Integer.parseInt(rescroprec.getResourceId()));
+            mysqlDate = formatter.parse(rescroprec.getApplicationDt());
+            rec.setAppldate(mysqlDate);
+            rec.setAppliedamt(BigDecimal.valueOf(Double.parseDouble(rescroprec.getAppliedAmount())));
+            
+            rescropdao.edit(rec);
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("This resourcecrop record does not exist.");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in aeditResCropRecord(ResourceCropDTO rescroprec).");
             return DB_SEVERE;
         }
     }

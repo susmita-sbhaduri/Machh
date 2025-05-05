@@ -11,6 +11,7 @@ import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
+import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
@@ -74,8 +75,23 @@ public class AppliedResForHarvest implements Serializable {
         ResourceCropDTO resourceCrop = new ResourceCropDTO();
         resourceCrop.setApplicationId(appliedRes.getApplicationId());
         int delres = masterDataService.delResCropRecord(resourceCrop);
-        if (delres == SUCCESS){
-            
+        if (delres == SUCCESS){            
+            FarmresourceDTO resourceRecord = masterDataService.
+                    getResourceNameForId(Integer.parseInt(appliedRes.getResourceId()));
+            float farmResourceAmt = Float.parseFloat(resourceRecord.getAvailableAmt())
+                    +Float.parseFloat(appliedRes.getAppliedAmount());
+            resourceRecord.setAvailableAmt(String.format("%.2f",farmResourceAmt));
+            int updRes = masterDataService.editResource(resourceRecord);
+            if (updRes == SUCCESS) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                        "resourcecrop record deleted successfully");
+                f.addMessage(null, message);
+            }
+            if (updRes == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "resourcecrop record could not be updated");
+                f.addMessage(null, message);
+            }
         }
         if (delres == DB_SEVERE) {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 

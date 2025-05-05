@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content">
+        <h4>Edit Resource for the Harvest.</h4>
+        <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        &nbsp;&nbsp;&nbsp;
+        <p:button value="Cancel" outcome="/secured/harvest/activehrvstlst"/>
+        &nbsp;&nbsp;&nbsp;
+
+        <f:metadata>
+            <f:viewParam name="selectedRescrop" value="#{resourceCropEdit.selectedRescrop}"></f:viewParam>
+            <f:viewAction action="#{resourceCropEdit.fillValues()}" />
+        </f:metadata>
+        <div class="card">
+            <h:form id="resappform" style="text-align: center">
+                <p:panelGrid columns="2">
+                    <h:outputLabel value="Site" />
+                    <h:outputText value="#{resourceCropEdit.site}" style="font-weight:bold;"/>
+                    <h:outputLabel value="Crop Category" />
+                    <h:outputText value="#{resourceCropEdit.cropcat}" style="font-weight:bold;"/>
+                    <h:outputLabel value="Crop Name" />
+                    <h:outputText value="#{resourceCropEdit.cropname}" style="font-weight:bold;"/>
+
+                    <h:outputLabel for="resid" value="Available Resources" />
+                    <p:selectOneRadio id="resid" value="#{resourceCropEdit.selectedRes}"
+                                      layout="pageDirection">
+                        <f:selectItems value="#{resourceCropEdit.existingresources}" 
+                                       var="res"
+                                       itemLabel="#{res.resourceName}" itemValue="#{res.resourceId}"/>
+                        <p:ajax event="change" listener="#{resourceCropEdit.onResSelect}" 
+                                update="@form" process="@this"/>
+                    </p:selectOneRadio>
+                    
+                    <h:outputLabel value="Available Amount" />
+                    <h:outputText value="#{resourceCropEdit.amount}" style="font-weight:bold;"/>
+                    <h:outputLabel value="Unit" />
+                    <h:outputText value="#{resourceCropEdit.unit}" style="font-weight:bold;"/>
+                    <p:outputLabel for="amtapplied" value="Amount to be Applied" />
+                    <p:inputText id="amtapplied" value="#{resourceCropEdit.amtapplied}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>
+
+                    <h:outputLabel for="adate" value="Apply Date" />
+                    <p:datePicker id="adate" value="#{resourceCropEdit.applyDt}" pattern="yyyy-MM-dd"/>
+
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Save"
+                                     action="#{resourceCropEdit.goToApplyRes()}" >                                     
+                    </p:commandButton>                                                         
+                    
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Applied Resources"
+                                     action="#{resourceApply.goToSubmitRes()}" >                                     
+                    </p:commandButton>
+                </p:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>    
+
+</ui:composition>

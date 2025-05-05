@@ -31,4 +31,11 @@ public class ResourceCropDAO extends ResourcecropJpaController{
         query.setParameter("harvestid", id);
         return query.getResultList();
     }
+    
+    public Resourcecrop getResCropHarvestId(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Resourcecrop> query = em.createNamedQuery("Resourcecrop.getResCropId", Resourcecrop.class);        
+        query.setParameter("applicationid", id);
+        return query.getSingleResult();
+    }
 }

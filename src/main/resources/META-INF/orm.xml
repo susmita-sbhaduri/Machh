@@ -84,6 +84,9 @@
     <named-query name="Resourcecrop.getResCropHarvest">
         <query>SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid</query>
     </named-query>
+    <named-query name="Resourcecrop.getResCropId">
+        <query>SELECT r FROM Resourcecrop r WHERE r.applicationid = :applicationid</query>
+    </named-query>
     <named-query name="Expense.getMaxExpId">
         <query>SELECT MAX(e.expenseid) FROM Expense e</query>
     </named-query>
