@@ -17,6 +17,7 @@
     <class>org.bhaduri.machh.entities.Resourcecrop</class>
     <class>org.bhaduri.machh.entities.Harvest</class>
     <class>org.bhaduri.machh.entities.Shop</class>
+    <class>org.bhaduri.machh.entities.Labourcrop</class>
     <class>org.bhaduri.machh.entities.Shopresource</class>
   </persistence-unit>
 </persistence>

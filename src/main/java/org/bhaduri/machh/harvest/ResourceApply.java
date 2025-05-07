@@ -66,10 +66,10 @@ public class ResourceApply implements Serializable {
                 .getUnit();
     }
     
-    public String goToSubmitRes() {
-        String redirectUrl = "/secured/harvest/appliedresperharvest?faces-redirect=true&appliedHarvest=" + selectedHarvest;
-        return redirectUrl; 
-    }
+//    public String goToSubmitRes() {
+//        String redirectUrl = "/secured/harvest/appliedresperharvest?faces-redirect=true&appliedHarvest=" + selectedHarvest;
+//        return redirectUrl; 
+//    }
     
     public String goToApplyRes() throws NamingException {
         String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest;

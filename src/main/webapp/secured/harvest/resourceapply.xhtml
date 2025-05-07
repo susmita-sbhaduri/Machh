@@ -38,7 +38,7 @@
                         <p:ajax event="change" listener="#{resourceApply.onResSelect}" 
                                 update="@form" process="@this"/>
                     </p:selectOneRadio>
-                    
+
                     <h:outputLabel value="Available Amount" />
                     <h:outputText value="#{resourceApply.amount}" style="font-weight:bold;"/>
                     <h:outputLabel value="Unit" />
@@ -48,23 +48,14 @@
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
-
                     <h:outputLabel for="adate" value="Apply Date" />
                     <p:datePicker id="adate" value="#{resourceApply.applyDt}" pattern="yyyy-MM-dd"/>
-
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Apply"
-                                     action="#{resourceApply.goToApplyRes()}" >                                     
-                    </p:commandButton>
-                                                          
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Review"
-                                     action="#{resourceApply.goToSubmitRes()}" >                                     
-                    </p:commandButton>
-                    
                 </p:panelGrid>
+                <p:commandButton styleClass="blue-button" 
+                                 icon="fa fa-edit" 
+                                 value="Apply"
+                                 action="#{resourceApply.goToApplyRes()}" >                                     
+                </p:commandButton>
             </h:form>
         </div>
     </ui:define>    
