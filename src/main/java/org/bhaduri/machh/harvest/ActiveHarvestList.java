@@ -58,7 +58,7 @@ public class ActiveHarvestList implements Serializable {
     }
     
     public String goApplyLabour(){
-        String redirectUrl = "/secured/userhome?faces-redirect=true";
+        String redirectUrl = "/secured/harvest/laborapply?faces-redirect=true&selectedHarvest=" + selectedHarvest.getHarvestid();
         return redirectUrl;
     }
 

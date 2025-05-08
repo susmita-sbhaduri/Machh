@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content">
+        <h4>Apply Labor.</h4>
+        <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        &nbsp;&nbsp;&nbsp;
+        <p:button value="Cancel" outcome="/secured/harvest/activehrvstlst"/>
+        &nbsp;&nbsp;&nbsp;
+
+        <f:metadata>
+            <f:viewParam name="selectedHarvest" value="#{laborApply.selectedHarvest}"></f:viewParam>
+            <f:viewAction action="#{laborApply.fillValues()}" />
+        </f:metadata>
+        <div class="card">
+            <h:form id="labappform" style="text-align: center">
+                <p:panelGrid columns="2">
+                    <h:outputLabel value="Site" />
+                    <h:outputText value="#{laborApply.site}" style="font-weight:bold;"/>
+                    <h:outputLabel value="Crop Category" />
+                    <h:outputText value="#{laborApply.cropcat}" style="font-weight:bold;"/>
+                    <h:outputLabel value="Crop Name" />
+                    <h:outputText value="#{laborApply.cropname}" style="font-weight:bold;"/>
+
+                    <h:outputLabel for="labid" value="Labour Category" />
+                    <p:selectOneRadio id="labid" value="#{laborApply.labCategory}"
+                                      layout="pageDirection">                       
+                        <f:selectItem itemLabel="Dredging" itemValue="DREDGE"/>
+                        <f:selectItem itemLabel="জাল টানা" itemValue="JAALTAANA"/>
+                    </p:selectOneRadio>
+
+                    <p:outputLabel for="amtpaid" value="Amount Paid(in Rs.)" />
+                    <p:inputText id="amtpaid" value="#{laborApply.amountPaid}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>
+                    <h:outputLabel for="adate" value="Apply Date" />
+                    <p:datePicker id="adate" value="#{laborApply.applyDt}" pattern="yyyy-MM-dd"/>
+                </p:panelGrid>
+                <p:commandButton styleClass="blue-button" 
+                                 icon="fa fa-edit" 
+                                 value="Apply"
+                                 action="#{laborApply.goToSaveLabor()}" >                                     
+                </p:commandButton>
+            </h:form>
+        </div>
+    </ui:define>    
+
+</ui:composition>

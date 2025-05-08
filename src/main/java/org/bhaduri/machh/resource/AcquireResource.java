@@ -47,20 +47,7 @@ public class AcquireResource implements Serializable {
     }
 
     public void fillResourceValues() throws NamingException {
-//        String redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
-//        FacesMessage message;
-//        FacesContext f = FacesContext.getCurrentInstance();
-//        f.getExternalContext().getFlash().setKeepMessages(true);
-//        MasterDataServices masterDataService = new MasterDataServices();
-//        existingresources = masterDataService.getResourceList();
-//        if (existingresources.isEmpty()) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Before acquiring resource should be added.",
-//                    "Before acquiring resource should be added.");
-//            f.addMessage("resid", message);
-//            return redirectUrl;
-//        } else {
-//            return null;
-//        }
+
         MasterDataServices masterDataService = new MasterDataServices();
         shopForSelectedRes = masterDataService.getShopResForResid(selectedRes);
     }

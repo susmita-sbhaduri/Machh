@@ -90,5 +90,8 @@
     <named-query name="Expense.getMaxExpId">
         <query>SELECT MAX(e.expenseid) FROM Expense e</query>
     </named-query>
+    <named-query name="Labourcrop.getMaxLabCropId">
+        <query>SELECT MAX(l.applicationid) FROM Labourcrop l</query>
+    </named-query>
 </entity-mappings>
 
