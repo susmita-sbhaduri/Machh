@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Date;
@@ -30,7 +29,6 @@ import java.util.Date;
     @NamedQuery(name = "Labourcrop.findAll", query = "SELECT l FROM Labourcrop l"),
     @NamedQuery(name = "Labourcrop.findByApplicationid", query = "SELECT l FROM Labourcrop l WHERE l.applicationid = :applicationid"),
     @NamedQuery(name = "Labourcrop.findByHarvestid", query = "SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid"),
-    @NamedQuery(name = "Labourcrop.findByLabourcategory", query = "SELECT l FROM Labourcrop l WHERE l.labourcategory = :labourcategory"),
     @NamedQuery(name = "Labourcrop.findByAppldate", query = "SELECT l FROM Labourcrop l WHERE l.appldate = :appldate")})
 public class Labourcrop implements Serializable {
 
@@ -46,11 +44,6 @@ public class Labourcrop implements Serializable {
     private int harvestid;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "labourcategory")
-    private String labourcategory;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "appldate")
     @Temporal(TemporalType.DATE)
     private Date appldate;
@@ -62,10 +55,9 @@ public class Labourcrop implements Serializable {
         this.applicationid = applicationid;
     }
 
-    public Labourcrop(Integer applicationid, int harvestid, String labourcategory, Date appldate) {
+    public Labourcrop(Integer applicationid, int harvestid, Date appldate) {
         this.applicationid = applicationid;
         this.harvestid = harvestid;
-        this.labourcategory = labourcategory;
         this.appldate = appldate;
     }
 
@@ -83,14 +75,6 @@ public class Labourcrop implements Serializable {
 
     public void setHarvestid(int harvestid) {
         this.harvestid = harvestid;
-    }
-
-    public String getLabourcategory() {
-        return labourcategory;
-    }
-
-    public void setLabourcategory(String labourcategory) {
-        this.labourcategory = labourcategory;
     }
 
     public Date getAppldate() {

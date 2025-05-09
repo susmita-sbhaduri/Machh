@@ -27,7 +27,6 @@ import org.bhaduri.machh.DA.ResAcquireDAO;
 import org.bhaduri.machh.DA.ResourceCropDAO;
 import org.bhaduri.machh.DA.ShopDAO;
 import org.bhaduri.machh.DA.ShopResDAO;
-//import org.bhaduri.machh.DA.SiteCropDAO;
 import org.bhaduri.machh.DA.SiteDAO;
 
 
@@ -943,7 +942,7 @@ public class MasterDataServices {
             rec.setHarvestid(Integer.parseInt(labourcroprec.getHarvestId()));            
             mysqlDate = formatter.parse(labourcroprec.getApplicationDate());
             rec.setAppldate(mysqlDate);
-            rec.setLabourcategory(labourcroprec.getLabourCategory());
+//            rec.setLabourcategory(labourcroprec.getLabourCategory());
 //            rec.s(BigDecimal.valueOf(Double.parseDouble(labourcroprec.getAppliedAmount())));
             
             labourcropdao.create(rec);
