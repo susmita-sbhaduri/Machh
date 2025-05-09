@@ -939,22 +939,40 @@ public class MasterDataServices {
         try {
             Labourcrop rec = new Labourcrop();
             
-            rec.setApplicationid(Integer.valueOf(labourcroprec.g));
-            rec.setHarvestid(Integer.parseInt(rescroprec.getHarvestId()));
-            rec.setResourceid(Integer.parseInt(rescroprec.getResourceId()));
-            mysqlDate = formatter.parse(rescroprec.getApplicationDt());
+            rec.setApplicationid(Integer.valueOf(labourcroprec.getApplicationId()));
+            rec.setHarvestid(Integer.parseInt(labourcroprec.getHarvestId()));            
+            mysqlDate = formatter.parse(labourcroprec.getApplicationDate());
             rec.setAppldate(mysqlDate);
-            rec.setAppliedamt(BigDecimal.valueOf(Double.parseDouble(rescroprec.getAppliedAmount())));
+            rec.setLabourcategory(labourcroprec.getLabourCategory());
+//            rec.s(BigDecimal.valueOf(Double.parseDouble(labourcroprec.getAppliedAmount())));
             
-            rescropdao.create(rec);
+            labourcropdao.create(rec);
             return SUCCESS;
         }
         catch (PreexistingEntityException e) {
-            System.out.println("Record is already there for this resourcecrop record");            
+            System.out.println("Record is already there for this labourcrop record");            
             return DB_DUPLICATE;
         }
         catch (Exception exception) {
-            System.out.println(exception + " has occurred in addResCropRecord(ResourceCropDTO rescroprec).");
+            System.out.println(exception + " has occurred in addLabourCropRecord(LabourCropDTO labourcroprec).");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int delLabourCropRecord(LabourCropDTO labourcroprec) {
+        LabourCropDAO labourcropdao = new LabourCropDAO(utx, emf);               
+        try {
+            Labourcrop rec = new Labourcrop();
+            rec.setApplicationid(Integer.valueOf(labourcroprec.getApplicationId())); 
+            labourcropdao.destroy(rec.getApplicationid());
+            return SUCCESS;
+        }
+        catch (NonexistentEntityException e) {
+            System.out.println("Record for this labourcrop does not exist");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in delLabourCropRecord(LabourCropDTO labourcroprec).");
             return DB_SEVERE;
         }
     }
