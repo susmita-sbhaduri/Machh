@@ -28,7 +28,7 @@ public class HrvstResSummary implements Serializable {
     public void fillValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         resoures = masterDataService.getResSummaryPerID();
-        
+        System.out.println("No resourcecrop record is found for this harvest.");
     }
 
     public List<ResourceCropDTO> getResoures() {
