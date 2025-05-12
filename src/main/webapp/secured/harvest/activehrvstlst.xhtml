@@ -11,7 +11,8 @@
         <h4>Active Harvests.</h4>
         <p:growl id="growl" showDetail="true" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        &nbsp;&nbsp;&nbsp;        
+        &nbsp;&nbsp;&nbsp;
+        <p:button outcome="/secured/harvest/hrvstressummary" value="Report"/>
         <f:metadata>
             <f:viewAction action="#{activeHarvestList.fillHarvestValues()}" />
         </f:metadata>

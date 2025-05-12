@@ -54,12 +54,12 @@ public class LaborApply implements Serializable {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-        if (labCategory == null || labCategory.trim().isEmpty()) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
-                    "Select labor category.");
-            f.addMessage("labid", message);
-            return redirectUrl;
-        }
+//        if (labCategory == null || labCategory.trim().isEmpty()) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
+//                    "Select labor category.");
+//            f.addMessage("labid", message);
+//            return redirectUrl;
+//        }
         
         if (amountPaid == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
@@ -80,7 +80,7 @@ public class LaborApply implements Serializable {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         labCropRec.setHarvestId(selectedHarvest); 
-        labCropRec.setLabourCategory(labCategory);
+//        labCropRec.setLabourCategory(labCategory);
         labCropRec.setApplicationDate(sdf.format(applyDt));   
 //        contruction of expense record
         ExpenseDTO expenseRec = new ExpenseDTO();
@@ -91,7 +91,7 @@ public class LaborApply implements Serializable {
             expenseRec.setExpenseId(String.valueOf(expenseid + 1));
         }
         expenseRec.setDate(sdf.format(applyDt));
-        expenseRec.setExpenseType(labCategory);
+        expenseRec.setExpenseType("LABHRVST");
         expenseRec.setExpenseRefId(selectedHarvest); //######harvest id
         expenseRec.setExpenditure(String.format("%.2f", amountPaid));
         expenseRec.setCommString(comments);

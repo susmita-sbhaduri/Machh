@@ -43,6 +43,7 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.LabourCropDTO;
 import org.bhaduri.machh.DTO.ResAcquireDTO;
+import org.bhaduri.machh.DTO.ResCropSummaryDTO;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
@@ -915,6 +916,38 @@ public class MasterDataServices {
         }
     }
     
+    public List<ResourceCropDTO> getResSummaryPerID() {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
+        List<ResourceCropDTO> recordlist = new ArrayList<>();
+//        List<ResCropSummaryDTO> recordsummary = new ArrayList<>();
+        ResourceCropDTO record = new ResourceCropDTO();
+        
+        try {
+            List<ResCropSummaryDTO> recordsummary = rescropdao.getSumByResId();
+            
+            for (int i = 0; i < recordsummary.size(); i++) {
+                record.setApplicationId(null);
+                record.setHarvestId(Integer.toString(recordsummary.get(i).getHarvestId()));
+                record.setResourceId(Integer.toString(recordsummary.get(i).getResourceId()));
+                record.setResourceName(getResourceNameForId(recordsummary.get(i).getResourceId())
+                        .getResourceName());
+                record.setHarvestDto(getHarvestRecForId(Integer.toString(recordsummary.get(i).getHarvestId())));
+                record.setApplicationDt(null);
+                record.setAppliedAmount(String.format("%.2f", recordsummary.get(i).
+                        getAppliedAmount().floatValue()));
+                recordlist.add(record);
+                record = new ResourceCropDTO();
+            }  
+            return recordlist;
+        } catch (NoResultException e) {
+            System.out.println("No resourcecrop record is found for this harvest.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
+            return null;
+        }
+    }
+    
     public int getMaxIdForLabCrop(){
         LabourCropDAO labourcropdao = new LabourCropDAO(utx, emf);
         try {
@@ -942,9 +975,6 @@ public class MasterDataServices {
             rec.setHarvestid(Integer.parseInt(labourcroprec.getHarvestId()));            
             mysqlDate = formatter.parse(labourcroprec.getApplicationDate());
             rec.setAppldate(mysqlDate);
-//            rec.setLabourcategory(labourcroprec.getLabourCategory());
-//            rec.s(BigDecimal.valueOf(Double.parseDouble(labourcroprec.getAppliedAmount())));
-            
             labourcropdao.create(rec);
             return SUCCESS;
         }

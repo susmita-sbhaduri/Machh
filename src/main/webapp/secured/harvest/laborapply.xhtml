@@ -29,12 +29,7 @@
                     <h:outputLabel value="Crop Name" />
                     <h:outputText value="#{laborApply.cropname}" style="font-weight:bold;"/>
 
-                    <h:outputLabel for="labid" value="Labour Category" />
-                    <p:selectOneRadio id="labid" value="#{laborApply.labCategory}"
-                                      layout="pageDirection">                       
-                        <f:selectItem itemLabel="Dredging" itemValue="DREDGE"/>
-                        <f:selectItem itemLabel="জাল টানা" itemValue="JAALTAANA"/>
-                    </p:selectOneRadio>
+                    
 
                     <p:outputLabel for="amtpaid" value="Amount Paid(in Rs.)" />
                     <p:inputText id="amtpaid" value="#{laborApply.amountPaid}">

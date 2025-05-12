@@ -6,7 +6,7 @@
     <named-query name="Users.getUserDetails">
         <query>SELECT u FROM Users u WHERE u.username = :username and u.password = :password</query>
     </named-query>
-<!--    <named-query name="Crop.listAllCropCat">
+    <!--    <named-query name="Crop.listAllCropCat">
         <query>SELECT DISTINCT c.cropPK.cropcategory FROM Crop c</query>
     </named-query>-->
     <named-query name="Crop.cropPerPK">
@@ -18,19 +18,19 @@
     <named-query name="Farmresource.listAll">
         <query>SELECT f FROM Farmresource f</query>
     </named-query>
-<!--    <named-query name="Crop.listCropPerPK">
+    <!--    <named-query name="Crop.listCropPerPK">
         <query>SELECT c FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory AND c.cropPK.crop =:cropname</query>
     </named-query>-->
-<!--    <named-query name="Resource.listResCatPerCrop">
+    <!--    <named-query name="Resource.listResCatPerCrop">
         <query>SELECT DISTINCT r.resourcePK.resourcecategory FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop</query>
     </named-query>-->
-<!--    <named-query name="Resource.listResDetPerCrop">
+    <!--    <named-query name="Resource.listResDetPerCrop">
         <query>SELECT r.resourcePK.resourcename FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop AND r.resourcePK.resourcecategory =:resourcecategory</query>
     </named-query>-->
-<!--    <named-query name="Site.listSiteForCrop">
+    <!--    <named-query name="Site.listSiteForCrop">
         <query>SELECT s.sitePK.id FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:crop</query>
     </named-query>-->
-<!--    <named-query name="Resource.listResourceForCrop">
+    <!--    <named-query name="Resource.listResourceForCrop">
         <query>SELECT r.resourcePK.resourcename FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop</query>
     </named-query>-->
     <named-query name="Site.listSite">
@@ -39,10 +39,10 @@
     <named-query name="Site.siteNameForId">
         <query>SELECT s FROM Site s WHERE s.id = :id</query>
     </named-query> 
-<!--    <named-query name="Site.listSiteForCrop">
+    <!--    <named-query name="Site.listSiteForCrop">
         <query>SELECT COUNT(s) FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:crop</query>
     </named-query>-->
-<!--    <named-query name="Site.chkSiteForCrop">
+    <!--    <named-query name="Site.chkSiteForCrop">
         <query>SELECT CASE WHEN EXISTS (SELECT 1 FROM Site s WHERE s.sitePK.cropcategory =:cropcategory AND s.sitePK.crop =:cropname) THEN TRUE ELSE FALSE END</query>
     </named-query>-->
     <named-query name="Harvest.activeList">
@@ -93,5 +93,24 @@
     <named-query name="Labourcrop.getMaxLabCropId">
         <query>SELECT MAX(l.applicationid) FROM Labourcrop l</query>
     </named-query>
+    <named-native-query 
+        name="Resourcecrop.sumByResId" 
+        result-set-mapping="RescropSummaryMapping">
+        <query>       
+            SELECT harvestid AS harvestId, resourceid AS resourceId, 
+            sum(appliedamt) AS appliedAmount 
+            FROM farmdb.resourcecrop 
+            GROUP BY harvestid, resourceid
+        </query>
+    </named-native-query>
+
+    <sql-result-set-mapping name="RescropSummaryMapping">
+        <constructor-result target-class="org.bhaduri.machh.DTO.ResCropSummaryDTO">        
+            <column name="harvestId" class="int"/>
+            <column name="resourceId" class="int"/>
+            <column name="appliedAmount" class="java.math.BigDecimal"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+
 </entity-mappings>
 

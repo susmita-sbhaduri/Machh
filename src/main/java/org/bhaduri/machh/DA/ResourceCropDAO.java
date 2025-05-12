@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
 import java.util.List;
+import org.bhaduri.machh.DTO.ResCropSummaryDTO;
 import org.bhaduri.machh.JPA.ResourcecropJpaController;
 import org.bhaduri.machh.entities.Resourcecrop;
 
@@ -38,4 +39,11 @@ public class ResourceCropDAO extends ResourcecropJpaController{
         query.setParameter("applicationid", id);
         return query.getSingleResult();
     }
+    
+    public List<ResCropSummaryDTO> getSumByResId(){
+        EntityManager em = getEntityManager();
+        TypedQuery<ResCropSummaryDTO> query = em.createNamedQuery("Resourcecrop.sumByResId", ResCropSummaryDTO.class);
+        return query.getResultList();
+    }
+        
 }
