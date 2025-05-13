@@ -90,8 +90,14 @@
     <named-query name="Expense.getMaxExpId">
         <query>SELECT MAX(e.expenseid) FROM Expense e</query>
     </named-query>
+    <named-query name="Expense.getRecForLabHrvst">
+        <query>SELECT e FROM Expense e WHERE e.expenserefid = :expenserefid AND e.expensetype = :expensetype</query>
+    </named-query>  
     <named-query name="Labourcrop.getMaxLabCropId">
         <query>SELECT MAX(l.applicationid) FROM Labourcrop l</query>
+    </named-query>
+    <named-query name="Labourcrop.getLabCropHarvest">
+        <query>SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid</query>
     </named-query>
     <named-native-query 
         name="Resourcecrop.sumByResId" 

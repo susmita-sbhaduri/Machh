@@ -8,7 +8,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
+import java.util.List;
 import org.bhaduri.machh.JPA.LabourcropJpaController;
+import org.bhaduri.machh.entities.Labourcrop;
 
 /**
  *
@@ -22,5 +24,12 @@ public class LabourCropDAO extends LabourcropJpaController{
         EntityManager em = getEntityManager();
         TypedQuery<Integer> query = em.createNamedQuery("Labourcrop.getMaxLabCropId", Integer.class);        
         return query.getSingleResult();
+    }
+    
+    public List<Labourcrop> getLabCropHarvest(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Labourcrop> query = em.createNamedQuery("Labourcrop.getLabCropHarvest", Labourcrop.class);        
+        query.setParameter("harvestid", id);
+        return query.getResultList();
     }
 }

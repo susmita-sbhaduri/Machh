@@ -33,7 +33,7 @@ public class LaborApply implements Serializable {
     private String site;
     private String cropcat;
     private String cropname;
-    private String labCategory;
+//    private String labCategory;
     private float amountPaid;
     private Date applyDt = new Date();
     private String comments;
@@ -92,7 +92,7 @@ public class LaborApply implements Serializable {
         }
         expenseRec.setDate(sdf.format(applyDt));
         expenseRec.setExpenseType("LABHRVST");
-        expenseRec.setExpenseRefId(selectedHarvest); //######harvest id
+        expenseRec.setExpenseRefId(labCropRec.getApplicationId()); //######labourcrop app id
         expenseRec.setExpenditure(String.format("%.2f", amountPaid));
         expenseRec.setCommString(comments);
 
@@ -180,13 +180,7 @@ public class LaborApply implements Serializable {
         this.cropname = cropname;
     }
 
-    public String getLabCategory() {
-        return labCategory;
-    }
-
-    public void setLabCategory(String labCategory) {
-        this.labCategory = labCategory;
-    }
+    
 
     public float getAmountPaid() {
         return amountPaid;

@@ -126,7 +126,7 @@ public class AcquireResource implements Serializable {
         }
         expenseRec.setDate(sdf.format(purchaseDt));
         expenseRec.setExpenseType("RES");
-        expenseRec.setExpenseRefId(selectedShopRes.getResourceId());
+        expenseRec.setExpenseRefId(resAcquireRec.getAcquireId()); //######resourcecrop acq id
         float calculatedAmount = Float.parseFloat(rate) * amount;
         expenseRec.setExpenditure(String.format("%.2f", calculatedAmount));
         expenseRec.setCommString("");

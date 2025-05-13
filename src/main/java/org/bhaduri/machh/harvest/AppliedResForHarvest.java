@@ -50,7 +50,7 @@ public class AppliedResForHarvest implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         
-        if(appliedresources==null){
+        if(appliedresources==null||appliedresources.size()==0){
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
                     "No resource is applied for this harvest.");
             f.addMessage(null, message);

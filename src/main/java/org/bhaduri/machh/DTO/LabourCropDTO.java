@@ -15,6 +15,7 @@ public class LabourCropDTO implements Serializable {
     private String harvestId;
     private String labourCategory;
     private String applicationDate;
+    private String appliedAmount;
 
     public String getApplicationId() {
         return applicationId;
@@ -48,5 +49,15 @@ public class LabourCropDTO implements Serializable {
     public void setApplicationDate(String applicationDate) {
         this.applicationDate = applicationDate;
     }
+
+    public String getAppliedAmount() {
+        return appliedAmount;
+    }
+
+    public void setAppliedAmount(String appliedAmount) {
+        this.appliedAmount = appliedAmount;
+    }
+    
+    
     
 }

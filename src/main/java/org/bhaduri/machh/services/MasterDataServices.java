@@ -733,6 +733,35 @@ public class MasterDataServices {
         }
     }
     
+    public ExpenseDTO getLabExpenseForHrvst(String labappid, String expensecat) {
+        ExpenseDAO expdao = new ExpenseDAO(utx, emf); 
+        ExpenseDTO retexpdto = new ExpenseDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Expense rec = expdao.getExpRecForLabHarvest(Integer.parseInt(labappid), expensecat);
+            
+            retexpdto.setExpenseId(rec.getExpenseid().toString());
+            mysqlDate = rec.getDate();
+            retexpdto.setDate(formatter.format(mysqlDate));
+            retexpdto.setExpenseType(rec.getExpensetype());            
+            retexpdto.setExpenseRefId(rec.getExpenserefid().toString());
+            retexpdto.setExpenditure(String.format("%.2f", rec.getExpediture()));
+            retexpdto.setCommString(rec.getComments());
+            
+            return retexpdto;
+        }
+        catch (NoResultException e) {
+            System.out.println("No Expense record found for this labor.");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getLabExpenseForHrvst().");
+            return null;
+        }
+    }
+    
     public int delExpenseRecord(ExpenseDTO exrec) {
         ExpenseDAO expdao = new ExpenseDAO(utx, emf);                 
         try {
@@ -919,7 +948,6 @@ public class MasterDataServices {
     public List<ResourceCropDTO> getResSummaryPerID() {
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
         List<ResourceCropDTO> recordlist = new ArrayList<>();
-//        List<ResCropSummaryDTO> recordsummary = new ArrayList<>();
         ResourceCropDTO record = new ResourceCropDTO();
         
         try {
@@ -939,11 +967,8 @@ public class MasterDataServices {
                 record = new ResourceCropDTO();
             }  
             return recordlist;
-        } catch (NoResultException e) {
-            System.out.println("No resourcecrop record is found for this harvest.");
-            return null;
         } catch (Exception exception) {
-            System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
+            System.out.println(exception + " has occurred in getResSummaryPerID().");
             return null;
         }
     }
@@ -1003,6 +1028,36 @@ public class MasterDataServices {
         catch (Exception exception) {
             System.out.println(exception + " has occurred in delLabourCropRecord(LabourCropDTO labourcroprec).");
             return DB_SEVERE;
+        }
+    }
+    
+    public List<LabourCropDTO> getLabCropForHarvest(String harvestid) {
+        LabourCropDAO labcropdao = new LabourCropDAO(utx, emf);
+        List<LabourCropDTO> recordlist = new ArrayList<>();
+        LabourCropDTO record = new LabourCropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            List<Labourcrop> reclist = labcropdao.getLabCropHarvest(Integer.parseInt(harvestid));
+            
+            for (int i = 0; i < reclist.size(); i++) {
+                record.setApplicationId(reclist.get(i).getApplicationid().toString());
+                record.setHarvestId(Integer.toString(reclist.get(i).getHarvestid()));                
+                mysqlDate = reclist.get(i).getAppldate();
+                record.setApplicationDate(formatter.format(mysqlDate));
+                record.setAppliedAmount(getLabExpenseForHrvst(harvestid, "LABHRVST")
+                        .getExpenditure());               
+                recordlist.add(record);
+                record = new LabourCropDTO();
+            }  
+            return recordlist;
+        } catch (NoResultException e) {
+            System.out.println("No resourcecrop record is found for this harvest.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
+            return null;
         }
     }
 // **********************commented   

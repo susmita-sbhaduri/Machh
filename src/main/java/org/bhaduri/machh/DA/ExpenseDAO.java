@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
 import org.bhaduri.machh.JPA.ExpenseJpaController;
+import org.bhaduri.machh.entities.Expense;
 
 /**
  *
@@ -23,5 +24,11 @@ public class ExpenseDAO extends ExpenseJpaController{
         TypedQuery<Integer> query = em.createNamedQuery("Expense.getMaxExpId", Integer.class);        
         return query.getSingleResult();
     }
-    
+    public Expense getExpRecForLabHarvest(int refid, String type) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Expense> query = em.createNamedQuery("Expense.getRecForLabHrvst", Expense.class);
+        query.setParameter("expenserefid", refid);
+        query.setParameter("expensetype", type);
+        return query.getSingleResult();
+    }
 }

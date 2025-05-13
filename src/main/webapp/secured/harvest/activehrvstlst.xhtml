@@ -53,6 +53,14 @@
                             <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
                         </p:commandButton>
                     </p:column>
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Review Labour"
+                                         action="#{activeHarvestList.goReviewLabour()}" >
+                            <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
+                        </p:commandButton>
+                    </p:column>
                 </p:dataTable>
             </h:form>
         </div>
