@@ -29,8 +29,8 @@
                     <h:outputLabel value="Crop Name" />
                     <h:outputText value="#{labourCropEdit.cropname}" style="font-weight:bold;"/>
 
-                    <p:outputLabel for="amtapplied" value="Amount to be Applied(Rs.)" />
-                    <p:inputText id="amtapplied" value="#{labourCropEdit.amtapplied}">
+                    <p:outputLabel for="amountpaid" value="Amount to be Applied(Rs.)" />
+                    <p:inputText id="amountpaid" value="#{labourCropEdit.amountpaid}">
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
@@ -47,7 +47,7 @@
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
                                      value="Applied Labor"
-                                     action="#{labourCropEdit.goToAppliedRes()}" >                                     
+                                     action="#{labourCropEdit.goToAppliedLab()}" >                                     
                     </p:commandButton>
                 </p:panelGrid>
             </h:form>

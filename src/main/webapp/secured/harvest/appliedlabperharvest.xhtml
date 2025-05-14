@@ -54,7 +54,7 @@
                                          icon="fa fa-edit" 
                                          value="Edit"
                                          action="#{appliedLabPerHarvest.editLabour()}" >
-                            <f:setPropertyActionListener value="#{appliedLabour}" target="#{appliedLabPerHarvest.appliedLabour}" />    
+                            <f:setPropertyActionListener value="#{appliedlabour}" target="#{appliedLabPerHarvest.appliedLabour}" />    
                         </p:commandButton>
                     </p:column>
                     <p:column>
@@ -62,7 +62,7 @@
                                          icon="fa fa-edit" 
                                          value="Delete"
                                          action="#{appliedLabPerHarvest.deleteLabour()}" >
-                            <f:setPropertyActionListener value="#{appliedresource}" target="#{appliedLabPerHarvest.appliedLabour}" />    
+                            <f:setPropertyActionListener value="#{appliedlabour}" target="#{appliedLabPerHarvest.appliedLabour}" />    
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>

@@ -1047,8 +1047,8 @@ public class MasterDataServices {
                 record.setHarvestId(Integer.toString(reclist.get(i).getHarvestid()));                
                 mysqlDate = reclist.get(i).getAppldate();
                 record.setApplicationDate(formatter.format(mysqlDate));
-                record.setAppliedAmount(getLabExpenseForHrvst(harvestid, "LABHRVST")
-                        .getExpenditure());               
+                record.setAppliedAmount(getLabExpenseForHrvst(record.getApplicationId()
+                        , "LABHRVST").getExpenditure());               
                 recordlist.add(record);
                 record = new LabourCropDTO();
             }  
@@ -1072,18 +1072,17 @@ public class MasterDataServices {
             Labourcrop rec = labcropdao.getLabCropHarvestId(Integer.parseInt(appliedid));
 
             record.setApplicationId(rec.getApplicationid().toString());
-            record.setHarvestId(Integer.toString(rec.getHarvestid()));
-            
+            record.setHarvestId(Integer.toString(rec.getHarvestid()));            
             mysqlDate = rec.getAppldate();
             record.setApplicationDate(formatter.format(mysqlDate));
-            record.setAppliedAmount(String.format("%.2f", rec.getAppliedamt().floatValue()));
+            record.setAppliedAmount(getLabExpenseForHrvst(appliedid, "LABHRVST").getExpenditure());            
 
             return record;
         } catch (NoResultException e) {
-            System.out.println("No resourcecrop record is found for this application Id.");
+            System.out.println("No laborcrop record is found for this application Id.");
             return null;
         } catch (Exception exception) {
-            System.out.println(exception + " has occurred in getResCropForId(String appliedid).");
+            System.out.println(exception + " has occurred in getLabCropForId.");
             return null;
         }
     }
