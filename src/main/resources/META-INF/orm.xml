@@ -99,6 +99,9 @@
     <named-query name="Labourcrop.getLabCropHarvest">
         <query>SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid</query>
     </named-query>
+    <named-query name="Labourcrop.getLabCropId">
+        <query>SELECT l FROM Labourcrop l WHERE l.applicationid = :applicationid</query>
+    </named-query>
     <named-native-query 
         name="Resourcecrop.sumByResId" 
         result-set-mapping="RescropSummaryMapping">

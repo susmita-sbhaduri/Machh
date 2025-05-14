@@ -946,6 +946,7 @@ public class MasterDataServices {
     }
     
     public List<ResourceCropDTO> getResSummaryPerID() {
+        //this is a group by one
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
         List<ResourceCropDTO> recordlist = new ArrayList<>();
         ResourceCropDTO record = new ResourceCropDTO();
@@ -1057,6 +1058,32 @@ public class MasterDataServices {
             return null;
         } catch (Exception exception) {
             System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
+            return null;
+        }
+    }
+    
+    public LabourCropDTO getLabCropForId(String appliedid) {
+        LabourCropDAO labcropdao = new LabourCropDAO(utx, emf);       
+        LabourCropDTO record = new LabourCropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Labourcrop rec = labcropdao.getLabCropHarvestId(Integer.parseInt(appliedid));
+
+            record.setApplicationId(rec.getApplicationid().toString());
+            record.setHarvestId(Integer.toString(rec.getHarvestid()));
+            
+            mysqlDate = rec.getAppldate();
+            record.setApplicationDate(formatter.format(mysqlDate));
+            record.setAppliedAmount(String.format("%.2f", rec.getAppliedamt().floatValue()));
+
+            return record;
+        } catch (NoResultException e) {
+            System.out.println("No resourcecrop record is found for this application Id.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResCropForId(String appliedid).");
             return null;
         }
     }

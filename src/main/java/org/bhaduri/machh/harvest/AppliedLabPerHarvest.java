@@ -11,8 +11,11 @@ import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
+import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import org.bhaduri.machh.DTO.LabourCropDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -57,14 +60,49 @@ public class AppliedLabPerHarvest implements Serializable {
     }
     
     public String editLabour() {
-//        String redirectUrl = "/secured/harvest/appliedlabperharvest?faces-redirect=true&appliedHarvest=" + selectedHarvest.getHarvestid();
-        String redirectUrl = "/secured/userhome?faces-redirect=true";
+
+         String redirectUrl = "/secured/harvest/labourcropedit?faces-redirect=true&selectedLabcrop=" 
+                 + appliedLabour.getApplicationId();
+//        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
         return redirectUrl;
     }
     
     public String deleteLabour() {
 //        String redirectUrl = "/secured/harvest/appliedlabperharvest?faces-redirect=true&appliedHarvest=" + selectedHarvest.getHarvestid();
-        String redirectUrl = "/secured/userhome?faces-redirect=true";
+//        String redirectUrl = "/secured/userhome?faces-redirect=true";
+        String redirectUrl = "/secured/harvest/appliedlabperharvest?faces-redirect=true&appliedHarvest=" + appliedHarvest;
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        MasterDataServices masterDataService = new MasterDataServices();
+        ResourceCropDTO resourceCrop = new ResourceCropDTO();
+        resourceCrop.setApplicationId(appliedRes.getApplicationId());
+        int delres = masterDataService.delResCropRecord(resourceCrop);
+        if (delres == SUCCESS){            
+            FarmresourceDTO resourceRecord = masterDataService.
+                    getResourceNameForId(Integer.parseInt(appliedRes.getResourceId()));
+            float farmResourceAmt = Float.parseFloat(resourceRecord.getAvailableAmt())
+                    +Float.parseFloat(appliedRes.getAppliedAmount());
+            resourceRecord.setAvailableAmt(String.format("%.2f",farmResourceAmt));
+            int updRes = masterDataService.editResource(resourceRecord);
+            if (updRes == SUCCESS) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                        "resourcecrop record deleted successfully");
+                f.addMessage(null, message);
+            }
+            if (updRes == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "resourcecrop record could not be updated");
+                f.addMessage(null, message);
+            }
+        }
+        if (delres == DB_SEVERE) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                    "resourcecrop record could not be deleted");
+            f.addMessage(null, message);
+        }
+                
+//        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
         return redirectUrl;
     } 
     

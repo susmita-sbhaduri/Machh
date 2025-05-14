@@ -32,4 +32,11 @@ public class LabourCropDAO extends LabourcropJpaController{
         query.setParameter("harvestid", id);
         return query.getResultList();
     }
+    
+    public Labourcrop getLabCropHarvestId(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Labourcrop> query = em.createNamedQuery("Labourcrop.getLabCropId", Labourcrop.class);        
+        query.setParameter("applicationid", id);
+        return query.getSingleResult();
+    }
 }

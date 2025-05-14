@@ -60,19 +60,16 @@ public class ResourceCropEdit implements Serializable {
         cropname = harvestRecord.getCropName();
         existingresources = masterDataService.getResourceList();
         
-       
+       // for autofill
         this.selectedRes = rescropPrev.getResourceId();
-//        resprev= rescropRecord.getResourceId();
         farmresPrev = masterDataService.
                 getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()));
         this.amount = farmresPrev.getAvailableAmt();
         this.unit = farmresPrev.getUnit();
         this.amtapplied = Float.parseFloat(rescropPrev.getAppliedAmount());
-//        amtappliedprev = Float.parseFloat(rescropPrev.getAppliedAmount());
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         this.applyDt = formatter.parse(rescropPrev.getApplicationDt());
-//        applyDtPrev = formatter.parse(rescropRecord.getApplicationDt());
     }
 
     public void onResSelect() throws NamingException {        
@@ -92,6 +89,9 @@ public class ResourceCropEdit implements Serializable {
         f.getExternalContext().getFlash().setKeepMessages(true);
         float remainingAmt =0;
         ResourceCropDTO rescropRecord = masterDataService.getResCropForId(selectedRescrop);
+        
+        /*if resource id is changed then both resource id and resource amount is updated in 
+        resourceapply and farmresource(remainingAmt field) table. */
         if (selectedRes.equals(rescropPrev.getResourceId())) {
             if (amtapplied == Float.parseFloat(rescropPrev.getAppliedAmount())) {
                 remainingAmt = Float.parseFloat(farmresPrev.getAvailableAmt());

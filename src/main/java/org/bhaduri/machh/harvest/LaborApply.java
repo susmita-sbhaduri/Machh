@@ -16,7 +16,6 @@ import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import org.bhaduri.machh.DTO.LabourCropDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.services.MasterDataServices;
