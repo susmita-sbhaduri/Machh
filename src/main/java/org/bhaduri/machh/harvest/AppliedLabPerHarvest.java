@@ -15,6 +15,7 @@ import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import org.bhaduri.machh.DTO.LabourCropDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
@@ -71,33 +72,53 @@ public class AppliedLabPerHarvest implements Serializable {
     public String deleteLabour() throws NamingException {
 
         String redirectUrl = "/secured/harvest/appliedlabperharvest?faces-redirect=true&appliedHarvest=" + appliedHarvest;
+        int sqlFlag = 0;
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         MasterDataServices masterDataService = new MasterDataServices();
         LabourCropDTO labourCrop = new LabourCropDTO();
         labourCrop.setApplicationId(appliedLabour.getApplicationId());
+
+        String labourCategory = "LABHRVST";
+        ExpenseDTO expenseRecord = masterDataService
+                .getLabExpenseForHrvst(labourCrop.getApplicationId(), labourCategory);
+        
         int dellabcrop = masterDataService.delLabourCropRecord(labourCrop);
+        
         if (dellabcrop == SUCCESS){ 
-            String labourCategory = "LABHRVST";
-            ExpenseDTO expenseRecord = masterDataService
-                    .getLabExpenseForHrvst(labourCrop.getApplicationId(), labourCategory);
-            
+            sqlFlag = sqlFlag+1;
+        } else {             
+            if (dellabcrop == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "laborcrop record could not be deleted");
+                f.addMessage(null, message);
+            }
+            return redirectUrl;
+        }    
+        if (sqlFlag == 1) {            
             int delexp = masterDataService.delExpenseRecord(expenseRecord);
             if (delexp == SUCCESS) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-                        "laborcrop record deleted successfully");
-                f.addMessage(null, message);
-            }
-            if (delexp == DB_SEVERE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                        "resourcecrop record could not be updated");
-                f.addMessage(null, message);
+                sqlFlag = sqlFlag + 1;
+                
+            } else {
+                if (delexp == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "laborcrop record could not be updated");
+                    f.addMessage(null, message);
+                }
+                int addlabour = masterDataService.addLabourCropRecord(labourCrop);
+                if (addlabour == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "Failure on laborcrop table correction");
+                    f.addMessage(null, message);
+                }
+                return redirectUrl;
             }
         }
-        if (delres == DB_SEVERE) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
-                    "resourcecrop record could not be deleted");
+        if (sqlFlag == 2) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                    "laborcrop record deleted successfully");
             f.addMessage(null, message);
         }
         return redirectUrl;
