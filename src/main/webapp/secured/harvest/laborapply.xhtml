@@ -38,8 +38,9 @@
                     </p:inputText>
                     <h:outputLabel for="adate" value="Apply Date" />
                     <p:datePicker id="adate" value="#{laborApply.applyDt}" pattern="yyyy-MM-dd"/>
-                    <p:outputLabel for="amtapplied" value="Comments" />
-                    <p:inputText id="amtapplied" value="#{laborApply.comments}"/>
+                    <p:outputLabel for="comments" value="Comments" />
+                    <p:inputText id="comments" value="#{laborApply.comments}"/>
+                    
                 </p:panelGrid>
                 <p:commandButton styleClass="blue-button" 
                                  icon="fa fa-edit" 

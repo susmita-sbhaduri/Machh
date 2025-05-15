@@ -83,7 +83,8 @@ public class ResourceCropEdit implements Serializable {
     public String goToSave() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         
-        String redirectUrl = "/secured/harvest/appliedresperharvest?faces-redirect=true&appliedHarvest=" + rescropPrev.getHarvestId();
+        String redirectUrl = "/secured/harvest/appliedresperharvest?faces-redirect=true&appliedHarvest=" 
+                + rescropPrev.getHarvestId();
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);

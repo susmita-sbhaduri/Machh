@@ -68,19 +68,25 @@ public class AppliedResForHarvest implements Serializable {
     
     public String deleteResource() throws NamingException{
         String redirectUrl = "/secured/harvest/appliedresperharvest?faces-redirect=true&appliedHarvest=" + appliedHarvest;
+        int sqlFlag = 0;
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
+        
+        
         MasterDataServices masterDataService = new MasterDataServices();
         ResourceCropDTO resourceCrop = new ResourceCropDTO();
         resourceCrop.setApplicationId(appliedRes.getApplicationId());
+
+        FarmresourceDTO resourceRecord = masterDataService.
+                getResourceNameForId(Integer.parseInt(appliedRes.getResourceId()));
+        float farmResourceAmt = Float.parseFloat(resourceRecord.getAvailableAmt())
+                + Float.parseFloat(appliedRes.getAppliedAmount());
+        resourceRecord.setAvailableAmt(String.format("%.2f", farmResourceAmt));
+        
         int delres = masterDataService.delResCropRecord(resourceCrop);
         if (delres == SUCCESS){            
-            FarmresourceDTO resourceRecord = masterDataService.
-                    getResourceNameForId(Integer.parseInt(appliedRes.getResourceId()));
-            float farmResourceAmt = Float.parseFloat(resourceRecord.getAvailableAmt())
-                    +Float.parseFloat(appliedRes.getAppliedAmount());
-            resourceRecord.setAvailableAmt(String.format("%.2f",farmResourceAmt));
+            sqlFlag = sqlFlag+1;
             int updRes = masterDataService.editResource(resourceRecord);
             if (updRes == SUCCESS) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
@@ -91,6 +97,7 @@ public class AppliedResForHarvest implements Serializable {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
                         "resourcecrop record could not be updated");
                 f.addMessage(null, message);
+                int addres = masterDataService.addResCropRecord(resourceCrop);
             }
         }
         if (delres == DB_SEVERE) {

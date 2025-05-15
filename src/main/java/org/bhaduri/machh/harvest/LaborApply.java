@@ -53,12 +53,6 @@ public class LaborApply implements Serializable {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-//        if (labCategory == null || labCategory.trim().isEmpty()) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
-//                    "Select labor category.");
-//            f.addMessage("labid", message);
-//            return redirectUrl;
-//        }
         
         if (amountPaid == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",

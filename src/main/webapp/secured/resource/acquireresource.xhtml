@@ -41,7 +41,9 @@
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
-
+                    <h:outputLabel for="comments" value="Comments" />
+                    <h:inputText id="comments" value="#{acquireResource.comments}"/>
+                    
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
                                      value="Review First"

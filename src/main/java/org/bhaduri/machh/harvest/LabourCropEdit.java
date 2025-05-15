@@ -20,7 +20,6 @@ import org.bhaduri.machh.DTO.LabourCropDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
-import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
 /**
@@ -59,119 +58,82 @@ public class LabourCropEdit implements Serializable {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         this.applyDt = formatter.parse(labcropPrev.getApplicationDate());
+        this.comments = labcropPrev.getExpenseComments();
     }
 
     public String goToSave() throws NamingException {
-//        MasterDataServices masterDataService = new MasterDataServices();
         
         String redirectUrl = "/secured/harvest/appliedlabperharvest?faces-redirect=true&appliedHarvest=" 
                 + labcropPrev.getHarvestId();
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-//        float remainingAmt =0;
-//        ResourceCropDTO rescropRecord = masterDataService.getResCropForId(selectedRescrop);
-//        
-//        /*if resource id is changed then both resource id and resource amount is updated in 
-//        resourceapply and farmresource(remainingAmt field) table. */
-//        if (selectedRes.equals(rescropPrev.getResourceId())) {
-//            if (amtapplied == Float.parseFloat(rescropPrev.getAppliedAmount())) {
-//                remainingAmt = Float.parseFloat(farmresPrev.getAvailableAmt());
-//            } else {
-//                remainingAmt = Float.parseFloat(farmresPrev.getAvailableAmt())
-//                        - amtapplied
-//                        + Float.parseFloat(rescropPrev.getAppliedAmount());
-//            }
-//        } else {
-//            remainingAmt = Float.parseFloat(amount)
-//                    - amtapplied
-//                    + Float.parseFloat(rescropRecord.getAppliedAmount());
-//        }  
-//        
-//        if (amtapplied == 0) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Apply non-zero amount of resource.",
-//                    "Apply non-zero amount of resource.");
-//            f.addMessage("amtapplied", message);
-//            return redirectUrl;
-//        } else {
-////            float remainingAmt = Float.parseFloat(amount) - amtapplied +amtappliedprev;
-//            if (remainingAmt == 0) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Strored resource would be finished after this application.",
-//                        "Strored resource would be finished after this application.");
-//                f.addMessage("amtapplied", message);
-//            }
-//            if (remainingAmt < 0) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource cannot be applied.",
-//                        "Strored resource is less than applied resource.");
-//                f.addMessage("amtapplied", message);
-//                return redirectUrl;
-//            }
-//        }
-//        
-//        int sqlFlag = 0;
-////        ResourceCropDTO rescropRecord = masterDataService.getResCropForId(selectedRescrop);
-//        rescropRecord.setResourceId(selectedRes);// for resourcecrop table
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        rescropRecord.setAppliedAmount(String.format("%.2f", amtapplied));
-//        rescropRecord.setApplicationDt(sdf.format(applyDt));
-//        
-//        FarmresourceDTO resourceRec = masterDataService.
-//                getResourceNameForId(Integer.parseInt(selectedRes)); // for farmresouce table
-//        resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
-//        
-//        int rescropres = masterDataService.editResCropRecord(rescropRecord);
-//        
-//        if (rescropres == SUCCESS) {
-//            sqlFlag = sqlFlag + 1;
-//        } else {
-//            if (rescropres == DB_NON_EXISTING) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure" 
-//                                                , "Resourcecrop record doesn't exist");
-//                f.addMessage(null, message);
-//            }
-//            if (rescropres == DB_SEVERE) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
-//                        Integer.toString(DB_SEVERE));
-//                f.addMessage(null, message);
-//            } 
-////            redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-//            return redirectUrl;
-//        }
-//        
-//        
-//        if (sqlFlag == 1) {
-//            int resres = masterDataService.editResource(resourceRec);
-//            if (resres == SUCCESS) {
-//                sqlFlag = sqlFlag + 1;
-//            } else {
-//                if (resres == DB_NON_EXISTING) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource record does not exist", Integer.toString(DB_NON_EXISTING));
-//                    f.addMessage(null, message);
-//                }
-//                if (resres == DB_SEVERE) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resource update", Integer.toString(DB_SEVERE));
-//                    f.addMessage(null, message);
-//                }
-////                resourceRec.setAvailableAmt(amount); //revert the changes in amount for farmresouce table
-//                resres = masterDataService.editResCropRecord(rescropPrev);
-////                
-////                rescropRecord.setAppliedAmount(String.format("%.2f", amtapplied));
-////                rescropRecord.setApplicationDt(sdf.format(applyDt));
-//                
-//                if (resres == DB_SEVERE) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resourcecrop table update", 
-//                            Integer.toString(DB_SEVERE));
-//                    f.addMessage(null, message);
-//                }
-////                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-//                return redirectUrl;
-//            }
-//        }
-//        if (sqlFlag == 2) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-//                    "Resource updated successfully with application ID=" + rescropRecord.getApplicationId());
-//            f.addMessage(null, message);
-//        }
+        if (amountpaid == 0) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
+                    "Labour payment cannot be zero.");
+            f.addMessage("amountpaid", message);
+            return redirectUrl;
+        }
+        
+        int sqlFlag = 0;
+        MasterDataServices masterDataService = new MasterDataServices();
+        LabourCropDTO labourrRecord = masterDataService.getLabCropForId(selectedLabcrop);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // for labourcrop table
+        labourrRecord.setApplicationDate(sdf.format(applyDt));
+        
+        String labourCategory = "LABHRVST";
+        ExpenseDTO expenseRec = masterDataService.getLabExpenseForHrvst(selectedLabcrop, labourCategory);
+        expenseRec.setCommString(comments);
+        expenseRec.setExpenditure(String.format("%.2f", amountpaid));
+        
+        int labcropres = masterDataService.editLabCropRecord(labourrRecord);
+        
+        if (labcropres == SUCCESS) {
+            sqlFlag = sqlFlag + 1;
+        } else {
+            if (labcropres == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure" 
+                                                , "Labourcrop record doesn't exist");
+                f.addMessage(null, message);
+            }
+            if (labcropres == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                        Integer.toString(DB_SEVERE));
+                f.addMessage(null, message);
+            }
+            return redirectUrl;
+        }
+        
+        
+        if (sqlFlag == 1) {
+            int expres = masterDataService.editExpenseRecord(expenseRec);
+            if (expres == SUCCESS) {
+                sqlFlag = sqlFlag + 1;
+            } else {
+                if (expres == DB_NON_EXISTING) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", "Labour record does not exist");
+                    f.addMessage(null, message);
+                }
+                if (expres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", "Failure on labor record update");
+                    f.addMessage(null, message);
+                }
+//              revert the changes in amount for labourcrop table
+                labcropres = masterDataService.editLabCropRecord(labcropPrev);                
+                if (labcropres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "Failure on laborcrop table update");
+                    f.addMessage(null, message);
+                }
+//                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+                return redirectUrl;
+            }
+        }
+        if (sqlFlag == 2) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                    "Labour expense updated successfully with application ID=" + selectedLabcrop);
+            f.addMessage(null, message);
+        }
         return redirectUrl;        
     }
     

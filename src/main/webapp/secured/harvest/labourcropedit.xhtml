@@ -35,8 +35,11 @@
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
 
-                    <h:outputLabel for="adate" value="Apply Date" />
-                    <p:datePicker id="adate" value="#{labourCropEdit.applyDt}" pattern="yyyy-MM-dd"/>
+                    <h:outputLabel for="applyDt" value="Apply Date" />
+                    <p:datePicker id="applyDt" value="#{labourCropEdit.applyDt}" pattern="yyyy-MM-dd"/>
+                    
+                    <p:outputLabel value="Comments" />
+                    <p:inputText value="#{labourCropEdit.comments}" style="font-weight:bold;"/>
 
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 

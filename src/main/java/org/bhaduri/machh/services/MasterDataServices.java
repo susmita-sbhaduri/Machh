@@ -733,6 +733,33 @@ public class MasterDataServices {
         }
     }
     
+    public int editExpenseRecord(ExpenseDTO exrec) {
+        ExpenseDAO expdao = new ExpenseDAO(utx, emf); 
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Expense rec = new Expense();
+            rec.setExpenseid(Integer.valueOf(exrec.getExpenseId()));
+            mysqlDate = formatter.parse(exrec.getDate());
+            rec.setDate(mysqlDate);
+            rec.setExpensetype(exrec.getExpenseType());
+            rec.setExpenserefid(Integer.valueOf(exrec.getExpenseRefId()));
+            rec.setExpediture(BigDecimal.valueOf(Double.parseDouble(exrec.getExpenditure())));
+            rec.setComments(exrec.getCommString());
+            expdao.edit(rec);
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("This labourcrop record does not exist.");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in editExpenseRecord.");
+            return DB_SEVERE;
+        }
+    }
+    
     public ExpenseDTO getLabExpenseForHrvst(String labappid, String expensecat) {
         ExpenseDAO expdao = new ExpenseDAO(utx, emf); 
         ExpenseDTO retexpdto = new ExpenseDTO();
@@ -988,7 +1015,30 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
-    
+    public int editLabCropRecord(LabourCropDTO labcroprec) {
+        LabourCropDAO rescropdao = new LabourCropDAO(utx, emf); 
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Labourcrop rec = new Labourcrop();
+            rec.setApplicationid(Integer.valueOf(labcroprec.getApplicationId()));
+            rec.setHarvestid(Integer.parseInt(labcroprec.getHarvestId()));
+            
+            mysqlDate = formatter.parse(labcroprec.getApplicationDate());
+            rec.setAppldate(mysqlDate);            
+            rescropdao.edit(rec);
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("This labourcrop record does not exist.");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in editLabCropRecord.");
+            return DB_SEVERE;
+        }
+    }
     public int addLabourCropRecord(LabourCropDTO labourcroprec) {
         LabourCropDAO labourcropdao = new LabourCropDAO(utx, emf);
         Date mysqlDate;
@@ -1047,8 +1097,11 @@ public class MasterDataServices {
                 record.setHarvestId(Integer.toString(reclist.get(i).getHarvestid()));                
                 mysqlDate = reclist.get(i).getAppldate();
                 record.setApplicationDate(formatter.format(mysqlDate));
+                String labourCategory = "LABHRVST";
                 record.setAppliedAmount(getLabExpenseForHrvst(record.getApplicationId()
-                        , "LABHRVST").getExpenditure());               
+                        , labourCategory).getExpenditure());  
+                record.setExpenseComments(getLabExpenseForHrvst(record.getApplicationId()
+                        , labourCategory).getCommString());
                 recordlist.add(record);
                 record = new LabourCropDTO();
             }  
@@ -1075,8 +1128,9 @@ public class MasterDataServices {
             record.setHarvestId(Integer.toString(rec.getHarvestid()));            
             mysqlDate = rec.getAppldate();
             record.setApplicationDate(formatter.format(mysqlDate));
-            record.setAppliedAmount(getLabExpenseForHrvst(appliedid, "LABHRVST").getExpenditure());            
-
+            String labourCategory = "LABHRVST";
+            record.setAppliedAmount(getLabExpenseForHrvst(appliedid, labourCategory).getExpenditure());            
+            record.setExpenseComments(getLabExpenseForHrvst(appliedid, labourCategory).getCommString());
             return record;
         } catch (NoResultException e) {
             System.out.println("No laborcrop record is found for this application Id.");

@@ -42,6 +42,7 @@ public class AcquireResource implements Serializable {
     private ShopResDTO selectedShopRes;
     private float amount;
     private Date purchaseDt = new Date();
+    private String comments;
 
     public AcquireResource() {
     }
@@ -129,7 +130,7 @@ public class AcquireResource implements Serializable {
         expenseRec.setExpenseRefId(resAcquireRec.getAcquireId()); //######resourcecrop acq id
         float calculatedAmount = Float.parseFloat(rate) * amount;
         expenseRec.setExpenditure(String.format("%.2f", calculatedAmount));
-        expenseRec.setCommString("");
+        expenseRec.setCommString(comments);
 
 
 //        contruction of resourceacquire record
@@ -211,15 +212,7 @@ public class AcquireResource implements Serializable {
                 return redirectUrl;
             }
         }
-        
-        
-//        FarmresourceDTO resourceRec = new FarmresourceDTO();
-//        resourceRec = masterDataService.getResourceNameForId(Integer.parseInt(
-//                selectedShopRes.getResourceId()));
-//        calculatedAmount = calculatedAmount+Float.parseFloat(resourceRec.getAvailableAmt());
-//        resourceRec.setAvailableAmt(String.format("%.2f", calculatedAmount));
-//        int resres = masterDataService.editResource(resourceRec);
-        
+                
         if (sqlFlag==3) {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Resource acquired successfully");
             f.addMessage(null, message);
@@ -227,6 +220,15 @@ public class AcquireResource implements Serializable {
         return redirectUrl;
     }
 
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+    
+    
     public String getSelectedRes() {
         return selectedRes;
     }

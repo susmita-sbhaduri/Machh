@@ -16,6 +16,7 @@ public class LabourCropDTO implements Serializable {
     private String labourCategory;
     private String applicationDate;
     private String appliedAmount;
+    private String expenseComments;
 
     public String getApplicationId() {
         return applicationId;
@@ -56,6 +57,14 @@ public class LabourCropDTO implements Serializable {
 
     public void setAppliedAmount(String appliedAmount) {
         this.appliedAmount = appliedAmount;
+    }
+
+    public String getExpenseComments() {
+        return expenseComments;
+    }
+
+    public void setExpenseComments(String expenseComments) {
+        this.expenseComments = expenseComments;
     }
     
     
