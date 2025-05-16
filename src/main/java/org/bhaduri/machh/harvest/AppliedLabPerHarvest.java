@@ -47,12 +47,13 @@ public class AppliedLabPerHarvest implements Serializable {
         cropname = harvestRecord.getCropName();
         
         appliedlabours = masterDataService.getLabCropForHarvest(appliedHarvest);        
-        String redirectUrl = "/secured/harvest/laborapply?faces-redirect=true&selectedHarvest=" + appliedHarvest;
+//        String redirectUrl = "/secured/harvest/laborapply?faces-redirect=true&selectedHarvest=" + appliedHarvest;
+        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         
-        if(appliedlabours==null||appliedlabours.size()==0){
+        if(appliedlabours==null||appliedlabours.isEmpty()){
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
                     "No labor is applied for this harvest.");
             f.addMessage(null, message);
@@ -65,7 +66,6 @@ public class AppliedLabPerHarvest implements Serializable {
 
          String redirectUrl = "/secured/harvest/labourcropedit?faces-redirect=true&selectedLabcrop=" 
                  + appliedLabour.getApplicationId();
-//        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
         return redirectUrl;
     }
     

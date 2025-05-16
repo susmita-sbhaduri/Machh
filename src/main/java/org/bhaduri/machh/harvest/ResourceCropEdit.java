@@ -89,6 +89,7 @@ public class ResourceCropEdit implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         float remainingAmt =0;
+        float remainingPrevAmt = 0;
         ResourceCropDTO rescropRecord = masterDataService.getResCropForId(selectedRescrop);
         
         /*if resource id is changed then both resource id and resource amount is updated in 
@@ -102,10 +103,15 @@ public class ResourceCropEdit implements Serializable {
                         + Float.parseFloat(rescropPrev.getAppliedAmount());
             }
         } else {
-            remainingAmt = Float.parseFloat(amount)
-                    - amtapplied
-                    + Float.parseFloat(rescropRecord.getAppliedAmount());
-        }  
+//            remainingAmt = Float.parseFloat(amount)
+//                    - amtapplied
+//                    + Float.parseFloat(rescropRecord.getAppliedAmount());
+            remainingAmt = Float.parseFloat(amount) - amtapplied;
+            remainingPrevAmt = Float.parseFloat(farmresPrev.getAvailableAmt())
+                    + Float.parseFloat(rescropPrev.getAppliedAmount());
+
+            
+        } 
         
         if (amtapplied == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Apply non-zero amount of resource.",
@@ -116,12 +122,12 @@ public class ResourceCropEdit implements Serializable {
 //            float remainingAmt = Float.parseFloat(amount) - amtapplied +amtappliedprev;
             if (remainingAmt == 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Strored resource would be finished after this application.",
-                        "Strored resource would be finished after this application.");
+                        "Stored resource would be finished after this application.");
                 f.addMessage("amtapplied", message);
             }
             if (remainingAmt < 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource cannot be applied.",
-                        "Strored resource is less than applied resource.");
+                        "Stored resource is less than applied resource.");
                 f.addMessage("amtapplied", message);
                 return redirectUrl;
             }
@@ -137,6 +143,13 @@ public class ResourceCropEdit implements Serializable {
         FarmresourceDTO resourceRec = masterDataService.
                 getResourceNameForId(Integer.parseInt(selectedRes)); // for farmresouce table
         resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
+        FarmresourceDTO resourceRecPrev = new FarmresourceDTO();
+        if (remainingPrevAmt > 0) {
+            //###      correction for previously selected resource
+            resourceRecPrev = masterDataService.
+                    getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()));
+            resourceRecPrev.setAvailableAmt(String.format("%.2f", remainingPrevAmt));
+        }
         
         int rescropres = masterDataService.editResCropRecord(rescropRecord);
         
@@ -153,7 +166,6 @@ public class ResourceCropEdit implements Serializable {
                         Integer.toString(DB_SEVERE));
                 f.addMessage(null, message);
             } 
-//            redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
             return redirectUrl;
         }
         
@@ -161,7 +173,34 @@ public class ResourceCropEdit implements Serializable {
         if (sqlFlag == 1) {
             int resres = masterDataService.editResource(resourceRec);
             if (resres == SUCCESS) {
-                sqlFlag = sqlFlag + 1;
+//                This is if the resource(selectedRes) is updated from existing one
+                if (remainingPrevAmt > 0) {
+                    int resprev = masterDataService.editResource(resourceRecPrev);
+                    if (resprev == SUCCESS) {
+                        sqlFlag = sqlFlag + 1;
+                    } else {
+                        if (resprev == DB_NON_EXISTING) {
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource record does not exist", Integer.toString(DB_NON_EXISTING));
+                            f.addMessage(null, message);
+                        }
+                        if (resprev == DB_SEVERE) {
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resource update", Integer.toString(DB_SEVERE));
+                            f.addMessage(null, message);
+                        }
+                        resres = masterDataService.editResCropRecord(rescropPrev);
+
+                        if (resres == DB_SEVERE) {
+                            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resourcecrop table update",
+                                    Integer.toString(DB_SEVERE));
+                            f.addMessage(null, message);
+                        }
+                        return redirectUrl;
+                    }
+                } else {
+//                    This is if the resource(selectedRes) is NOT updated from existing one
+                    sqlFlag = sqlFlag + 1;
+                }
+                
             } else {
                 if (resres == DB_NON_EXISTING) {
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource record does not exist", Integer.toString(DB_NON_EXISTING));
@@ -171,18 +210,13 @@ public class ResourceCropEdit implements Serializable {
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resource update", Integer.toString(DB_SEVERE));
                     f.addMessage(null, message);
                 }
-//                resourceRec.setAvailableAmt(amount); //revert the changes in amount for farmresouce table
                 resres = masterDataService.editResCropRecord(rescropPrev);
-//                
-//                rescropRecord.setAppliedAmount(String.format("%.2f", amtapplied));
-//                rescropRecord.setApplicationDt(sdf.format(applyDt));
-                
+
                 if (resres == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resourcecrop table update", 
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resourcecrop table update",
                             Integer.toString(DB_SEVERE));
                     f.addMessage(null, message);
                 }
-//                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
                 return redirectUrl;
             }
         }
