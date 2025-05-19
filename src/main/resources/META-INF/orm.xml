@@ -55,16 +55,19 @@
         <query>SELECT s FROM Shopresource s</query>
     </named-query>
     <named-query name="Shopresource.shopsPerRes">
-        <query>SELECT s.shopresourcePK.shopid FROM Shopresource s WHERE s.shopresourcePK.resourceid = :resourceid</query>
+        <query>SELECT s.shopid FROM Shopresource s WHERE s.resourceid = :resourceid</query>
     </named-query>
     <named-query name="Shopresource.shopDtlsPerRes">
-        <query>SELECT s FROM Shopresource s WHERE s.shopresourcePK.resourceid = :resourceid</query>
+        <query>SELECT s.shopid FROM Shopresource s WHERE s.resourceid = :resourceid</query>
     </named-query>
     <named-query name="Shopresource.shopDtlsPerPk">
-        <query>SELECT s FROM Shopresource s WHERE s.shopresourcePK.shopid = :shopid AND s.shopresourcePK.resourceid = :resourceid</query>
+        <query>SELECT s FROM Shopresource s WHERE s.shopid = :shopid AND s.resourceid = :resourceid</query>
     </named-query>
     <named-query name="Shopresource.delForResid">
-        <query>DELETE FROM Shopresource s WHERE s.shopresourcePK.resourceid = :resourceid</query>
+        <query>DELETE FROM Shopresource s WHERE s.resourceid = :resourceid</query>
+    </named-query>
+    <named-query name="Shopresource.getMaxId">
+        <query>SELECT MAX(s.id) FROM Shopresource s</query>
     </named-query>
     <named-query name="Shop.shopNameForId">
         <query>SELECT s FROM Shop s WHERE s.shopid = :shopid</query>

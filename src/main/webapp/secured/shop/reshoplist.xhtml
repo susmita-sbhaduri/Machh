@@ -52,7 +52,10 @@
                     <p:column headerText="Per Unit">
                         <h:outputText value="#{existingshop.unit}" />
                     </p:column>
-
+                    <p:column headerText="Rate Fixed on:">
+                        <h:outputText value="#{existingshop.resRateDate}" />
+                    </p:column>
+                    
                     <p:column>  
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 

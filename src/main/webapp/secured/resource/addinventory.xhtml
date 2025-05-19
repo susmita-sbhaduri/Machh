@@ -29,11 +29,7 @@
                                        itemValue="#{resourceAdd.shoplist.indexOf(shop)}" 
                                        itemLabel="#{shop.shopName}" />
                     </p:selectOneMenu>
-                    <p:outputLabel for="rate" value="Rate" />
-                    <p:inputText id="rate" value="#{resourceAdd.rate}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
+                    
                     <h:outputLabel for="unit" value="Unit"/>
                     <h:inputText id="unit" value="#{resourceAdd.unit}" />
                     <p:commandButton styleClass="blue-button" 

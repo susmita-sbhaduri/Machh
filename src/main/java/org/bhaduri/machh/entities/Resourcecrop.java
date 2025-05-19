@@ -32,7 +32,8 @@ import java.util.Date;
     @NamedQuery(name = "Resourcecrop.findByResourceid", query = "SELECT r FROM Resourcecrop r WHERE r.resourceid = :resourceid"),
     @NamedQuery(name = "Resourcecrop.findByHarvestid", query = "SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid"),
     @NamedQuery(name = "Resourcecrop.findByAppldate", query = "SELECT r FROM Resourcecrop r WHERE r.appldate = :appldate"),
-    @NamedQuery(name = "Resourcecrop.findByAppliedamt", query = "SELECT r FROM Resourcecrop r WHERE r.appliedamt = :appliedamt")})
+    @NamedQuery(name = "Resourcecrop.findByAppliedamt", query = "SELECT r FROM Resourcecrop r WHERE r.appliedamt = :appliedamt"),
+    @NamedQuery(name = "Resourcecrop.findByAppamtcost", query = "SELECT r FROM Resourcecrop r WHERE r.appamtcost = :appamtcost")})
 public class Resourcecrop implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,6 +60,10 @@ public class Resourcecrop implements Serializable {
     @NotNull
     @Column(name = "appliedamt")
     private BigDecimal appliedamt;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "appamtcost")
+    private BigDecimal appamtcost;
 
     public Resourcecrop() {
     }
@@ -67,12 +72,13 @@ public class Resourcecrop implements Serializable {
         this.applicationid = applicationid;
     }
 
-    public Resourcecrop(Integer applicationid, int resourceid, int harvestid, Date appldate, BigDecimal appliedamt) {
+    public Resourcecrop(Integer applicationid, int resourceid, int harvestid, Date appldate, BigDecimal appliedamt, BigDecimal appamtcost) {
         this.applicationid = applicationid;
         this.resourceid = resourceid;
         this.harvestid = harvestid;
         this.appldate = appldate;
         this.appliedamt = appliedamt;
+        this.appamtcost = appamtcost;
     }
 
     public Integer getApplicationid() {
@@ -113,6 +119,14 @@ public class Resourcecrop implements Serializable {
 
     public void setAppliedamt(BigDecimal appliedamt) {
         this.appliedamt = appliedamt;
+    }
+
+    public BigDecimal getAppamtcost() {
+        return appamtcost;
+    }
+
+    public void setAppamtcost(BigDecimal appamtcost) {
+        this.appamtcost = appamtcost;
     }
 
     @Override

@@ -20,6 +20,11 @@ public class ShopResDAO extends ShopresourceJpaController{
         super(utx, emf);
         this.myUtx = utx; // store reference for your own use
     }
+    public int getMaxId() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Integer> query = em.createNamedQuery("Shopresource.getMaxId", Integer.class);        
+        return query.getSingleResult();
+    }
     public List<Shopresource> getShopResList() {
         EntityManager em = getEntityManager();
         TypedQuery<Shopresource> query = em.createNamedQuery("Shopresource.shopResList", Shopresource.class);            

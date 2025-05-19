@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
-import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
@@ -77,12 +76,12 @@ public class ResourceAdd implements Serializable {
             f.addMessage("shopid", message);
             return redirectUrl;
         }
-        if (rate == 0) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate cannot be 0.",
-                    "Resource Rate cannot be 0.");
-            f.addMessage("rate", message);
-            return redirectUrl;
-        }
+//        if (rate == 0) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate cannot be 0.",
+//                    "Resource Rate cannot be 0.");
+//            f.addMessage("rate", message);
+//            return redirectUrl;
+//        }
 
         if (unit.isBlank()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unit cannot be empty.",
@@ -91,6 +90,7 @@ public class ResourceAdd implements Serializable {
             return redirectUrl;
         }
         redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+        int sqlFlag = 0;
         MasterDataServices masterDataService = new MasterDataServices();
         FarmresourceDTO resAddBean = new FarmresourceDTO();
         resAddBean.setResourceId(resid);
@@ -99,24 +99,74 @@ public class ResourceAdd implements Serializable {
         int resres = masterDataService.addResource(resAddBean);
 
         ShopResDTO resShopUpdBean = new ShopResDTO();
+        int shopresid = masterDataService.getMaxIdForShopRes(); 
+        if(shopresid==0 || shopresid==DB_SEVERE){
+            shopresid=1;
+        } else shopresid=shopresid+1;
+        resShopUpdBean.setId(String.valueOf(shopresid));
         resShopUpdBean.setShopId(selectedShop.getShopId());
         resShopUpdBean.setShopName(selectedShop.getShopName());
         resShopUpdBean.setResourceId(resid);
         resShopUpdBean.setResourceName(resname);
-        resShopUpdBean.setRate(String.format("%.2f", rate));
-        int shopres = masterDataService.addShopResource(resShopUpdBean);
-        if (resres == SUCCESS && shopres == SUCCESS) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource added", Integer.toString(SUCCESS));
-            redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+//        resShopUpdBean.setRate(String.format("%.2f", rate));
+        
+        
+        if (resres == SUCCESS){
+            sqlFlag = sqlFlag + 1;
         } else {
-            if (resres == DB_DUPLICATE || shopres == DB_DUPLICATE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Duplicate record", Integer.toString(DB_DUPLICATE));
+            if (resres == DB_DUPLICATE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "Duplicate record error for farmresource table");
+                f.addMessage(null, message);
             }
-            if (resres == DB_SEVERE || shopres == DB_SEVERE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+            if (resres == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "Failure on insert in farmresource table");
+                f.addMessage(null, message);
+            }
+            return redirectUrl;
+        }
+        if (sqlFlag == 1) {
+            int shopres = masterDataService.addShopResource(resShopUpdBean);
+            if (shopres == SUCCESS) {
+                sqlFlag = sqlFlag + 1;
+            } else {
+                if (shopres == DB_DUPLICATE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Duplicate record error for shopresource table");
+                    f.addMessage(null, message);
+                }
+                if (shopres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Failure on insert in shopresource table");
+                    f.addMessage(null, message);
+                }
+                int delres = masterDataService.delResource(resAddBean);
+                if (delres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Farmresource record could not be deleted");
+                    f.addMessage(null, message);
+                }
+                return redirectUrl;
             }
         }
-        f.addMessage(null, message);
+//        if (resres == SUCCESS && shopres == SUCCESS) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource added", Integer.toString(SUCCESS));
+//            redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+//        } else {
+//            if (resres == DB_DUPLICATE || shopres == DB_DUPLICATE) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Duplicate record", Integer.toString(DB_DUPLICATE));
+//            }
+//            if (resres == DB_SEVERE || shopres == DB_SEVERE) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", Integer.toString(DB_SEVERE));
+//            }
+//        }
+//        f.addMessage(null, message);
+        if (sqlFlag==2) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", 
+                    "Resource added successfully");
+            f.addMessage(null, message);
+        }
         return redirectUrl;
     }
 

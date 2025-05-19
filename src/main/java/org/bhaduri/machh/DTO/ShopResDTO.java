@@ -11,12 +11,39 @@ import java.io.Serializable;
  * @author sb
  */
 public class ShopResDTO implements Serializable {
+    private String Id;
     private String shopId;
     private String resourceId;
     private String shopName;
     private String resourceName;
+    private String resRateDate;
+    private String stockPerRate;
     private String rate; 
     private String unit;
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String Id) {
+        this.Id = Id;
+    }
+
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
+    }
 
     public String getShopName() {
         return shopName;
@@ -34,6 +61,22 @@ public class ShopResDTO implements Serializable {
         this.resourceName = resourceName;
     }
 
+    public String getResRateDate() {
+        return resRateDate;
+    }
+
+    public void setResRateDate(String resRateDate) {
+        this.resRateDate = resRateDate;
+    }
+
+    public String getStockPerRate() {
+        return stockPerRate;
+    }
+
+    public void setStockPerRate(String stockPerRate) {
+        this.stockPerRate = stockPerRate;
+    }
+
     public String getRate() {
         return rate;
     }
@@ -42,22 +85,6 @@ public class ShopResDTO implements Serializable {
         this.rate = rate;
     }
 
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
-    }    
-
     public String getUnit() {
         return unit;
     }
@@ -65,6 +92,7 @@ public class ShopResDTO implements Serializable {
     public void setUnit(String unit) {
         this.unit = unit;
     }
+
     
     
 }

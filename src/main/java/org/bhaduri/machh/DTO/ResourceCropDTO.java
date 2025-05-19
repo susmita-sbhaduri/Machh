@@ -18,6 +18,7 @@ public class ResourceCropDTO implements Serializable {
     private HarvestDTO harvestDto;
     private String applicationDt;
     private String appliedAmount;
+    private String appliedAmtCost;
 
     public HarvestDTO getHarvestDto() {
         return harvestDto;
@@ -74,6 +75,14 @@ public class ResourceCropDTO implements Serializable {
 
     public void setAppliedAmount(String appliedAmount) {
         this.appliedAmount = appliedAmount;
+    }
+
+    public String getAppliedAmtCost() {
+        return appliedAmtCost;
+    }
+
+    public void setAppliedAmtCost(String appliedAmtCost) {
+        this.appliedAmtCost = appliedAmtCost;
     }
 
     
