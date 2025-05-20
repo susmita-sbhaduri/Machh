@@ -22,7 +22,8 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ResAcquireDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.services.MasterDataServices;
-
+import java.util.*;
+import java.util.stream.*;
 /**
  *
  * @author sb
@@ -49,8 +50,16 @@ public class AcquireResource implements Serializable {
     public void fillResourceValues() throws NamingException {
 
         MasterDataServices masterDataService = new MasterDataServices();
-        shopForSelectedRes = masterDataService.getShopResForResid(selectedRes);
-        
+        List<ShopResDTO> shopForSelectedResAll = masterDataService.getShopResForResid(selectedRes);
+        shopForSelectedRes = shopForSelectedResAll.stream()
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(
+                                row -> Arrays.asList(row.getShopId(), row.getResourceId()), // key: two columns
+                                row -> row,
+                                (row1, row2) -> row1 // keep the first occurrence
+                        ),
+                        map -> new ArrayList<>(map.values())
+                ));
         
     }
 
