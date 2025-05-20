@@ -89,13 +89,31 @@ public class ResourceAdd implements Serializable {
             f.addMessage("unit", message);
             return redirectUrl;
         }
+        
+        MasterDataServices masterDataService = new MasterDataServices();
+        int residprev;
+        if(Integer.parseInt(resid)>1){
+            residprev = Integer.parseInt(resid)-1;
+        } else residprev = 1;
+        
+        ShopResDTO existingResShopId;
+        existingResShopId = masterDataService.getResShopForPk(Integer.toString(residprev), selectedShop.getShopId());        
+        if(existingResShopId!=null){
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                    "Same Resource and Shop combition already exists.");
+            f.addMessage(null, message);
+            return redirectUrl;
+        }
+        
         redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
         int sqlFlag = 0;
-        MasterDataServices masterDataService = new MasterDataServices();
         FarmresourceDTO resAddBean = new FarmresourceDTO();
+        
+        
         resAddBean.setResourceId(resid);
         resAddBean.setResourceName(resname);
         resAddBean.setUnit(unit);
+        resAddBean.setAvailableAmt(String.format("%.2f", 0.00));
         int resres = masterDataService.addResource(resAddBean);
 
         ShopResDTO resShopUpdBean = new ShopResDTO();
@@ -108,7 +126,8 @@ public class ResourceAdd implements Serializable {
         resShopUpdBean.setShopName(selectedShop.getShopName());
         resShopUpdBean.setResourceId(resid);
         resShopUpdBean.setResourceName(resname);
-//        resShopUpdBean.setRate(String.format("%.2f", rate));
+        resShopUpdBean.setRate(String.format("%.2f", 0.00));
+        resShopUpdBean.setStockPerRate(String.format("%.2f", 0.00));
         
         
         if (resres == SUCCESS){

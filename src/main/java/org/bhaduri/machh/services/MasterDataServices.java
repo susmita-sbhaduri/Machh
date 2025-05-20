@@ -443,7 +443,8 @@ public class MasterDataServices {
             Farmresource recentity = new Farmresource();
             recentity.setResourceid(Integer.valueOf(res.getResourceId()));
             recentity.setResourcename(res.getResourceName());
-            recentity.setAvailableamount(BigDecimal.valueOf(Double.parseDouble("0.00")));
+            recentity.setAvailableamount(BigDecimal.
+                    valueOf(Double.parseDouble(res.getAvailableAmt())));
             recentity.setUnit(res.getUnit());
             
             resourcedao.create(recentity);
@@ -636,7 +637,7 @@ public class MasterDataServices {
             shopresrec.setShopid(Integer.parseInt(shopres.getShopId()));
 //            shopresrec.setShopresourcePK(shoprespk);
             shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
-            if("".equals(shopres.getResRateDate())){
+            if(shopres.getResRateDate()==null){
                 shopresrec.setResrtdate(null);
             } else {
                 mysqlDate = formatter.parse(shopres.getResRateDate());
@@ -692,10 +693,19 @@ public class MasterDataServices {
     
     public int editShopForRes(ShopResDTO shopres) {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {            
             Shopresource shopresrec = new Shopresource();
             shopresrec.setId(Integer.valueOf(shopres.getId()));
+            shopresrec.setShopid(Integer.parseInt(shopres.getShopId()));
+            shopresrec.setResourceid(Integer.parseInt(shopres.getResourceId()));
             shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
+            mysqlDate = formatter.parse(shopres.getResRateDate());
+            shopresrec.setResrtdate(mysqlDate);
+            shopresrec.setStockperrt(BigDecimal
+                    .valueOf(Double.parseDouble(shopres.getStockPerRate())));
             shopresdao.edit(shopresrec);
             return SUCCESS;
         }
@@ -715,7 +725,7 @@ public class MasterDataServices {
         
         try {
             Shopresource shopresrec = shopresdao.getShopResSingle(Integer.parseInt(resourceId), Integer.parseInt(shopId));
-
+            record.setId(String.valueOf(shopresrec.getId()));
             record.setShopId(String.valueOf(shopresrec.getShopid()));
             record.setResourceId(String.valueOf(shopresrec.getResourceid()));
             record.setShopName(getShopNameForId(String.valueOf(shopresrec.getShopid())).getShopName());

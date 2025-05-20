@@ -31,7 +31,10 @@
                     </p:selectOneRadio>
 
                     <h:outputLabel for="rate" value="Rate" />
-                    <h:inputText id="rate" value="#{acquireResource.rate}" readonly="true"/>
+                    <p:inputText id="rate" value="#{acquireResource.rate}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>
                     <h:outputLabel for="unit" value="per Unit" />
                     <h:inputText id="unit" value="#{acquireResource.unit}" readonly="true"/>
                     <h:outputLabel for="pdate" value="Purchase Date" />

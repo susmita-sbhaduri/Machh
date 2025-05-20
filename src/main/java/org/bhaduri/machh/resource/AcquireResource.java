@@ -10,7 +10,6 @@ import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
@@ -35,7 +34,7 @@ public class AcquireResource implements Serializable {
     private boolean saveDisabled = true;
     private String selectedRes;
     private String selectedShop;
-    private String rate;
+    private float rate;
     private String unit;
     private List<ShopResDTO> shopForSelectedRes;
     private List<FarmresourceDTO> existingresources;
@@ -51,42 +50,54 @@ public class AcquireResource implements Serializable {
 
         MasterDataServices masterDataService = new MasterDataServices();
         shopForSelectedRes = masterDataService.getShopResForResid(selectedRes);
-    }
-
-    public void onResourceIdselect() throws NamingException {
-//         FarmresourceDTO temp = selectedRes;
-        System.out.println("No crop categories are found." + selectedRes);
-        MasterDataServices masterDataService = new MasterDataServices();
-        shopForSelectedRes = masterDataService.getShopResForResid(selectedRes);
-
+        
+        
     }
 
     public void onShopResSelect() throws NamingException {
         System.out.println("No crop categories are found." + selectedShop);
         MasterDataServices masterDataService = new MasterDataServices();
         selectedShopRes = masterDataService.getResShopForPk(selectedRes, selectedShop);
-        rate = selectedShopRes.getRate();
+//        rate = Float.parseFloat(selectedShopRes.getRate());
+        rate = 0;
         unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes)).getUnit();
+//        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="+ selectedShopRes.getResourceId();
+//        FacesMessage message;
+//        FacesContext f = FacesContext.getCurrentInstance();
+//        f.getExternalContext().getFlash().setKeepMessages(true);
+//        if(Float.parseFloat(selectedShopRes.getRate())==0){
+//           message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+//                    "This resource is getting acquired for the first time.");
+//            f.addMessage("rate", message); 
+//            return redirectUrl;
+//        } else return null; 
     }
 
     public String goToReviewRes() {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         if (selectedShop == null || selectedShop.trim().isEmpty()) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select one shop.",
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
                     "Select one shop.");
             f.addMessage("shopid", message);
             return null;
         }
-
+        
+        if(rate==0){
+           message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                    "Provide a non-zero rate.");
+            f.addMessage("rate", message); 
+            return null;
+        }
+        
         if (amount == 0) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Provide non-zero purchase amount.",
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
                     "Provide non-zero purchase amount.");
             f.addMessage("amount", message);
             return null;
         }
-        float calculatedAmount = Float.parseFloat(rate)*amount;
-        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Total cost for "+selectedShopRes.getResourceName()
+        float calculatedAmount = rate*amount;
+        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Total cost for "+selectedShopRes.getResourceName()
                 +" for shop "+selectedShopRes.getShopName(),
                     "=Rs."+String.format("%.2f", calculatedAmount));
         
@@ -97,13 +108,41 @@ public class AcquireResource implements Serializable {
 
     public String goToSaveRes() throws NamingException {
         int sqlFlag = 0;
-        String redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+//        String redirectUrl = "/secured/resource/maintainresource?faces-redirect=true";
+        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
+                        + selectedShopRes.getResourceId();
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
 
         MasterDataServices masterDataService = new MasterDataServices();
         
+//        construction of shopresource record
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        ShopResDTO shopResRec = new ShopResDTO();
+        int shopresflag = 0;
+        shopResRec.setShopId(selectedShopRes.getShopId());
+        shopResRec.setShopName(selectedShopRes.getShopName());
+        shopResRec.setResourceId(selectedShopRes.getResourceId());
+        shopResRec.setResourceName(selectedShopRes.getResourceName());
+        shopResRec.setRate(String.format("%.2f", rate));
+        shopResRec.setResRateDate(sdf.format(purchaseDt));
+        shopResRec.setStockPerRate(String.format("%.2f", amount));
+        if (Float.parseFloat(selectedShopRes.getRate())==0){ 
+            shopResRec.setId(selectedShopRes.getId());
+           
+
+            shopresflag = 1;
+        } else {            
+            int shopresid = masterDataService.getMaxIdForShopRes();
+            if (shopresid == 0 || shopresid == DB_SEVERE) {
+                shopresid = 1;
+            } else {
+                shopresid = shopresid + 1;
+            }
+            shopResRec.setId(String.valueOf(shopresid));
+            shopresflag =2;
+        }
 //        contruction of resourceacquire record
         ResAcquireDTO resAcquireRec = new ResAcquireDTO();        
         int acquireid = masterDataService.getNextIdForResAquire();
@@ -112,7 +151,7 @@ public class AcquireResource implements Serializable {
         } else {
             resAcquireRec.setAcquireId(String.valueOf(acquireid + 1));
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
         resAcquireRec.setResoureId(selectedShopRes.getResourceId());
         resAcquireRec.setAmount(String.format("%.2f", amount));
         resAcquireRec.setAcquireDate(sdf.format(purchaseDt));
@@ -128,12 +167,12 @@ public class AcquireResource implements Serializable {
         expenseRec.setDate(sdf.format(purchaseDt));
         expenseRec.setExpenseType("RES");
         expenseRec.setExpenseRefId(resAcquireRec.getAcquireId()); //######resourcecrop acq id
-        float calculatedAmount = Float.parseFloat(rate) * amount;
+        float calculatedAmount = rate * amount;
         expenseRec.setExpenditure(String.format("%.2f", calculatedAmount));
         expenseRec.setCommString(comments);
 
 
-//        contruction of resourceacquire record
+//        contruction of farmresource record
         FarmresourceDTO resourceRec = masterDataService.getResourceNameForId(Integer.parseInt(
                 selectedShopRes.getResourceId()));
         float amountAcquired = amount + Float.parseFloat(resourceRec.getAvailableAmt());
@@ -144,17 +183,19 @@ public class AcquireResource implements Serializable {
             sqlFlag = sqlFlag + 1;
         } else {
             if (acqres == DB_DUPLICATE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Duplicate record error for resourceacquire table", Integer.toString(DB_DUPLICATE));
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                        "Duplicate record error for resourceacquire table");
                 f.addMessage(null, message);
             }
             if (acqres == DB_SEVERE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on insert in resourceacquire table", Integer.toString(DB_SEVERE));
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                        "Failure on insert in resourceacquire table");
                 f.addMessage(null, message);
             }
 
-            redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
-                        + selectedShopRes.getResourceId();
-            return redirectUrl;
+//            redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
+//                        + selectedShopRes.getResourceId();
+//            return redirectUrl;
         }
 
         if (sqlFlag == 1) {
@@ -164,21 +205,24 @@ public class AcquireResource implements Serializable {
                 sqlFlag = sqlFlag + 1;
             } else {
                 if (expres == DB_DUPLICATE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Duplicate record error for expense table", Integer.toString(DB_DUPLICATE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "Duplicate record error for expense table");
                     f.addMessage(null, message);
                 }
                 if (expres == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on insert in expense table", Integer.toString(DB_SEVERE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure"
+                            , "Failure on insert in expense table");
                     f.addMessage(null, message);
                 }
                 int delacq = masterDataService.delAcquireResource(resAcquireRec);
                 if (delacq == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "acquireresource record could not be deleted", Integer.toString(DB_SEVERE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "acquireresource record could not be deleted");
                     f.addMessage(null, message);
                 }
-                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
-                        + selectedShopRes.getResourceId();
-                return redirectUrl;
+//                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
+//                        + selectedShopRes.getResourceId();
+//                return redirectUrl;
             }
         }
 
@@ -189,32 +233,91 @@ public class AcquireResource implements Serializable {
                 sqlFlag = sqlFlag + 1;
             } else {
                 if (resres == DB_NON_EXISTING) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "This resource record does not exist.", Integer.toString(DB_NON_EXISTING));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "This resource record does not exist.");
                     f.addMessage(null, message);
                 }
                 if (resres == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on edit in resource table", Integer.toString(DB_SEVERE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "Failure on edit in resource table");
                     f.addMessage(null, message);
                 }
                 
                 int delacq = masterDataService.delAcquireResource(resAcquireRec);
                 if (delacq == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "acquireresource record could not be deleted", Integer.toString(DB_SEVERE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "acquireresource record could not be deleted");
                     f.addMessage(null, message);
                 }
                 int delexpense = masterDataService.delExpenseRecord(expenseRec);
                 if (delexpense == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "expense record could not be deleted", Integer.toString(DB_SEVERE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "expense record could not be deleted");
                     f.addMessage(null, message);
                 }
-                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
-                        + selectedShopRes.getResourceId();
-                return redirectUrl;
+//                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
+//                        + selectedShopRes.getResourceId();
+//                return redirectUrl;
             }
         }
+        
+        if (sqlFlag == 3) {
+            
+            int shopres;
+            if(shopresflag==1){
+                shopres = masterDataService.editShopForRes(shopResRec);
+            } else {
+                shopres = masterDataService.addShopResource(shopResRec);
+            }
+            
+            if (shopres == SUCCESS) {
+                sqlFlag = sqlFlag + 1;
+            } else {
+                if (shopres == DB_NON_EXISTING) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "This shopresource record does not exist.");
+                    f.addMessage(null, message);
+                }
+                if (shopres == DB_DUPLICATE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "This shopresource record does not exist.");
+                    f.addMessage(null, message);
+                }
+                if (shopres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "Failure on edit in shopresource table");
+                    f.addMessage(null, message);
+                }
                 
-        if (sqlFlag==3) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Resource acquired successfully");
+                int delacq = masterDataService.delAcquireResource(resAcquireRec);
+                if (delacq == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "acquireresource record could not be deleted");
+                    f.addMessage(null, message);
+                }
+                int delexpense = masterDataService.delExpenseRecord(expenseRec);
+                if (delexpense == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "expense record could not be deleted");
+                    f.addMessage(null, message);
+                }
+                amountAcquired = Float.parseFloat(resourceRec.getAvailableAmt())-amount;
+                resourceRec.setAvailableAmt(String.format("%.2f", amountAcquired));
+                int resres = masterDataService.editResource(resourceRec);
+                if (resres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                            "farmresource record could not be corrected");
+                    f.addMessage(null, message);
+                }
+//                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
+//                        + selectedShopRes.getResourceId();
+//                return redirectUrl;
+            }
+        }
+        
+        if (sqlFlag==4) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", 
+                    "Resource acquired successfully");
             f.addMessage(null, message);
         }
         return redirectUrl;
@@ -261,13 +364,15 @@ public class AcquireResource implements Serializable {
         this.existingresources = existingresources;
     }
 
-    public String getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate(String rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
+
+    
 
     public String getUnit() {
         return unit;
