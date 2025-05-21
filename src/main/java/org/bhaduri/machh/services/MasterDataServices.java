@@ -399,6 +399,27 @@ public class MasterDataServices {
         }
     }
     
+    public FarmresourceDTO getResourceIdForName(String resourcename) {
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);        
+        FarmresourceDTO record = new FarmresourceDTO();        
+        try {  
+           Farmresource resrec = resourcedao.getResourceId(resourcename); 
+           record.setResourceId(Integer.toString(resrec.getResourceid()));
+           record.setResourceName(resourcename);
+           record.setAvailableAmt(String.format("%.2f",resrec.getAvailableamount().floatValue()));
+           record.setUnit(resrec.getUnit());
+           return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No resourceid found for this resourcename");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResourceIdForName.");
+            return null;
+        }
+    }
+    
      public List<FarmresourceDTO> getResourceList() {
         FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);        
         FarmresourceDTO record = new FarmresourceDTO();
@@ -424,6 +445,8 @@ public class MasterDataServices {
             return null;
         }
     }
+     
+     
     public String getNextIdForRes(){
         List<FarmresourceDTO> reclist = getResourceList();
         List<Integer> resIdList =  new ArrayList<>();
@@ -719,22 +742,37 @@ public class MasterDataServices {
         }
     }
     
-    public ShopResDTO getResShopForPk(String resourceId, String shopId) {
+    public List<ShopResDTO> getResShopForPk(String resourceId, String shopId) {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);
+        List<ShopResDTO> recordList = new ArrayList<>();
         ShopResDTO record = new ShopResDTO();
-        
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {
-            Shopresource shopresrec = shopresdao.getShopResSingle(Integer.parseInt(resourceId), Integer.parseInt(shopId));
-            record.setId(String.valueOf(shopresrec.getId()));
-            record.setShopId(String.valueOf(shopresrec.getShopid()));
-            record.setResourceId(String.valueOf(shopresrec.getResourceid()));
-            record.setShopName(getShopNameForId(String.valueOf(shopresrec.getShopid())).getShopName());
-            record.setResourceName(getResourceNameForId(shopresrec.getResourceid()).getResourceName());
-            record.setRate(String.format("%.2f", shopresrec.getRate().floatValue()));
-            return record;
+            List<Shopresource> shopreslist = shopresdao.getShopResList(Integer.parseInt(resourceId), Integer.parseInt(shopId));
+            for (int i = 0; i < shopreslist.size(); i++) {
+                record.setId(String.valueOf(shopreslist.get(i).getId()));
+                record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
+                record.setResourceId(String.valueOf(shopreslist.get(i).getResourceid()));
+                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopid())).getShopName());
+                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
+                record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
+                mysqlDate = shopreslist.get(i).getResrtdate();
+                
+                if (mysqlDate != null) {
+                    record.setResRateDate(formatter.format(mysqlDate));
+                } else {
+                    record.setResRateDate("");
+                }
+                record.setStockPerRate(String.format("%.2f", shopreslist.get(i).getStockperrt()));
+                recordList.add(record);
+                record = new ShopResDTO();
+            }        
+            return recordList;
         }
         catch (NoResultException e) {
-            System.out.println("No ShopResource record is found");            
+            System.out.println("No ShopResource record is found for shop and resource id");            
             return null;
         }
         catch (Exception exception) {

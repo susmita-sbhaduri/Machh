@@ -8,7 +8,7 @@
                 xmlns:h="jakarta.faces.html">
 
     <ui:define name="content">
-        <h4>Acquire Resource.</h4>
+        <h4>Acquire Resource for:</h4>
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         &nbsp;&nbsp;&nbsp;
@@ -19,10 +19,13 @@
         </f:metadata>
         <div class="card">
             <h:form id="resaddform" style="text-align: center">
+                <h5>#{acquireResource.selectedResName}</h5> <!-- Your dynamic heading variable -->
+               
                 <p:panelGrid columns="2">
 
                     <h:outputLabel for="shopid" value="Shops where found(select one)" />
-                    <p:selectOneRadio id="shopid" value="#{acquireResource.selectedShop}">
+                    <p:selectOneRadio id="shopid" value="#{acquireResource.selectedShop}"
+                                      layout="pageDirection">
                         <f:selectItems value="#{acquireResource.shopForSelectedRes}" 
                                        var="shop"
                                        itemLabel="#{shop.shopName}" itemValue="#{shop.shopId}"/>
@@ -46,14 +49,14 @@
                     </p:inputText>
                     <h:outputLabel for="comments" value="Comments" />
                     <h:inputText id="comments" value="#{acquireResource.comments}"/>
-                    
+
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
                                      value="Review First"
                                      action="#{acquireResource.goToReviewRes()}" 
                                      update="growl saveBtn" > 
                     </p:commandButton>
-                    
+
                     <p:commandButton id="saveBtn"
                                      styleClass="blue-button" 
                                      icon="fa fa-edit" 

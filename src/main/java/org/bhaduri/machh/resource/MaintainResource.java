@@ -30,13 +30,19 @@ public class MaintainResource implements Serializable {
     public MaintainResource() {
     }
     public String fillResourceValues() throws NamingException {
-        String redirectUrl;
+        String redirectUrl = "/secured/resource/addinventory?faces-redirect=true";
         MasterDataServices masterDataService = new MasterDataServices();
         existingresources = masterDataService.getResourceList();      
         
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
         if(existingresources.isEmpty()){            
-            redirectUrl = "/secured/userhome";
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                    "Add one resource.");
+            f.addMessage(null, message);
             return redirectUrl;
+            
         } else {
             return null;    
         }

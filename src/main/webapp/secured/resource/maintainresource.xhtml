@@ -31,14 +31,7 @@
                     <p:column headerText="Unit">
                         <h:outputText value="#{existingres.unit}" />
                     </p:column>                 
-                    <p:column>  
-                        <p:commandButton styleClass="blue-button" 
-                                         icon="fa fa-edit" 
-                                         value="Maintain Shop"
-                                         action="#{maintainResource.goToShopForRes()}" >
-                            <f:setPropertyActionListener value="#{existingres}" target="#{maintainResource.selectedRes}" />    
-                        </p:commandButton>
-                    </p:column>
+                    
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 

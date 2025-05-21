@@ -34,6 +34,7 @@ public class AcquireResource implements Serializable {
 
     private boolean saveDisabled = true;
     private String selectedRes;
+    private String selectedResName;
     private String selectedShop;
     private float rate;
     private String unit;
@@ -60,13 +61,16 @@ public class AcquireResource implements Serializable {
                         ),
                         map -> new ArrayList<>(map.values())
                 ));
-        
+        FarmresourceDTO selectedResDto = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes));
+        selectedResName = selectedResDto.getResourceName();
     }
 
     public void onShopResSelect() throws NamingException {
         System.out.println("No crop categories are found." + selectedShop);
         MasterDataServices masterDataService = new MasterDataServices();
-        selectedShopRes = masterDataService.getResShopForPk(selectedRes, selectedShop);
+        
+        List<ShopResDTO> selectedShopResLst = masterDataService.getResShopForPk(selectedRes, selectedShop);
+        selectedShopRes = selectedShopResLst.get(0);
 //        rate = Float.parseFloat(selectedShopRes.getRate());
         rate = 0;
         unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes)).getUnit();
@@ -138,9 +142,7 @@ public class AcquireResource implements Serializable {
         shopResRec.setResRateDate(sdf.format(purchaseDt));
         shopResRec.setStockPerRate(String.format("%.2f", amount));
         if (Float.parseFloat(selectedShopRes.getRate())==0){ 
-            shopResRec.setId(selectedShopRes.getId());
-           
-
+            shopResRec.setId(selectedShopRes.getId()); //this shopresource is getting updated for the first time
             shopresflag = 1;
         } else {            
             int shopresid = masterDataService.getMaxIdForShopRes();
@@ -421,6 +423,14 @@ public class AcquireResource implements Serializable {
 
     public void setSaveDisabled(boolean saveDisabled) {
         this.saveDisabled = saveDisabled;
+    }
+
+    public String getSelectedResName() {
+        return selectedResName;
+    }
+
+    public void setSelectedResName(String selectedResName) {
+        this.selectedResName = selectedResName;
     }
 
     

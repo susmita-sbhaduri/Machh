@@ -25,7 +25,13 @@ public class FarmresourceDAO extends FarmresourceJpaController{
         Farmresource resrec = query.getSingleResult();
         return resrec;
     }
-    
+    public Farmresource getResourceId(String name) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Farmresource> query = em.createNamedQuery("Farmresource.resIdForName", Farmresource.class);
+        query.setParameter("resourcename", name);
+        Farmresource resrec = query.getSingleResult();
+        return resrec;
+    }
     public List<Farmresource> getAllResource() {
         EntityManager em = getEntityManager();
         TypedQuery<Farmresource> query = em.createNamedQuery("Farmresource.listAll", Farmresource.class);            

@@ -9,6 +9,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.util.List;
 import javax.naming.NamingException;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
@@ -34,7 +35,8 @@ public class ReShopEdit implements Serializable {
     }
     public void fillDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
-        editBean = masterDataService.getResShopForPk(resourceId, shopId); 
+        List<ShopResDTO> editBeanList = masterDataService.getResShopForPk(resourceId, shopId);
+        editBean = editBeanList.get(0);
         rate = Float.parseFloat(editBean.getRate());
         unit = masterDataService.getResourceNameForId(Integer.parseInt(resourceId)).getUnit();
     }
