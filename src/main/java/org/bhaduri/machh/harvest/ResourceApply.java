@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
-import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
@@ -21,8 +20,7 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
-import org.bhaduri.machh.DTO.ShopDTO;
-import org.bhaduri.machh.DTO.SiteDTO;
+import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
 /**
@@ -42,9 +40,8 @@ public class ResourceApply implements Serializable {
     private String unit;
     private float amtapplied;
     private Date applyDt = new Date();
-    /**
-     * Creates a new instance of ResourceApply
-     */
+    private float resCropAppliedCost;
+    
     public ResourceApply() {
     }
     public void fillValues() throws NamingException {
@@ -81,14 +78,12 @@ public class ResourceApply implements Serializable {
                     "Select one resource.");
             f.addMessage("resid", message);
             return redirectUrl;
-//            return null;
         }
         if (amtapplied == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Apply non-zero amount of resource.",
                     "Apply non-zero amount of resource.");
             f.addMessage("amtapplied", message);
             return redirectUrl;
-//            return null;
         } else {
             float remainingAmt = Float.parseFloat(amount) - amtapplied;
             if (remainingAmt == 0) {
@@ -106,8 +101,11 @@ public class ResourceApply implements Serializable {
             }
         }
         int sqlFlag = 0;
-        ResourceCropDTO resourceCrop = new ResourceCropDTO();
         MasterDataServices masterDataService = new MasterDataServices();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //shopresource record construction
+        //resourcecrop record construction
+        ResourceCropDTO resourceCrop = new ResourceCropDTO();        
         int applicationid = masterDataService.getMaxIdForResCrop();
         if (applicationid == 0 || applicationid == DB_SEVERE) {
             resourceCrop.setApplicationId("1");
@@ -116,10 +114,10 @@ public class ResourceApply implements Serializable {
         }
         resourceCrop.setResourceId(selectedRes);
         resourceCrop.setHarvestId(selectedHarvest);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         resourceCrop.setAppliedAmount(String.format("%.2f", amtapplied));
         resourceCrop.setApplicationDt(sdf.format(applyDt));
         
+        //farmresource record construction
         FarmresourceDTO resourceRec = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes));
         float remainingAmt = Float.parseFloat(amount) - amtapplied;
         resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
@@ -174,10 +172,52 @@ public class ResourceApply implements Serializable {
         
     }
     
-//    public String goToApplyResAgain(){
-//        String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest;
-//        return redirectUrl;
-//    }
+    public String calcShopResAmt(float quantityApplied) throws NamingException{
+        MasterDataServices masterDataService = new MasterDataServices();
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResid(selectedRes);
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        ShopResDTO shopResRec = new ShopResDTO();
+        float appliedQuantity = quantityApplied;
+        resCropAppliedCost = 0;
+        for (int i = 0; i < shopResListResid.size(); i++) {            
+            if(Float.parseFloat(shopResListResid.get(i).getStockPerRate())>0){                
+                shopResRec.setId(shopResListResid.get(i).getId());
+                shopResRec.setRate(shopResListResid.get(i).getRate());
+                shopResRec.setResRateDate(shopResListResid.get(i).getResRateDate());
+                shopResRec.setResourceId(shopResListResid.get(i).getResourceId());
+                shopResRec.setShopId(shopResListResid.get(i).getShopId());
+                
+                float shopResStock = Float.parseFloat(shopResListResid.get(i).getStockPerRate());
+                float shopResRate = Float.parseFloat(shopResListResid.get(i).getRate());
+                if((appliedQuantity-shopResStock)<=0){
+                    shopResStock = shopResStock-appliedQuantity;
+                    resCropAppliedCost = resCropAppliedCost+(appliedQuantity*shopResRate);
+                    appliedQuantity = 0;
+                    shopResRec.setStockPerRate(String.format("%.2f",shopResStock));
+                    break;
+                }
+                if((appliedQuantity-shopResStock)>0){
+                    resCropAppliedCost = resCropAppliedCost+(shopResStock*shopResRate);
+                    shopResStock = 0;
+                    appliedQuantity = appliedQuantity-shopResStock;
+                    shopResRec.setStockPerRate(String.format("%.2f",shopResStock));
+                }
+                int shopres = masterDataService.editShopForRes(shopResRec);
+                if (shopres != SUCCESS){
+                    resCropAppliedCost = 0;
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure"
+                            , "shopresource record could not be updated");
+                    f.addMessage(null, message);
+                    return redirectUrl;
+                }
+            }            
+        }
+        return "OK";
+    }
     public String getSelectedRes() {
         return selectedRes;
     }
@@ -256,6 +296,14 @@ public class ResourceApply implements Serializable {
 
     public void setApplyDt(Date applyDt) {
         this.applyDt = applyDt;
+    }
+
+    public float getResCropAppliedCost() {
+        return resCropAppliedCost;
+    }
+
+    public void setResCropAppliedCost(float resCropAppliedCost) {
+        this.resCropAppliedCost = resCropAppliedCost;
     }
     
         

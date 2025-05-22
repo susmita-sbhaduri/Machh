@@ -4,7 +4,6 @@
  */
 package org.bhaduri.machh.services;
 
-import jakarta.annotation.Resource;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -47,7 +46,6 @@ import org.bhaduri.machh.DTO.ResCropSummaryDTO;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
-import org.bhaduri.machh.DTO.SiteCropDTO;
 import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
