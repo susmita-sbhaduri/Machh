@@ -38,6 +38,14 @@ public class FarmresourceDAO extends FarmresourceJpaController{
         List<Farmresource> listofresource = query.getResultList();
         return listofresource;
     }
+    
+    public List<Farmresource> getNonzeroResource() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Farmresource> query = em.createNamedQuery("Farmresource.listNonzero", Farmresource.class);            
+        List<Farmresource> listofresource = query.getResultList();
+        return listofresource;
+    }
+    
     public List<String> listResCat(String cropcat, String cropname) {
         EntityManager em = getEntityManager();
         TypedQuery<String> query = em.createNamedQuery("Resource.listResCatPerCrop", String.class);

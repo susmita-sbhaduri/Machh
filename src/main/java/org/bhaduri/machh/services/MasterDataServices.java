@@ -444,6 +444,32 @@ public class MasterDataServices {
         }
     }
      
+    public List<FarmresourceDTO> getNonzeroResList() {
+        FarmresourceDAO resourcedao = new FarmresourceDAO(utx, emf);        
+        FarmresourceDTO record = new FarmresourceDTO();
+        List<FarmresourceDTO> recordList = new ArrayList<>();
+        try {  
+            List<Farmresource> resourcelist = resourcedao.getNonzeroResource();
+            for (int i = 0; i < resourcelist.size(); i++) {
+                record.setResourceId(Integer.toString(resourcelist.get(i).getResourceid()));
+                record.setResourceName(resourcelist.get(i).getResourcename());
+                record.setAvailableAmt(String.format("%.2f",resourcelist.get(i).getAvailableamount().floatValue()));
+                record.setUnit(resourcelist.get(i).getUnit());                         
+                recordList.add(record);
+                record = new FarmresourceDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No Resoureces are added");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResourceList().");
+            return null;
+        }
+    }
+     
      
     public String getNextIdForRes(){
         List<FarmresourceDTO> reclist = getResourceList();

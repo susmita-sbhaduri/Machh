@@ -18,6 +18,9 @@
     <named-query name="Farmresource.listAll">
         <query>SELECT f FROM Farmresource f</query>
     </named-query>
+    <named-query name="Farmresource.listNonzero">
+        <query>SELECT f FROM Farmresource f WHERE f.availableamount > 0</query>
+    </named-query>
     <!--    <named-query name="Crop.listCropPerPK">
         <query>SELECT c FROM Crop c WHERE c.cropPK.cropcategory = :cropcategory AND c.cropPK.crop =:cropname</query>
     </named-query>-->

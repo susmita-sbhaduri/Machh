@@ -52,7 +52,7 @@ public class ResourceApply implements Serializable {
         site = harvestRecord.getSiteName();
         cropcat = harvestRecord.getCropCategory();
         cropname = harvestRecord.getCropName();
-        existingresources = masterDataService.getResourceList();
+        existingresources = masterDataService.getNonzeroResList();
     }
     
     public void onResSelect() throws NamingException {        
@@ -74,27 +74,27 @@ public class ResourceApply implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         if (selectedRes == null || selectedRes.trim().isEmpty()) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Select one resource.",
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                     "Select one resource.");
             f.addMessage("resid", message);
             return redirectUrl;
         }
         if (amtapplied == 0) {
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Apply non-zero amount of resource.",
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                     "Apply non-zero amount of resource.");
             f.addMessage("amtapplied", message);
             return redirectUrl;
         } else {
             float remainingAmt = Float.parseFloat(amount) - amtapplied;
             if (remainingAmt == 0) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Strored resource would be finished after this application.",
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                         "Strored resource would be finished after this application.");
                 f.addMessage("amtapplied", message);
 //                return null;
             }
             if (remainingAmt < 0) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource cannot be applied.",
-                        "Strored resource is less than applied resource.");
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
+                        "Stored resource is less than applied resource.");
                 f.addMessage("amtapplied", message);
                 return redirectUrl;
 //                return null;
@@ -103,7 +103,9 @@ public class ResourceApply implements Serializable {
         int sqlFlag = 0;
         MasterDataServices masterDataService = new MasterDataServices();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        //shopresource record construction
+        //shopresource record construction and update
+        String shopResupdate = calcShopResAmt(amtapplied);
+        
         //resourcecrop record construction
         ResourceCropDTO resourceCrop = new ResourceCropDTO();        
         int applicationid = masterDataService.getMaxIdForResCrop();
@@ -115,6 +117,9 @@ public class ResourceApply implements Serializable {
         resourceCrop.setResourceId(selectedRes);
         resourceCrop.setHarvestId(selectedHarvest);
         resourceCrop.setAppliedAmount(String.format("%.2f", amtapplied));
+        if(shopResupdate.equals("OK")){
+            resourceCrop.setAppliedAmtCost((String.format("%.2f", resCropAppliedCost)));
+        } else resourceCrop.setAppliedAmtCost("0.00");
         resourceCrop.setApplicationDt(sdf.format(applyDt));
         
         //farmresource record construction
@@ -128,12 +133,13 @@ public class ResourceApply implements Serializable {
             sqlFlag = sqlFlag + 1;
         } else {
             if (rescropres == DB_DUPLICATE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource already applied with this application ID=" + resourceCrop.getApplicationId()
-                        , Integer.toString(DB_DUPLICATE));
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure."
+                        , "Resource already applied with this application ID=" + resourceCrop.getApplicationId());
                 f.addMessage(null, message);
             }
             if (rescropres == DB_SEVERE) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on applying resource", Integer.toString(DB_SEVERE));
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure."
+                        , "Failure on applying resource");
                 f.addMessage(null, message);
             } 
             redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
@@ -147,16 +153,19 @@ public class ResourceApply implements Serializable {
                 sqlFlag = sqlFlag + 1;
             } else {
                 if (resres == DB_NON_EXISTING) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Resource record does not exist", Integer.toString(DB_NON_EXISTING));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure"
+                            , "Resource record does not exist");
                     f.addMessage(null, message);
                 }
                 if (resres == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure on resource update", Integer.toString(DB_SEVERE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure"
+                            , "Failure on resource update");
                     f.addMessage(null, message);
                 }
                 int delres = masterDataService.delResCropRecord(resourceCrop);
                 if (delres == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "resourcecrop record could not be deleted", Integer.toString(DB_SEVERE));
+                    message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure"
+                            , "resourcecrop record could not be deleted");
                     f.addMessage(null, message);
                 }
                 redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
@@ -193,17 +202,27 @@ public class ResourceApply implements Serializable {
                 
                 float shopResStock = Float.parseFloat(shopResListResid.get(i).getStockPerRate());
                 float shopResRate = Float.parseFloat(shopResListResid.get(i).getRate());
-                if((appliedQuantity-shopResStock)<=0){
-                    shopResStock = shopResStock-appliedQuantity;
-                    resCropAppliedCost = resCropAppliedCost+(appliedQuantity*shopResRate);
+                if ((appliedQuantity - shopResStock) <= 0) {
+                    //in this case the applied resource is deducted from the stock(consumed
+                    //from the stock completely and stock is not more than 0, hence break from this loop.
+                    shopResStock = shopResStock - appliedQuantity;
+                    resCropAppliedCost = resCropAppliedCost + (appliedQuantity * shopResRate);
                     appliedQuantity = 0;
-                    shopResRec.setStockPerRate(String.format("%.2f",shopResStock));
+                    shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
+                    int shopres = masterDataService.editShopForRes(shopResRec);
+                    if (shopres != SUCCESS) {
+                        resCropAppliedCost = 0;
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                 "shopresource record could not be updated");
+                        f.addMessage(null, message);
+                        return redirectUrl;
+                    }
                     break;
                 }
                 if((appliedQuantity-shopResStock)>0){
-                    resCropAppliedCost = resCropAppliedCost+(shopResStock*shopResRate);
-                    shopResStock = 0;
+                    resCropAppliedCost = resCropAppliedCost+(shopResStock*shopResRate);                    
                     appliedQuantity = appliedQuantity-shopResStock;
+                    shopResStock = 0;
                     shopResRec.setStockPerRate(String.format("%.2f",shopResStock));
                 }
                 int shopres = masterDataService.editShopForRes(shopResRec);
