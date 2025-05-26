@@ -29,16 +29,8 @@
                     <h:outputLabel value="Crop Name" />
                     <h:outputText value="#{resourceCropEdit.cropname}" style="font-weight:bold;"/>
 
-                    <h:outputLabel for="resid" value="Available Resources" />
-                    <p:selectOneRadio id="resid" value="#{resourceCropEdit.selectedRes}"
-                                      layout="pageDirection">
-                        <f:selectItems value="#{resourceCropEdit.existingresources}" 
-                                       var="res"
-                                       itemLabel="#{res.resourceName}" itemValue="#{res.resourceId}"/>
-                        <p:ajax event="change" listener="#{resourceCropEdit.onResSelect}" 
-                                update="@form" process="@this"/>
-                    </p:selectOneRadio>
-                    
+                    <h:outputLabel for="resid" value="Resource Name" />
+                    <h:outputText value="#{resourceCropEdit.selectedRes}" style="font-weight:bold;"/>
                     <h:outputLabel value="Available Amount" />
                     <h:outputText value="#{resourceCropEdit.amount}" style="font-weight:bold;"/>
                     <h:outputLabel value="Unit" />

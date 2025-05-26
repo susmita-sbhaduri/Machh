@@ -318,6 +318,46 @@ public class MasterDataServices {
         }
     }
     
+    public List<ShopResDTO> getShopResForResidRate(String resid) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
+        List<ShopResDTO> recordList = new ArrayList<>();
+        ShopResDTO record = new ShopResDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Shopresource> shopreslist = shopresdao.getShopDtlssForResRt(Integer.parseInt(resid));
+            for (int i = 0; i < shopreslist.size(); i++) {
+                record.setId(String.valueOf(shopreslist.get(i).getId()));
+                record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
+                record.setResourceId(String.valueOf(shopreslist.get(i).getResourceid()));
+                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopid())).getShopName());
+                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
+                record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
+                record.setUnit(getResourceNameForId(shopreslist.get(i).getResourceid()).getUnit());
+                mysqlDate = shopreslist.get(i).getResrtdate();
+                
+                if (mysqlDate != null) {
+                    record.setResRateDate(formatter.format(mysqlDate));
+                } else {
+                    record.setResRateDate("");
+                }
+                record.setStockPerRate(String.format("%.2f", shopreslist.get(i).getStockperrt()));
+                recordList.add(record);
+                record = new ShopResDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No ShopResource records are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopResName().");
+            return null;
+        }
+    }
+    
     public ShopDTO getShopNameForId(String shopid) {
         ShopDAO shopdao = new ShopDAO(utx, emf);        
         ShopDTO record = new ShopDTO();
@@ -605,7 +645,36 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
-    
+    public ResAcquireDTO getResAcqPerDate(String acquireDt, String resid) {
+        ResAcquireDAO acqresdao = new ResAcquireDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        ResAcquireDTO record = new ResAcquireDTO();
+        try {
+            Resourceaquire result = acqresdao.resAcqPerDt(formatter.parse(acquireDt)
+                    , Integer.parseInt(resid));
+
+            record.setAcquireId(result.getAquireid().toString());
+            record.setResoureId(String.valueOf(result.getResourceid()));
+            record.setAmount(String.format("%.2f", result));
+            mysqlDate = result.getAquiredate();
+
+            if (mysqlDate != null) {
+                record.setAcquireDate(formatter.format(mysqlDate));
+            } else {
+                record.setAcquireDate("");
+            }
+
+            return record;
+        } catch (NoResultException e) {
+            System.out.println("No resourceaquire records are found");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResAcqPerDate.");
+            return null;
+        }
+    }
     public List<ShopDTO> getShopList() {
         ShopDAO shopdao = new ShopDAO(utx, emf);        
         ShopDTO record = new ShopDTO();

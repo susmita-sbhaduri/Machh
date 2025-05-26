@@ -187,7 +187,7 @@ public class ResourceApply implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResid(selectedRes);
+        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResidRate(selectedRes);
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         ShopResDTO shopResRec = new ShopResDTO();
         float appliedQuantity = quantityApplied;
