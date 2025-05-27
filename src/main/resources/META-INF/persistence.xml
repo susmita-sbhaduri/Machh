@@ -19,5 +19,6 @@
     <class>org.bhaduri.machh.entities.Shop</class>
     <class>org.bhaduri.machh.entities.Labourcrop</class>
     <class>org.bhaduri.machh.entities.Shopresource</class>
+    <class>org.bhaduri.machh.entities.Shoprescrop</class>
   </persistence-unit>
 </persistence>

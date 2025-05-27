@@ -92,7 +92,5 @@ public class ShopResDTO implements Serializable {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-
-    
-    
+      
 }

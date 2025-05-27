@@ -25,6 +25,7 @@ import org.bhaduri.machh.DA.LabourCropDAO;
 import org.bhaduri.machh.DA.ResAcquireDAO;
 import org.bhaduri.machh.DA.ResourceCropDAO;
 import org.bhaduri.machh.DA.ShopDAO;
+import org.bhaduri.machh.DA.ShopResCropDAO;
 import org.bhaduri.machh.DA.ShopResDAO;
 import org.bhaduri.machh.DA.SiteDAO;
 
@@ -45,6 +46,7 @@ import org.bhaduri.machh.DTO.ResAcquireDTO;
 import org.bhaduri.machh.DTO.ResCropSummaryDTO;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
+import org.bhaduri.machh.DTO.ShopResCropDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.DTO.SiteDTO;
 import org.bhaduri.machh.entities.Users;
@@ -63,6 +65,7 @@ import org.bhaduri.machh.entities.Farmresource;
 import org.bhaduri.machh.entities.Labourcrop;
 import org.bhaduri.machh.entities.Resourceaquire;
 import org.bhaduri.machh.entities.Resourcecrop;
+import org.bhaduri.machh.entities.Shoprescrop;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
@@ -751,7 +754,6 @@ public class MasterDataServices {
             shopresrec.setId(Integer.valueOf(shopres.getId()));
             shopresrec.setResourceid(Integer.parseInt(shopres.getResourceId()));
             shopresrec.setShopid(Integer.parseInt(shopres.getShopId()));
-//            shopresrec.setShopresourcePK(shoprespk);
             shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
             if(shopres.getResRateDate()==null){
                 shopresrec.setResrtdate(null);
@@ -1156,6 +1158,41 @@ public class MasterDataServices {
         }
     }
     
+    public int getMaxIdForShopResCrop(){
+        ShopResCropDAO shoprescroprec = new ShopResCropDAO(utx, emf);
+        try {
+            return shoprescroprec.getMaxId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in shoprescrop table");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getMaxIdForShopResCrop().");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int addShopResCrop(ShopResCropDTO shoprescroprec) {
+        ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
+        
+        try {
+            Shoprescrop rec = new Shoprescrop();
+            rec.setId(Integer.valueOf(shoprescroprec.getId()));
+            rec.setRecropid(Integer.parseInt(shoprescroprec.getResCropId()));
+            rec.setShopresid(Integer.parseInt(shoprescroprec.getShopResId()));
+            recorddao.create(rec);
+            return SUCCESS;
+        }
+        catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this shoprescrop record");            
+            return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addShopResCrop.");
+            return DB_SEVERE;
+        }
+    }
     public List<ResourceCropDTO> getResSummaryPerID() {
         //this is a group by one
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);

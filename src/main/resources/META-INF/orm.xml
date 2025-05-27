@@ -75,6 +75,9 @@
     <named-query name="Shopresource.getMaxId">
         <query>SELECT MAX(s.id) FROM Shopresource s</query>
     </named-query>
+    <named-query name="Shoprescrop.getMaxId">
+        <query>SELECT MAX(s.id) FROM Shoprescrop s</query>
+    </named-query>
     <named-query name="Shop.shopNameForId">
         <query>SELECT s FROM Shop s WHERE s.shopid = :shopid</query>
     </named-query>
