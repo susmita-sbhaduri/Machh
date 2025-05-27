@@ -41,7 +41,7 @@ public class ResourceApply implements Serializable {
     private String unit;
     private float amtapplied;
     private Date applyDt = new Date();
-    private float resCropAppliedCost;
+    private float resCropAppliedCost=0;
     
     public ResourceApply() {
     }
@@ -193,11 +193,11 @@ public class ResourceApply implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResidRate(selectedRes);
+        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResid(selectedRes);
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         ShopResDTO shopResRec = new ShopResDTO();
         float appliedQuantity = quantityApplied;
-        resCropAppliedCost = 0;
+//        resCropAppliedCost = 0;
         for (int i = 0; i < shopResListResid.size(); i++) {            
             if (Float.parseFloat(shopResListResid.get(i).getStockPerRate()) > 0) {                
                 shopResRec.setId(shopResListResid.get(i).getId());
