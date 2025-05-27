@@ -1193,6 +1193,29 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
+    
+    public List<ShopResCropDTO> getShopResCropList(String rescropid) {
+        ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
+        ShopResCropDTO record = new ShopResCropDTO();
+        List<ShopResCropDTO> recordList = new ArrayList<>();
+        try {
+            List<Shoprescrop> resultlist = recorddao.getShopResList(rescropid);
+            for (int i = 0; i < resultlist.size(); i++) {
+                record.setId(resultlist.get(i).getId().toString());
+                record.setResCropId(Integer.toString(resultlist.get(i).getRecropid()));
+                record.setShopResId(Integer.toString(resultlist.get(i).getShopresid()));
+                recordList.add(record);
+                record = new ShopResCropDTO();
+            }
+            return recordList;
+        } catch (NoResultException e) {
+            System.out.println("No shoprescrop records are found for resapplyid");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopResCropList().");
+            return null;
+        }
+    }
     public List<ResourceCropDTO> getResSummaryPerID() {
         //this is a group by one
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);

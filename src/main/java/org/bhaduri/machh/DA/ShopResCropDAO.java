@@ -8,7 +8,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
+import java.util.List;
 import org.bhaduri.machh.JPA.ShoprescropJpaController;
+import org.bhaduri.machh.entities.Shoprescrop;
+import org.bhaduri.machh.entities.Shopresource;
 
 /**
  *
@@ -24,5 +27,12 @@ public class ShopResCropDAO extends ShoprescropJpaController{
         EntityManager em = getEntityManager();
         TypedQuery<Integer> query = em.createNamedQuery("Shoprescrop.getMaxId", Integer.class);        
         return query.getSingleResult();
+    }
+    public List<Shoprescrop> getShopResList(String rescropid) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Shoprescrop> query = em.createNamedQuery("Shoprescrop.shopResCropList", Shoprescrop.class); 
+        query.setParameter("recropid", rescropid);
+//        List<Shoprescrop> shopreslist = query.getResultList();
+        return query.getResultList();
     }
 }
