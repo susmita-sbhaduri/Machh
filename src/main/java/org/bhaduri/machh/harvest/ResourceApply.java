@@ -216,13 +216,16 @@ public class ResourceApply implements Serializable {
                 }
                 shoprescroprec.setResCropId(applId);
                 shoprescroprec.setShopResId(shopResListResid.get(i).getId());
-                
+                //shoprescrop record construction
                 float shopResStock = Float.parseFloat(shopResListResid.get(i).getStockPerRate());
                 float shopResRate = Float.parseFloat(shopResListResid.get(i).getRate());
                 if ((appliedQuantity - shopResStock) <= 0) {
                     //in this case the applied resource is deducted from the stock(consumed
                     //from the stock completely and stock is not more than 0, hence break from this loop.
                     shopResStock = shopResStock - appliedQuantity;
+                    //shoprescrop record construction
+                    shoprescroprec.setAmtApplied(String.format("%.2f", appliedQuantity));
+                    //shoprescrop record construction
                     resCropAppliedCost = resCropAppliedCost + (appliedQuantity * shopResRate);
                     appliedQuantity = 0;
                     shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
@@ -245,7 +248,10 @@ public class ResourceApply implements Serializable {
                     break;
                 }
                 if ((appliedQuantity - shopResStock) > 0) {
-                    resCropAppliedCost = resCropAppliedCost + (shopResStock * shopResRate);                    
+                    resCropAppliedCost = resCropAppliedCost + (shopResStock * shopResRate);   
+                    //shoprescrop record construction
+                    shoprescroprec.setAmtApplied(String.format("%.2f", shopResStock));
+                    //shoprescrop record construction
                     appliedQuantity = appliedQuantity - shopResStock;
                     shopResStock = 0;
                     shopResRec.setStockPerRate(String.format("%.2f", shopResStock));

@@ -361,6 +361,41 @@ public class MasterDataServices {
         }
     }
     
+    public ShopResDTO getShopResForId(String Id) {
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);
+
+        ShopResDTO record = new ShopResDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Shopresource shopres = shopresdao.getShopResForId(Integer.parseInt(Id));
+            record.setId(String.valueOf(shopres.getId()));
+            record.setShopId(String.valueOf(shopres.getShopid()));
+            record.setResourceId(String.valueOf(shopres.getResourceid()));
+//                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopid())).getShopName());
+//                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
+            record.setRate(String.format("%.2f", shopres.getRate().floatValue()));
+//                record.setUnit(getResourceNameForId(shopreslist.get(i).getResourceid()).getUnit());
+            mysqlDate = shopres.getResrtdate();
+
+            if (mysqlDate != null) {
+                record.setResRateDate(formatter.format(mysqlDate));
+            } else {
+                record.setResRateDate("");
+            }
+            record.setStockPerRate(String.format("%.2f", shopres.getStockperrt()));
+
+            return record;
+        } catch (NoResultException e) {
+            System.out.println("No ShopResource records are found");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopResForId.");
+            return null;
+        }
+    }
+    
     public ShopDTO getShopNameForId(String shopid) {
         ShopDAO shopdao = new ShopDAO(utx, emf);        
         ShopDTO record = new ShopDTO();
@@ -1181,6 +1216,7 @@ public class MasterDataServices {
             rec.setId(Integer.valueOf(shoprescroprec.getId()));
             rec.setRecropid(Integer.parseInt(shoprescroprec.getResCropId()));
             rec.setShopresid(Integer.parseInt(shoprescroprec.getShopResId()));
+            rec.setAppliedamt(BigDecimal.valueOf(Double.parseDouble(shoprescroprec.getAmtApplied())));
             recorddao.create(rec);
             return SUCCESS;
         }
@@ -1190,6 +1226,28 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in addShopResCrop.");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int editShopResCrop(ShopResCropDTO shoprescroprec) {
+        ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
+        
+        try {
+            Shoprescrop rec = new Shoprescrop();
+            rec.setId(Integer.valueOf(shoprescroprec.getId()));
+            rec.setRecropid(Integer.parseInt(shoprescroprec.getResCropId()));
+            rec.setShopresid(Integer.parseInt(shoprescroprec.getShopResId()));
+            rec.setAppliedamt(BigDecimal.valueOf(Double.parseDouble(shoprescroprec.getAmtApplied())));
+            recorddao.edit(rec);
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("No shoprescrop record is found for this rescropid");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in editShopResCrop.");
             return DB_SEVERE;
         }
     }
@@ -1204,6 +1262,7 @@ public class MasterDataServices {
                 record.setId(resultlist.get(i).getId().toString());
                 record.setResCropId(Integer.toString(resultlist.get(i).getRecropid()));
                 record.setShopResId(Integer.toString(resultlist.get(i).getShopresid()));
+                record.setAmtApplied(String.format("%.2f",resultlist.get(i).getAppliedamt()));
                 recordList.add(record);
                 record = new ShopResCropDTO();
             }

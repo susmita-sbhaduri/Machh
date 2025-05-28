@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -26,7 +27,8 @@ import java.io.Serializable;
     @NamedQuery(name = "Shoprescrop.findAll", query = "SELECT s FROM Shoprescrop s"),
     @NamedQuery(name = "Shoprescrop.findById", query = "SELECT s FROM Shoprescrop s WHERE s.id = :id"),
     @NamedQuery(name = "Shoprescrop.findByShopresid", query = "SELECT s FROM Shoprescrop s WHERE s.shopresid = :shopresid"),
-    @NamedQuery(name = "Shoprescrop.findByRecropid", query = "SELECT s FROM Shoprescrop s WHERE s.recropid = :recropid")})
+    @NamedQuery(name = "Shoprescrop.findByRecropid", query = "SELECT s FROM Shoprescrop s WHERE s.recropid = :recropid"),
+    @NamedQuery(name = "Shoprescrop.findByAppliedamt", query = "SELECT s FROM Shoprescrop s WHERE s.appliedamt = :appliedamt")})
 public class Shoprescrop implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,6 +45,11 @@ public class Shoprescrop implements Serializable {
     @NotNull
     @Column(name = "recropid")
     private int recropid;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "appliedamt")
+    private BigDecimal appliedamt;
 
     public Shoprescrop() {
     }
@@ -51,10 +58,11 @@ public class Shoprescrop implements Serializable {
         this.id = id;
     }
 
-    public Shoprescrop(Integer id, int shopresid, int recropid) {
+    public Shoprescrop(Integer id, int shopresid, int recropid, BigDecimal appliedamt) {
         this.id = id;
         this.shopresid = shopresid;
         this.recropid = recropid;
+        this.appliedamt = appliedamt;
     }
 
     public Integer getId() {
@@ -79,6 +87,14 @@ public class Shoprescrop implements Serializable {
 
     public void setRecropid(int recropid) {
         this.recropid = recropid;
+    }
+
+    public BigDecimal getAppliedamt() {
+        return appliedamt;
+    }
+
+    public void setAppliedamt(BigDecimal appliedamt) {
+        this.appliedamt = appliedamt;
     }
 
     @Override

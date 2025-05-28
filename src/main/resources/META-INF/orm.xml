@@ -60,6 +60,9 @@
     <named-query name="Shopresource.shopsPerRes">
         <query>SELECT s.shopid FROM Shopresource s WHERE s.resourceid = :resourceid</query>
     </named-query>
+    <named-query name="Shopresource.shopResPerId">
+        <query>SELECT s FROM Shopresource s WHERE s.id = :id</query>
+    </named-query>
     <named-query name="Shopresource.shopDtlsPerRes">
         <query>SELECT s FROM Shopresource s WHERE s.resourceid = :resourceid</query>
     </named-query>

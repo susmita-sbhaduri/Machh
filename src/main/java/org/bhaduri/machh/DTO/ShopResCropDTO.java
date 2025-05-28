@@ -14,6 +14,7 @@ public class ShopResCropDTO implements Serializable {
     private String Id;
     private String shopResId;
     private String resCropId;
+    private String amtApplied;
 
     public String getId() {
         return Id;
@@ -37,6 +38,14 @@ public class ShopResCropDTO implements Serializable {
 
     public void setResCropId(String resCropId) {
         this.resCropId = resCropId;
+    }
+
+    public String getAmtApplied() {
+        return amtApplied;
+    }
+
+    public void setAmtApplied(String amtApplied) {
+        this.amtApplied = amtApplied;
     }
     
 }

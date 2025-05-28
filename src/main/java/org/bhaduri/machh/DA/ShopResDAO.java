@@ -40,6 +40,7 @@ public class ShopResDAO extends ShopresourceJpaController{
         return shopids;
     }
     
+    
     public List<Shopresource> getShopDtlssForRes(int id) {
         EntityManager em = getEntityManager();
         TypedQuery<Shopresource> query = em.createNamedQuery("Shopresource.shopDtlsPerRes", Shopresource.class);
@@ -63,6 +64,14 @@ public class ShopResDAO extends ShopresourceJpaController{
         query.setParameter("shopid", shopid);
         List<Shopresource> recordlist = query.getResultList();
         return recordlist;
+    }
+    
+    public Shopresource getShopResForId(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Shopresource> query = em.createNamedQuery("Shopresource.shopResPerId", Shopresource.class);
+        query.setParameter("id", id);
+//        List<Shopresource> shopids = query.getResultList();
+        return query.getSingleResult();
     }
     
     public int delForResid(int resid) throws Exception {
