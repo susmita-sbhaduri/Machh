@@ -65,7 +65,7 @@ public class ResourceCropEdit implements Serializable {
         site = harvestRecord.getSiteName();
         cropcat = harvestRecord.getCropCategory();
         cropname = harvestRecord.getCropName();
-        selectedRes = rescropPrev.getResourceName();
+        selectedRes = rescropPrev.getResourceId();
         farmresPrev = masterDataService.
                 getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()));
         amount = farmresPrev.getAvailableAmt();
