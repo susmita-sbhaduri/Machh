@@ -64,7 +64,7 @@
         <query>SELECT s FROM Shopresource s WHERE s.id = :id</query>
     </named-query>
     <named-query name="Shopresource.shopDtlsPerRes">
-        <query>SELECT s FROM Shopresource s WHERE s.resourceid = :resourceid</query>
+        <query>SELECT s FROM Shopresource s WHERE s.resourceid = :resourceid AND s.stockperrt > 0</query>
     </named-query>
     <named-query name="Shopresource.shopDtlsPerResRt">
         <query>SELECT s FROM Shopresource s WHERE s.resourceid = :resourceid ORDER BY s.rate</query>

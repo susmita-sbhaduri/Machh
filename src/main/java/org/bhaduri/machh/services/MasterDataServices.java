@@ -36,7 +36,6 @@ import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
-
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
@@ -859,6 +858,9 @@ public class MasterDataServices {
             shopresrec.setResrtdate(mysqlDate);
             shopresrec.setStockperrt(BigDecimal
                     .valueOf(Double.parseDouble(shopres.getStockPerRate())));
+            shopresrec.setResappid(Integer.valueOf(shopres.getResAppId()));            
+            shopresrec.setAppliedamt(BigDecimal
+                    .valueOf(Double.parseDouble(shopres.getAmtApplied())));
             shopresdao.edit(shopresrec);
             return SUCCESS;
         }
@@ -1109,6 +1111,7 @@ public class MasterDataServices {
                 record.setApplicationDt(formatter.format(mysqlDate));
                 record.setAppliedAmount(String.format("%.2f", reclist.get(i).getAppliedamt().floatValue()));
                 record.setAppliedAmtCost(String.format("%.2f", reclist.get(i).getAppamtcost().floatValue()));
+                record.setResUnit(getResourceNameForId(reclist.get(i).getResourceid()).getUnit());
                 recordlist.add(record);
                 record = new ResourceCropDTO();
             }  

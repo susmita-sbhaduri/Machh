@@ -33,7 +33,9 @@ import java.util.Date;
     @NamedQuery(name = "Shopresource.findByShopid", query = "SELECT s FROM Shopresource s WHERE s.shopid = :shopid"),
     @NamedQuery(name = "Shopresource.findByRate", query = "SELECT s FROM Shopresource s WHERE s.rate = :rate"),
     @NamedQuery(name = "Shopresource.findByResrtdate", query = "SELECT s FROM Shopresource s WHERE s.resrtdate = :resrtdate"),
-    @NamedQuery(name = "Shopresource.findByStockperrt", query = "SELECT s FROM Shopresource s WHERE s.stockperrt = :stockperrt")})
+    @NamedQuery(name = "Shopresource.findByStockperrt", query = "SELECT s FROM Shopresource s WHERE s.stockperrt = :stockperrt"),
+    @NamedQuery(name = "Shopresource.findByAppliedamt", query = "SELECT s FROM Shopresource s WHERE s.appliedamt = :appliedamt"),
+    @NamedQuery(name = "Shopresource.findByResappid", query = "SELECT s FROM Shopresource s WHERE s.resappid = :resappid")})
 public class Shopresource implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,6 +60,10 @@ public class Shopresource implements Serializable {
     private Date resrtdate;
     @Column(name = "stockperrt")
     private BigDecimal stockperrt;
+    @Column(name = "appliedamt")
+    private BigDecimal appliedamt;
+    @Column(name = "resappid")
+    private Integer resappid;
 
     public Shopresource() {
     }
@@ -118,6 +124,22 @@ public class Shopresource implements Serializable {
 
     public void setStockperrt(BigDecimal stockperrt) {
         this.stockperrt = stockperrt;
+    }
+
+    public BigDecimal getAppliedamt() {
+        return appliedamt;
+    }
+
+    public void setAppliedamt(BigDecimal appliedamt) {
+        this.appliedamt = appliedamt;
+    }
+
+    public Integer getResappid() {
+        return resappid;
+    }
+
+    public void setResappid(Integer resappid) {
+        this.resappid = resappid;
     }
 
     @Override

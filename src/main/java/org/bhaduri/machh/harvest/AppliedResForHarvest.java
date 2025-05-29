@@ -50,7 +50,7 @@ public class AppliedResForHarvest implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         
-        if(appliedresources==null||appliedresources.size()==0){
+        if(appliedresources==null||appliedresources.isEmpty()){
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
                     "No resource is applied for this harvest.");
             f.addMessage(null, message);
@@ -59,9 +59,9 @@ public class AppliedResForHarvest implements Serializable {
             return null;        
     }
     
-    public String editResource(){
+    public String goToEdit(){
         String redirectUrl = "/secured/harvest/resourcecropedit?faces-redirect=true&selectedRescrop=" + 
-                appliedRes.getApplicationId();
+                appliedresources.get(appliedresources.size()-1).getApplicationId();
 //        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
         return redirectUrl;
     }

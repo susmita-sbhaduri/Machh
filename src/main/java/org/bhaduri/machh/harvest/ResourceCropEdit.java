@@ -36,7 +36,7 @@ import org.bhaduri.machh.services.MasterDataServices;
 public class ResourceCropEdit implements Serializable {
 
     private String selectedRes;
-//    private String resprev;
+    private String resName;
     private String selectedRescrop;
     private String site;
     private String cropcat;
@@ -51,7 +51,7 @@ public class ResourceCropEdit implements Serializable {
     private FarmresourceDTO farmresPrev;
     private ResourceCropDTO rescropPrev;
 //    private float resCropAppliedCostPrev;
-    private float resCropAppliedCost;
+    private float resCropAppliedCost=0;
 
     public ResourceCropEdit() {
     }
@@ -65,6 +65,8 @@ public class ResourceCropEdit implements Serializable {
         site = harvestRecord.getSiteName();
         cropcat = harvestRecord.getCropCategory();
         cropname = harvestRecord.getCropName();
+        resName = rescropPrev.getResourceName();
+        
         selectedRes = rescropPrev.getResourceId();
         farmresPrev = masterDataService.
                 getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()));
@@ -108,13 +110,14 @@ public class ResourceCropEdit implements Serializable {
             remainingAmt = Float.parseFloat(farmresPrev.getAvailableAmt())
                     - amtapplied
                     + Float.parseFloat(rescropPrev.getAppliedAmount());
+            
             if (Float.parseFloat(rescropPrev.getAppliedAmount()) < amtapplied) {
                 shopResResponse = calcShopResAmtDeduct(amtapplied
                         - Float.parseFloat(rescropPrev.getAppliedAmount()), selectedRes);
             }
             if (Float.parseFloat(rescropPrev.getAppliedAmount()) > amtapplied) {
-                shopResResponse = calcShopResAmtAdd(Float.parseFloat(
-                        rescropPrev.getAppliedAmount()) - amtapplied, selectedRes);
+//                shopResResponse = calcShopResAmtAdd(Float.parseFloat(
+//                        rescropPrev.getAppliedAmount()) - amtapplied, selectedRes);
             }
 //            shopResAdd = calcShopResAmtAdd(Float.parseFloat(rescropPrev.getAppliedAmount()),
 //                    selectedRes);
@@ -534,5 +537,14 @@ public class ResourceCropEdit implements Serializable {
     public void setRescropPrev(ResourceCropDTO rescropPrev) {
         this.rescropPrev = rescropPrev;
     }
+
+    public String getResName() {
+        return resName;
+    }
+
+    public void setResName(String resName) {
+        this.resName = resName;
+    }
+    
     
 }

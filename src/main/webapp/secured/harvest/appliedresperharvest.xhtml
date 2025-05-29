@@ -52,23 +52,16 @@
                     <p:column headerText="Applied Amount">
                         <h:outputText value="#{appliedresource.appliedAmount}" />
                     </p:column>
-                    <p:column>
-                        <p:commandButton styleClass="blue-button" 
-                                         icon="fa fa-edit" 
-                                         value="Edit"
-                                         action="#{appliedResForHarvest.editResource()}" >
-                            <f:setPropertyActionListener value="#{appliedresource}" target="#{appliedResForHarvest.appliedRes}" />    
-                        </p:commandButton>
+                    <p:column headerText="Unit">
+                        <h:outputText value="#{appliedresource.resUnit}" />
                     </p:column>
-                    <p:column>
-                        <p:commandButton styleClass="blue-button" 
-                                         icon="fa fa-edit" 
-                                         value="Delete"
-                                         action="#{appliedResForHarvest.deleteResource()}" >
-                            <f:setPropertyActionListener value="#{appliedresource}" target="#{appliedResForHarvest.appliedRes}" />    
-                        </p:commandButton>
-                    </p:column>
+                    
                 </p:dataTable>
+                <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Edit Last Application"
+                                     action="#{appliedResForHarvest.goToEdit()}" >                                     
+                    </p:commandButton> 
             </h:form>
         </div>
     </ui:define>

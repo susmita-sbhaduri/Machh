@@ -18,6 +18,8 @@ public class ShopResDTO implements Serializable {
     private String resourceName;
     private String resRateDate;
     private String stockPerRate;
+    private String amtApplied;
+    private String resAppId;
     private String rate; 
     private String unit;
 
@@ -92,5 +94,22 @@ public class ShopResDTO implements Serializable {
     public void setUnit(String unit) {
         this.unit = unit;
     }
-      
+
+    public String getAmtApplied() {
+        return amtApplied;
+    }
+
+    public void setAmtApplied(String amtApplied) {
+        this.amtApplied = amtApplied;
+    }
+
+    public String getResAppId() {
+        return resAppId;
+    }
+
+    public void setResAppId(String resAppId) {
+        this.resAppId = resAppId;
+    }
+    
+    
 }
