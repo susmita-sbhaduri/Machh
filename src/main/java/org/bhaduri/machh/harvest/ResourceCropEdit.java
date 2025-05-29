@@ -110,7 +110,8 @@ public class ResourceCropEdit implements Serializable {
             remainingAmt = Float.parseFloat(farmresPrev.getAvailableAmt())
                     - amtapplied
                     + Float.parseFloat(rescropPrev.getAppliedAmount());
-            
+//            Float.parseFloat(rescropPrev.getAppliedAmount()) will be added back to shopresource
+//            amtapplied will again be deducted.
             if (Float.parseFloat(rescropPrev.getAppliedAmount()) < amtapplied) {
                 shopResResponse = calcShopResAmtDeduct(amtapplied
                         - Float.parseFloat(rescropPrev.getAppliedAmount()), selectedRes);
