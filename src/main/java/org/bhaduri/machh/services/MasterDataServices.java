@@ -257,6 +257,8 @@ public class MasterDataServices {
                 record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopid())).getShopName());
                 record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
                 record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
+                record.setResAppId(String.valueOf(shopreslist.get(i).getResappid()));
+                record.setAmtApplied(String.format("%.2f", shopreslist.get(i).getAppliedamt().floatValue()));
                 mysqlDate = shopreslist.get(i).getResrtdate();
                 
                 if (mysqlDate != null) {
@@ -297,6 +299,8 @@ public class MasterDataServices {
                 record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
                 record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
                 record.setUnit(getResourceNameForId(shopreslist.get(i).getResourceid()).getUnit());
+                record.setResAppId(String.valueOf(shopreslist.get(i).getResappid()));
+                record.setAmtApplied(String.format("%.2f", shopreslist.get(i).getAppliedamt().floatValue()));
                 mysqlDate = shopreslist.get(i).getResrtdate();
                 
                 if (mysqlDate != null) {
@@ -320,7 +324,7 @@ public class MasterDataServices {
         }
     }
     
-    public List<ShopResDTO> getShopResForResidRate(String resid) {
+    public List<ShopResDTO> getShopResForApplyRes(String appid, String resid) {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
         List<ShopResDTO> recordList = new ArrayList<>();
         ShopResDTO record = new ShopResDTO();
@@ -328,7 +332,7 @@ public class MasterDataServices {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {  
-            List<Shopresource> shopreslist = shopresdao.getShopDtlssForResRt(Integer.parseInt(resid));
+            List<Shopresource> shopreslist = shopresdao.getShopResPerAppid(Integer.parseInt(appid), Integer.parseInt(resid));
             for (int i = 0; i < shopreslist.size(); i++) {
                 record.setId(String.valueOf(shopreslist.get(i).getId()));
                 record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
@@ -337,6 +341,8 @@ public class MasterDataServices {
                 record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
                 record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
                 record.setUnit(getResourceNameForId(shopreslist.get(i).getResourceid()).getUnit());
+                record.setResAppId(String.valueOf(shopreslist.get(i).getResappid()));
+                record.setAmtApplied(String.format("%.2f", shopreslist.get(i).getAppliedamt().floatValue()));
                 mysqlDate = shopreslist.get(i).getResrtdate();
                 
                 if (mysqlDate != null) {
@@ -375,6 +381,8 @@ public class MasterDataServices {
 //                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopid())).getShopName());
 //                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
             record.setRate(String.format("%.2f", shopres.getRate().floatValue()));
+            record.setResAppId(String.valueOf(shopres.getResappid()));
+                record.setAmtApplied(String.format("%.2f", shopres.getAppliedamt().floatValue()));
 //                record.setUnit(getResourceNameForId(shopreslist.get(i).getResourceid()).getUnit());
             mysqlDate = shopres.getResrtdate();
 
@@ -789,6 +797,9 @@ public class MasterDataServices {
             shopresrec.setResourceid(Integer.parseInt(shopres.getResourceId()));
             shopresrec.setShopid(Integer.parseInt(shopres.getShopId()));
             shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
+            shopresrec.setResappid(Integer.valueOf(shopres.getResAppId()));            
+            shopresrec.setAppliedamt(BigDecimal
+                    .valueOf(Double.parseDouble(shopres.getAmtApplied())));
             if(shopres.getResRateDate()==null){
                 shopresrec.setResrtdate(null);
             } else {
@@ -1255,7 +1266,7 @@ public class MasterDataServices {
         }
     }
     
-    public List<ShopResCropDTO> getShopResCropList(String rescropid) {
+    public List<ShopResCropDTO> getShopResCropList(String rescropid, String resid) {
         ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
         ShopResCropDTO record = new ShopResCropDTO();
         List<ShopResCropDTO> recordList = new ArrayList<>();
@@ -1447,6 +1458,45 @@ public class MasterDataServices {
         }
     }
 // **********************commented   
+//    public List<ShopResDTO> getShopResForResidRate(String resid) {
+//        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
+//        List<ShopResDTO> recordList = new ArrayList<>();
+//        ShopResDTO record = new ShopResDTO();
+//        Date mysqlDate;
+//        String pattern = "yyyy-MM-dd";
+//        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+//        try {  
+//            List<Shopresource> shopreslist = shopresdao.getShopDtlssForResRt(Integer.parseInt(resid));
+//            for (int i = 0; i < shopreslist.size(); i++) {
+//                record.setId(String.valueOf(shopreslist.get(i).getId()));
+//                record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
+//                record.setResourceId(String.valueOf(shopreslist.get(i).getResourceid()));
+//                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopid())).getShopName());
+//                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
+//                record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
+//                record.setUnit(getResourceNameForId(shopreslist.get(i).getResourceid()).getUnit());
+//                mysqlDate = shopreslist.get(i).getResrtdate();
+//                
+//                if (mysqlDate != null) {
+//                    record.setResRateDate(formatter.format(mysqlDate));
+//                } else {
+//                    record.setResRateDate("");
+//                }
+//                record.setStockPerRate(String.format("%.2f", shopreslist.get(i).getStockperrt()));
+//                recordList.add(record);
+//                record = new ShopResDTO();
+//            }        
+//            return recordList;
+//        }
+//        catch (NoResultException e) {
+//            System.out.println("No ShopResource records are found");            
+//            return null;
+//        }
+//        catch (Exception exception) {
+//            System.out.println(exception + " has occurred in getShopResName().");
+//            return null;
+//        }
+//    }
 //    public List<SiteCropDTO> getSiteCropsPerId(String siteid) {
 //        SiteCropDAO sitecropdao = new SiteCropDAO(utx, emf);  
 //        List<SiteCropDTO> recordList = new ArrayList<>();
