@@ -205,7 +205,17 @@ public class ResourceApply implements Serializable {
             shopResRec.setResourceId(shopResListResid.get(i).getResourceId());
             shopResRec.setShopId(shopResListResid.get(i).getShopId());
             shopResRec.setResAppId(applId);
-
+            ///
+            ShopResCropDTO shoprescrop = new ShopResCropDTO();
+            int maxid = masterDataService.getMaxIdForShopResCrop();
+            if (maxid == 0 || maxid == DB_SEVERE) {
+                shoprescrop.setId("1");
+            } else {
+                shoprescrop.setId(String.valueOf(maxid + 1));
+            }
+            shoprescrop.setResCropId(applId);
+            shoprescrop.setShopResId(shopResListResid.get(i).getId());
+            ///
             float shopResStock = Float.parseFloat(shopResListResid.get(i).getStockPerRate());
             float shopResRate = Float.parseFloat(shopResListResid.get(i).getRate());
             if ((appliedQuantity - shopResStock) <= 0) {
@@ -215,6 +225,10 @@ public class ResourceApply implements Serializable {
                 resCropAppliedCost = resCropAppliedCost + (appliedQuantity * shopResRate);                
                 shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
                 shopResRec.setAmtApplied(String.format("%.2f", appliedQuantity));
+                
+                ///                
+                shoprescrop.setAmtApplied(String.format("%.2f", appliedQuantity));
+                ///
                 appliedQuantity = 0;
                 
                 int shopres = masterDataService.editShopForRes(shopResRec);
@@ -225,6 +239,17 @@ public class ResourceApply implements Serializable {
                     f.addMessage(null, message);
                     return redirectUrl;
                 }
+                
+                ///
+                int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
+                if (shoprescropres != SUCCESS) {
+                    resCropAppliedCost = 0;
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "shoprescrop record could not be inserted");
+                    f.addMessage(null, message);
+                    return redirectUrl;
+                }
+                ///
                 breaki = i;
                 break;
             }
@@ -232,6 +257,9 @@ public class ResourceApply implements Serializable {
                 resCropAppliedCost = resCropAppliedCost + (shopResStock * shopResRate);
                 appliedQuantity = appliedQuantity - shopResStock;
                 shopResRec.setAmtApplied(String.format("%.2f", shopResStock));
+                ///                
+                shoprescrop.setAmtApplied(String.format("%.2f", shopResStock));
+                ///
                 shopResStock = 0;
                 shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
             }
@@ -243,7 +271,16 @@ public class ResourceApply implements Serializable {
                 f.addMessage(null, message);
                 return redirectUrl;
             }
-
+            ///
+            int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
+            if (shoprescropres != SUCCESS) {
+                resCropAppliedCost = 0;
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "shoprescrop record could not be inserted");
+                f.addMessage(null, message);
+                return redirectUrl;
+            }
+                ///
         }
 //        if (breaki < shopResListResid.size() - 1) {
 //            for (int ii = breaki+1; ii < shopResListResid.size(); ii++) {
