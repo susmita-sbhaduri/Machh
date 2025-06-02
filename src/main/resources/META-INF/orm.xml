@@ -88,6 +88,12 @@
     <named-query name="Shoprescrop.shopResCropList">
         <query>SELECT s FROM Shoprescrop s WHERE s.recropid = :recropid</query>
     </named-query>
+    <named-query name="Shoprescrop.shopResCropEmptyList">
+        <query>SELECT s FROM Shoprescrop s WHERE s.recropid = :recropid AND s.appliedamt = 0</query>
+    </named-query>
+    <named-query name="Shoprescrop.shopResResCropList">
+        <query>SELECT s FROM Shoprescrop s WHERE s.recropid = :recropid AND s.shopresid = :shopresid</query>
+    </named-query>
     <named-query name="Shop.shopNameForId">
         <query>SELECT s FROM Shop s WHERE s.shopid = :shopid</query>
     </named-query>

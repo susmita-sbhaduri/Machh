@@ -1266,12 +1266,32 @@ public class MasterDataServices {
         }
     }
     
-    public List<ShopResCropDTO> getShopResCropList(String rescropid, String resid) {
+    public int deleteShopResCrop(ShopResCropDTO shoprescroprec) {
+        ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);        
+        try {
+            Shoprescrop rec = new Shoprescrop();
+            rec.setId(Integer.valueOf(shoprescroprec.getId()));
+            
+            recorddao.destroy(rec.getId());
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("No shoprescrop record is found for this rescropid");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in editShopResCrop.");
+            return DB_SEVERE;
+        }
+    }
+    
+    public List<ShopResCropDTO> getShopResCropList(String rescropid) {
         ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
         ShopResCropDTO record = new ShopResCropDTO();
         List<ShopResCropDTO> recordList = new ArrayList<>();
         try {
-            List<Shoprescrop> resultlist = recorddao.getShopResList(rescropid);
+            List<Shoprescrop> resultlist = recorddao.
+                    getShopResList(Integer.parseInt(rescropid));
             for (int i = 0; i < resultlist.size(); i++) {
                 record.setId(resultlist.get(i).getId().toString());
                 record.setResCropId(Integer.toString(resultlist.get(i).getRecropid()));
@@ -1289,6 +1309,57 @@ public class MasterDataServices {
             return null;
         }
     }
+    
+    public List<ShopResCropDTO> getShopResCropEmpty(String rescropid) {
+        ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
+        ShopResCropDTO record = new ShopResCropDTO();
+        List<ShopResCropDTO> recordList = new ArrayList<>();
+        try {
+            List<Shoprescrop> resultlist = recorddao.
+                    shopResListEmpty(Integer.parseInt(rescropid));
+            for (int i = 0; i < resultlist.size(); i++) {
+                record.setId(resultlist.get(i).getId().toString());
+                record.setResCropId(Integer.toString(resultlist.get(i).getRecropid()));
+                record.setShopResId(Integer.toString(resultlist.get(i).getShopresid()));
+                record.setAmtApplied(String.format("%.2f",resultlist.get(i).getAppliedamt()));
+                recordList.add(record);
+                record = new ShopResCropDTO();
+            }
+            return recordList;
+        } catch (NoResultException e) {
+            System.out.println("No shoprescrop records are found for resapplyid");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopResCropList().");
+            return null;
+        }
+    }
+    
+    public List<ShopResCropDTO> getListForShopResCrop(String rescropid, String shopresid) {
+        ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
+        ShopResCropDTO record = new ShopResCropDTO();
+        List<ShopResCropDTO> recordList = new ArrayList<>();
+        try {
+            List<Shoprescrop> resultlist = recorddao.
+                    getShopResCropList(Integer.parseInt(rescropid), Integer.parseInt(shopresid));
+            for (int i = 0; i < resultlist.size(); i++) {
+                record.setId(resultlist.get(i).getId().toString());
+                record.setResCropId(Integer.toString(resultlist.get(i).getRecropid()));
+                record.setShopResId(Integer.toString(resultlist.get(i).getShopresid()));
+                record.setAmtApplied(String.format("%.2f",resultlist.get(i).getAppliedamt()));
+                recordList.add(record);
+                record = new ShopResCropDTO();
+            }
+            return recordList;
+        } catch (NoResultException e) {
+            System.out.println("No shoprescrop records are found for rescropid and shopresid");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getListForShopResCrop().");
+            return null;
+        }
+    }
+    
     public List<ResourceCropDTO> getResSummaryPerID() {
         //this is a group by one
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);

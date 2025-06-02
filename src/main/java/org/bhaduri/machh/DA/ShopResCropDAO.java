@@ -28,10 +28,27 @@ public class ShopResCropDAO extends ShoprescropJpaController{
         TypedQuery<Integer> query = em.createNamedQuery("Shoprescrop.getMaxId", Integer.class);        
         return query.getSingleResult();
     }
-    public List<Shoprescrop> getShopResList(String rescropid) {
+    public List<Shoprescrop> getShopResList(int rescropid) {
         EntityManager em = getEntityManager();
         TypedQuery<Shoprescrop> query = em.createNamedQuery("Shoprescrop.shopResCropList", Shoprescrop.class); 
         query.setParameter("recropid", rescropid);
+//        List<Shoprescrop> shopreslist = query.getResultList();
+        return query.getResultList();
+    }
+    
+    public List<Shoprescrop> shopResListEmpty(int rescropid) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Shoprescrop> query = em.createNamedQuery("Shoprescrop.shopResCropEmptyList", Shoprescrop.class); 
+        query.setParameter("recropid", rescropid);
+//        List<Shoprescrop> shopreslist = query.getResultList();
+        return query.getResultList();
+    }
+    
+    public List<Shoprescrop> getShopResCropList(int rescropid, int shopresid) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Shoprescrop> query = em.createNamedQuery("Shoprescrop.shopResResCropList", Shoprescrop.class); 
+        query.setParameter("recropid", rescropid);
+        query.setParameter("shopresid", shopresid);
 //        List<Shoprescrop> shopreslist = query.getResultList();
         return query.getResultList();
     }
