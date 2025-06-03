@@ -91,7 +91,7 @@
     <named-query name="Shoprescrop.shopResCropEmptyList">
         <query>SELECT s FROM Shoprescrop s WHERE s.recropid = :recropid AND s.appliedamt = 0</query>
     </named-query>
-    <named-query name="Shoprescrop.shopResResCropList">
+    <named-query name="Shoprescrop.shopResResCrop">
         <query>SELECT s FROM Shoprescrop s WHERE s.recropid = :recropid AND s.shopresid = :shopresid</query>
     </named-query>
     <named-query name="Shop.shopNameForId">

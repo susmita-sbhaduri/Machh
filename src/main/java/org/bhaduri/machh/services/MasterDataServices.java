@@ -869,9 +869,9 @@ public class MasterDataServices {
             shopresrec.setResrtdate(mysqlDate);
             shopresrec.setStockperrt(BigDecimal
                     .valueOf(Double.parseDouble(shopres.getStockPerRate())));
-            shopresrec.setResappid(Integer.valueOf(shopres.getResAppId()));            
+            shopresrec.setResappid(Integer.valueOf("0"));            
             shopresrec.setAppliedamt(BigDecimal
-                    .valueOf(Double.parseDouble(shopres.getAmtApplied())));
+                    .valueOf(Double.parseDouble("0.00")));
             shopresdao.edit(shopresrec);
             return SUCCESS;
         }
@@ -1335,22 +1335,17 @@ public class MasterDataServices {
         }
     }
     
-    public List<ShopResCropDTO> getListForShopResCrop(String rescropid, String shopresid) {
+    public ShopResCropDTO getRecForShopResCrop(String rescropid, String shopresid) {
         ShopResCropDAO recorddao = new ShopResCropDAO(utx, emf);
-        ShopResCropDTO record = new ShopResCropDTO();
-        List<ShopResCropDTO> recordList = new ArrayList<>();
+        ShopResCropDTO record = new ShopResCropDTO();        
         try {
-            List<Shoprescrop> resultlist = recorddao.
-                    getShopResCropList(Integer.parseInt(rescropid), Integer.parseInt(shopresid));
-            for (int i = 0; i < resultlist.size(); i++) {
-                record.setId(resultlist.get(i).getId().toString());
-                record.setResCropId(Integer.toString(resultlist.get(i).getRecropid()));
-                record.setShopResId(Integer.toString(resultlist.get(i).getShopresid()));
-                record.setAmtApplied(String.format("%.2f",resultlist.get(i).getAppliedamt()));
-                recordList.add(record);
-                record = new ShopResCropDTO();
-            }
-            return recordList;
+            Shoprescrop result = recorddao.
+                    getShopResCrop(Integer.parseInt(rescropid), Integer.parseInt(shopresid));
+            record.setId(result.getId().toString());
+            record.setResCropId(Integer.toString(result.getRecropid()));
+            record.setShopResId(Integer.toString(result.getShopresid()));
+            record.setAmtApplied(String.format("%.2f", result.getAppliedamt()));
+            return record;
         } catch (NoResultException e) {
             System.out.println("No shoprescrop records are found for rescropid and shopresid");
             return null;
