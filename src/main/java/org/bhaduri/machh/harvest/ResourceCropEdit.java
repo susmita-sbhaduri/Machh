@@ -229,9 +229,17 @@ public class ResourceCropEdit implements Serializable {
             ///
             int shoprescropflag = 0;
             ShopResCropDTO shoprescropadd = new ShopResCropDTO();
-            ShopResCropDTO shoprescroped = masterDataService
-                    .getRecForShopResCrop(applId, shopResListResid.get(i).getId());
-            
+//            ShopResCropDTO shoprescroped = masterDataService
+//                    .getRecForShopResCrop(applId, shopResListResid.get(i).getId());
+            List<ShopResCropDTO> shopResCropList = masterDataService
+                    .getShopResCropEmpty(applId);
+            ShopResCropDTO shoprescroped;
+            if(shopResCropList.size()==0){
+                shoprescroped = null;
+            } else {
+                shoprescroped = shopResCropList.get(0);//we need to take the first record
+                shoprescroped.setShopResId(shopResListResid.get(i).getId());
+            }
             if (shoprescroped == null) {
                 shoprescropflag = 1;
                 int maxid = masterDataService.getMaxIdForShopResCrop();
@@ -301,10 +309,10 @@ public class ResourceCropEdit implements Serializable {
                 appliedQuantity = appliedQuantity - shopResStock;
                 ///
                 if(shoprescropflag ==2){
-                    shoprescroped.setAmtApplied(String.format("%.2f", appliedQuantity));
+                    shoprescroped.setAmtApplied(String.format("%.2f", shopResStock));
                 }
                 if(shoprescropflag ==1){
-                    shoprescropadd.setAmtApplied(String.format("%.2f", appliedQuantity));
+                    shoprescropadd.setAmtApplied(String.format("%.2f", shopResStock));
                 }
                 ///
                 shopResStock = 0;
