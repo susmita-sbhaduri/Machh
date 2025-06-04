@@ -151,14 +151,7 @@ public class ResourceCropEdit implements Serializable {
         FarmresourceDTO resourceRec = masterDataService.
                 getResourceNameForId(Integer.parseInt(selectedRes)); // for farmresouce table
         resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
-//        FarmresourceDTO resourceRecPrev = new FarmresourceDTO();
-//        if (remainingPrevAmt > 0) {//## implies that resourceid is changed
-//            //###      correction for previously selected resource
-//            resourceRecPrev = masterDataService.
-//                    getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()));
-//            resourceRecPrev.setAvailableAmt(String.format("%.2f", remainingPrevAmt));
-//        }
-        
+       
         int rescropres = masterDataService.editResCropRecord(rescropRecord);
         
         if (rescropres == SUCCESS) {
@@ -232,12 +225,13 @@ public class ResourceCropEdit implements Serializable {
 //            ShopResCropDTO shoprescroped = masterDataService
 //                    .getRecForShopResCrop(applId, shopResListResid.get(i).getId());
             List<ShopResCropDTO> shopResCropList = masterDataService
-                    .getShopResCropEmpty(applId);
+                    .getShopResCropEmpty(applId);// all the records with zero amt applied
             ShopResCropDTO shoprescroped;
             if(shopResCropList.size()==0){
                 shoprescroped = null;
             } else {
-                shoprescroped = shopResCropList.get(0);//we need to take the first record
+                shoprescroped = shopResCropList.get(0);//we need to take the first record as in every iteration 
+// of the loop next record of the shoprescrop record would be updated. This way we are interating next of shoprescrop.
                 shoprescroped.setShopResId(shopResListResid.get(i).getId());
             }
             if (shoprescroped == null) {
@@ -364,104 +358,7 @@ public class ResourceCropEdit implements Serializable {
         return "OKDEDUCT";
     }
     
-    public String calcShopResAmt(float quantityApplied, String applId, String resId) throws NamingException {
-        MasterDataServices masterDataService = new MasterDataServices();
-        FacesMessage message;
-        FacesContext f = FacesContext.getCurrentInstance();
-        f.getExternalContext().getFlash().setKeepMessages(true);
-        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResid(resId);
-
-        ShopResDTO shopResRec = new ShopResDTO();
-        float appliedQuantity = quantityApplied;
         
-        for (int i = 0; i < shopResListResid.size(); i++) {
-            shopResRec.setId(shopResListResid.get(i).getId());
-            shopResRec.setRate(shopResListResid.get(i).getRate());
-            shopResRec.setResRateDate(shopResListResid.get(i).getResRateDate());
-            shopResRec.setResourceId(shopResListResid.get(i).getResourceId());
-            shopResRec.setShopId(shopResListResid.get(i).getShopId());
-//            shopResRec.setResAppId(applId);
-            ///
-            ShopResCropDTO shoprescrop = new ShopResCropDTO();
-            int maxid = masterDataService.getMaxIdForShopResCrop();
-            if (maxid == 0 || maxid == DB_SEVERE) {
-                shoprescrop.setId("1");
-            } else {
-                shoprescrop.setId(String.valueOf(maxid + 1));
-            }
-            shoprescrop.setResCropId(applId);
-            shoprescrop.setShopResId(shopResListResid.get(i).getId());
-            ///
-            float shopResStock = Float.parseFloat(shopResListResid.get(i).getStockPerRate());
-            float shopResRate = Float.parseFloat(shopResListResid.get(i).getRate());
-            if ((appliedQuantity - shopResStock) <= 0) {
-                //in this case the applied resource is deducted from the stock(consumed
-                //from the stock completely and stock is not more than 0, hence break from this loop.
-                shopResStock = shopResStock - appliedQuantity;                
-                resCropAppliedCost = resCropAppliedCost + (appliedQuantity * shopResRate);                
-                shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
-//                shopResRec.setAmtApplied(String.format("%.2f", appliedQuantity));
-                
-                ///                
-                shoprescrop.setAmtApplied(String.format("%.2f", appliedQuantity));
-                ///
-                appliedQuantity = 0;
-                
-                int shopres = masterDataService.editShopForRes(shopResRec);
-                if (shopres != SUCCESS) {
-                    resCropAppliedCost = 0;
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "shopresource record could not be updated");
-                    f.addMessage(null, message);
-                    return redirectUrl;
-                }
-                
-                ///
-                int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
-                if (shoprescropres != SUCCESS) {
-                    resCropAppliedCost = 0;
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "shoprescrop record could not be inserted");
-                    f.addMessage(null, message);
-                    return redirectUrl;
-                }
-                ///
-                
-                break;
-            }
-            if ((appliedQuantity - shopResStock) > 0) {
-                resCropAppliedCost = resCropAppliedCost + (shopResStock * shopResRate);
-                appliedQuantity = appliedQuantity - shopResStock;
-                shopResRec.setAmtApplied(String.format("%.2f", shopResStock));
-                ///                
-                shoprescrop.setAmtApplied(String.format("%.2f", shopResStock));
-                ///
-                shopResStock = 0;
-                shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
-            }
-            int shopres = masterDataService.editShopForRes(shopResRec);
-            if (shopres != SUCCESS) {
-                resCropAppliedCost = 0;
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                        "shopresource record could not be updated");
-                f.addMessage(null, message);
-                return redirectUrl;
-            }
-            ///
-            int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
-            if (shoprescropres != SUCCESS) {
-                resCropAppliedCost = 0;
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                        "shoprescrop record could not be inserted");
-                f.addMessage(null, message);
-                return redirectUrl;
-            }
-                ///
-        }
-        return "OK";
-    }
-    
     public String calcShopResAmtAdd(String applyid, String resId) throws NamingException{
         MasterDataServices masterDataService = new MasterDataServices();
         FacesMessage message;

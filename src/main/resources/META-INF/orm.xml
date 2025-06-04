@@ -36,9 +36,7 @@
     <!--    <named-query name="Resource.listResourceForCrop">
         <query>SELECT r.resourcePK.resourcename FROM Resource r WHERE r.resourcePK.cropcategory =:cropcategory AND r.resourcePK.crop =:crop</query>
     </named-query>-->
-    <!--    <named-query name="Shopresource.shopDtlsPerResRt">
-        <query>SELECT s FROM Shopresource s WHERE s.resourceid = :resourceid ORDER BY s.rate</query>
-    </named-query>-->
+    
     <named-query name="Site.listSite">
         <query>SELECT s.id FROM Site s</query>
     </named-query>
@@ -69,7 +67,9 @@
     <named-query name="Shopresource.shopDtlsPerRes">
         <query>SELECT s FROM Shopresource s WHERE s.resourceid = :resourceid AND s.stockperrt > 0</query>
     </named-query>
-    
+    <named-query name="Shopresource.shopResListPerRes">
+        <query>SELECT s FROM Shopresource s WHERE s.resourceid = :resourceid</query>
+    </named-query>
     <named-query name="Shopresource.shopResPerAppid">
         <query>SELECT s FROM Shopresource s WHERE s.resappid =:resappid AND s.resourceid =:resourceid</query>
     </named-query>

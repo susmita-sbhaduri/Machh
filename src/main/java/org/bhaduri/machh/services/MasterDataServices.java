@@ -290,7 +290,7 @@ public class MasterDataServices {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {  
-            List<Shopresource> shopreslist = shopresdao.getShopDtlssForRes(Integer.parseInt(resid));
+            List<Shopresource> shopreslist = shopresdao.getShopResLstPerRes(Integer.parseInt(resid));
             for (int i = 0; i < shopreslist.size(); i++) {
                 record.setId(String.valueOf(shopreslist.get(i).getId()));
                 record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
