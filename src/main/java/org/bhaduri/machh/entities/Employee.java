@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -29,13 +30,10 @@ import java.util.Date;
 @NamedQueries({
     @NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e"),
     @NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = :id"),
-    @NamedQuery(name = "Employee.findByEmpcategory", query = "SELECT e FROM Employee e WHERE e.empcategory = :empcategory"),
     @NamedQuery(name = "Employee.findByName", query = "SELECT e FROM Employee e WHERE e.name = :name"),
     @NamedQuery(name = "Employee.findByAddress", query = "SELECT e FROM Employee e WHERE e.address = :address"),
     @NamedQuery(name = "Employee.findByContact", query = "SELECT e FROM Employee e WHERE e.contact = :contact"),
     @NamedQuery(name = "Employee.findBySalary", query = "SELECT e FROM Employee e WHERE e.salary = :salary"),
-    @NamedQuery(name = "Employee.findByLoanTotal", query = "SELECT e FROM Employee e WHERE e.loanTotal = :loanTotal"),
-    @NamedQuery(name = "Employee.findByDueAmount", query = "SELECT e FROM Employee e WHERE e.dueAmount = :dueAmount"),
     @NamedQuery(name = "Employee.findByStartdate", query = "SELECT e FROM Employee e WHERE e.startdate = :startdate"),
     @NamedQuery(name = "Employee.findByEnddate", query = "SELECT e FROM Employee e WHERE e.enddate = :enddate")})
 public class Employee implements Serializable {
@@ -46,27 +44,28 @@ public class Employee implements Serializable {
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @Size(max = 45)
-    @Column(name = "empcategory")
-    private String empcategory;
-    @Size(max = 45)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "name")
     private String name;
-    @Size(max = 45)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "address")
     private String address;
-    @Size(max = 45)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "contact")
     private String contact;
-    @Size(max = 45)
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "salary")
-    private String salary;
-    @Size(max = 45)
-    @Column(name = "loan total")
-    private String loanTotal;
-    @Size(max = 45)
-    @Column(name = "due amount")
-    private String dueAmount;
+    private BigDecimal salary;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "startdate")
     @Temporal(TemporalType.DATE)
     private Date startdate;
@@ -81,20 +80,21 @@ public class Employee implements Serializable {
         this.id = id;
     }
 
+    public Employee(Integer id, String name, String address, String contact, BigDecimal salary, Date startdate) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.contact = contact;
+        this.salary = salary;
+        this.startdate = startdate;
+    }
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getEmpcategory() {
-        return empcategory;
-    }
-
-    public void setEmpcategory(String empcategory) {
-        this.empcategory = empcategory;
     }
 
     public String getName() {
@@ -121,28 +121,12 @@ public class Employee implements Serializable {
         this.contact = contact;
     }
 
-    public String getSalary() {
+    public BigDecimal getSalary() {
         return salary;
     }
 
-    public void setSalary(String salary) {
+    public void setSalary(BigDecimal salary) {
         this.salary = salary;
-    }
-
-    public String getLoanTotal() {
-        return loanTotal;
-    }
-
-    public void setLoanTotal(String loanTotal) {
-        this.loanTotal = loanTotal;
-    }
-
-    public String getDueAmount() {
-        return dueAmount;
-    }
-
-    public void setDueAmount(String dueAmount) {
-        this.dueAmount = dueAmount;
     }
 
     public Date getStartdate() {

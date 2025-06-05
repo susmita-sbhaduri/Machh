@@ -9,6 +9,9 @@
     <!--    <named-query name="Crop.listAllCropCat">
         <query>SELECT DISTINCT c.cropPK.cropcategory FROM Crop c</query>
     </named-query>-->
+    <named-query name="Employee.getMaxEmpId">
+        <query>SELECT MAX(e.id) FROM Employee e</query>
+    </named-query>
     <named-query name="Crop.cropPerPK">
         <query>SELECT c FROM Crop c WHERE c.cropid = :cropid</query>
     </named-query>

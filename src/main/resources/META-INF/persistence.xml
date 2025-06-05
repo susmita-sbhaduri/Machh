@@ -9,6 +9,7 @@
     <class>org.bhaduri.machh.entities.Users</class>
     <class>org.bhaduri.machh.entities.Crop</class>
     <class>org.bhaduri.machh.entities.Employee</class>
+    <class>org.bhaduri.machh.entities.Empexpense</class>
     <class>org.bhaduri.machh.entities.Operation</class>
     <class>org.bhaduri.machh.entities.Farmresource</class>    
     <class>org.bhaduri.machh.entities.Site</class>

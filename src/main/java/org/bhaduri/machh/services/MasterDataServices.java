@@ -18,6 +18,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.bhaduri.machh.DA.CropDAO;
+import org.bhaduri.machh.DA.EmployeeDAO;
 import org.bhaduri.machh.DA.ExpenseDAO;
 import org.bhaduri.machh.DA.HarvestDAO;
 import org.bhaduri.machh.DA.FarmresourceDAO;
@@ -33,6 +34,7 @@ import org.bhaduri.machh.DA.SiteDAO;
 
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
+import org.bhaduri.machh.DTO.EmployeeDTO;
 import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
@@ -54,6 +56,7 @@ import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
+import org.bhaduri.machh.entities.Employee;
 import org.bhaduri.machh.entities.Expense;
 
 import org.bhaduri.machh.entities.Harvest;
@@ -1523,6 +1526,54 @@ public class MasterDataServices {
             return null;
         }
     }
+    
+    public int getMaxEmployeeId(){
+        EmployeeDAO empdao = new EmployeeDAO(utx, emf);
+        try {
+            return empdao.getMaxEmpId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in employee table");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getMaxEmployeeId().");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int addEmployeeRecord(EmployeeDTO employeerec) {
+        EmployeeDAO empdao = new EmployeeDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Employee rec = new Employee();
+            rec.setId(Integer.valueOf(employeerec.getId()));
+            rec.setName(employeerec.getName());
+            rec.setAddress(employeerec.getAddress());
+            rec.setContact(employeerec.getPhno());
+            rec.setSalary(BigDecimal.valueOf(Double.parseDouble(employeerec.getSalary())));
+
+            mysqlDate = formatter.parse(employeerec.getSdate());
+            rec.setStartdate(mysqlDate);
+            
+            if (employeerec.getEdate() != null) {
+                rec.setEnddate(formatter.parse(employeerec.getEdate()));
+            } else {
+                rec.setEnddate(null);
+            }
+            empdao.create(rec);
+            return SUCCESS;
+        } catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this employee record");
+            return DB_DUPLICATE;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in addEmployeeRecord.");
+            return DB_SEVERE;
+        }
+    }
+    
 // **********************commented   
 //    public List<ShopResDTO> getShopResForResidRate(String resid) {
 //        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  

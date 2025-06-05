@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content">
+        <p:growl id="growl" showDetail="true" />
+        <h4>Add New Employee.</h4>
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        
+               
+        <div class="card">
+            <h:form id="empaddform" style="text-align: center">
+                <p:panelGrid columns="2">
+                    <h:outputLabel for="empname" value="Name" />
+                    <h:inputText id="empname" value="#{employeeAdd.name}"/>                                       
+                    <h:outputLabel for="empaddr" value="Address"/>
+                    <h:inputText id="empaddr" value="#{employeeAdd.address}" />
+                    <p:outputLabel for="empph" value="Contact No." />
+                    <p:inputText id="empph" value="#{employeeAdd.phno}" >
+                        <p:keyFilter regEx="/[\d]/" />
+                    </p:inputText>  
+                    <p:outputLabel for="empsal" value="Salary(Rs.)" />
+                    <p:inputText id="empsal" value="#{employeeAdd.salary}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>
+                    <h:outputLabel for="sdate" value="Start Date" />
+                    <p:datePicker id="sdate" value="#{employeeAdd.sdate}" pattern="yyyy-MM-dd"/>
+                    <h:outputLabel for="edate" value="End Date" />
+                    <p:datePicker id="edate" value="#{employeeAdd.edate}" pattern="yyyy-MM-dd"/>
+                    
+                    <p:commandButton styleClass="blue-button" 
+                                     icon="fa fa-edit" 
+                                     value="Save"
+                                     action="#{employeeAdd.goToSaveEmp()}" >                        
+                    </p:commandButton>
+                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
+                </p:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
