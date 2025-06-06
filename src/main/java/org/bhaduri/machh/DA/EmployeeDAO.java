@@ -31,4 +31,11 @@ public class EmployeeDAO extends EmployeeJpaController{
         TypedQuery<Employee> query = em.createNamedQuery("Employee.activeList", Employee.class);
         return query.getResultList();
     }
+    
+     public Employee getEmpName(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Employee> query = em.createNamedQuery("Employee.nameForId", Employee.class);
+        query.setParameter("id", id);       
+        return query.getSingleResult();
+    }
 }

@@ -1607,6 +1607,40 @@ public class MasterDataServices {
         }
     }
     
+    public EmployeeDTO getEmpNameForId(String empid) {
+        EmployeeDAO empdao = new EmployeeDAO(utx, emf);        
+        EmployeeDTO record = new EmployeeDTO(); 
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            Employee emprec = empdao.getEmpName(Integer.parseInt(empid));
+            record.setId(empid);
+            record.setName(emprec.getName());
+
+            record.setAddress(emprec.getAddress());
+            record.setPhno(emprec.getContact());
+            record.setSalary(String.format("%.2f", emprec.getSalary()));
+            mysqlDate = emprec.getStartdate();
+            record.setSdate(formatter.format(mysqlDate));
+            if(emprec.getEnddate()==null){
+                record.setEdate(null);
+            } else {
+                mysqlDate = emprec.getEnddate();
+                record.setEdate(formatter.format(mysqlDate));
+            }
+                
+            return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No resource found for this resourceid");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResourceNameForId(int resourceid).");
+            return null;
+        }
+    }
 // **********************commented   
 //    public List<ShopResDTO> getShopResForResidRate(String resid) {
 //        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  

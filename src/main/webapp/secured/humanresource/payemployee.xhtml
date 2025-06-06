@@ -21,14 +21,24 @@
             <h:form id="empaddform" style="text-align: center">
                 <h5>#{payEmployee.selectedResName}</h5>
                 <p:panelGrid columns="2">
-                    <h:outputLabel for="empname" value="Name" />
-                    <h:inputText id="empname" value="#{employeeAdd.name}"/>                                       
-                    <h:outputLabel for="empaddr" value="Address"/>
-                    <h:inputText id="empaddr" value="#{employeeAdd.address}" />
-                    <p:outputLabel for="empph" value="Contact No." />
-                    <p:inputText id="empph" value="#{employeeAdd.phno}" maxlength="10">
-                        <p:keyFilter regEx="/[0-9]/" />
-                        <f:validateRegex pattern="\d{10}" />
+                    <h:outputLabel value="Salary" />
+                    <h:outputText value="#{payEmployee.salary}" style="font-weight:bold;"/>                                   
+                    <h:outputLabel for="loan" value="Loan Amount"/>
+                    <p:inputText id="loan" value="#{payEmployee.totalLoan}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
+                        <p:ajax event="keyup"
+                        listener="#{payEmployee.calculateOutstanding}"
+                        update="outstanding"
+                        oncomplete="if(event.key === 'Enter')
+                        {document.getElementById('empaddform:payback').focus();}" />
+                    </p:inputText>
+                    <h:outputLabel for="outstanding" value="Outstanding Amt(Rs.)" />
+                    <h:inputText id="outstanding" value="#{payEmployee.outstanding}" readonly="true"/>
+                    <p:outputLabel for="payback" value="Payback(Rs.)" />
+                    <p:inputText id="payback" value="#{payEmployee.payback}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
 
                     <p:outputLabel for="empsal" value="Salary(Rs.)" />
