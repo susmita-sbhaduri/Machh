@@ -1574,6 +1574,39 @@ public class MasterDataServices {
         }
     }
     
+    public List<EmployeeDTO> getActiveEmployeeList() {
+        EmployeeDAO empdao = new EmployeeDAO(utx, emf);  
+        List<EmployeeDTO> recordList = new ArrayList<>();
+        EmployeeDTO record = new EmployeeDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Employee> emplist = empdao.getActiveList();
+            for (int i = 0; i < emplist.size(); i++) {
+                record.setId(String.valueOf(emplist.get(i).getId()));
+                record.setName(emplist.get(i).getName());
+                record.setAddress(emplist.get(i).getAddress());
+                record.setPhno(emplist.get(i).getContact());               
+                record.setSalary(String.format("%.2f", emplist.get(i).getSalary()));
+                mysqlDate = emplist.get(i).getStartdate();                    
+                record.setSdate(formatter.format(mysqlDate));
+                record.setEdate(null);
+                recordList.add(record);
+                record = new EmployeeDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No employee are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getActiveEmployeeList.");
+            return null;
+        }
+    }
+    
 // **********************commented   
 //    public List<ShopResDTO> getShopResForResidRate(String resid) {
 //        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  

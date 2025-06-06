@@ -12,6 +12,9 @@
     <named-query name="Employee.getMaxEmpId">
         <query>SELECT MAX(e.id) FROM Employee e</query>
     </named-query>
+    <named-query name="Employee.activeList">
+        <query>SELECT e FROM Employee e WHERE e.enddate IS NULL</query>
+    </named-query>
     <named-query name="Crop.cropPerPK">
         <query>SELECT c FROM Crop c WHERE c.cropid = :cropid</query>
     </named-query>

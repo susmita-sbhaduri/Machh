@@ -8,7 +8,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
+import java.util.List;
 import org.bhaduri.machh.JPA.EmployeeJpaController;
+import org.bhaduri.machh.entities.Employee;
 
 /**
  *
@@ -22,5 +24,11 @@ public class EmployeeDAO extends EmployeeJpaController{
         EntityManager em = getEntityManager();
         TypedQuery<Integer> query = em.createNamedQuery("Employee.getMaxEmpId", Integer.class);        
         return query.getSingleResult();
+    }
+    
+    public List<Employee> getActiveList() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Employee> query = em.createNamedQuery("Employee.activeList", Employee.class);
+        return query.getResultList();
     }
 }

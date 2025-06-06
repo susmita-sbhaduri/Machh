@@ -9,12 +9,17 @@
 
     <ui:define name="content">
         <p:growl id="growl" showDetail="true" />
-        <h4>Add New Employee.</h4>
+        <h4>Payment Details.</h4>
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-
+        <p:button value="Cancel" outcome="/secured/resource/maintainresource"/>
+        <f:metadata>
+            <f:viewParam name="selectedEmp" value="#{payEmployee.selectedEmp}"></f:viewParam>
+            <f:viewAction action="#{payEmployee.fillValues()}" />
+        </f:metadata>
 
         <div class="card">
             <h:form id="empaddform" style="text-align: center">
+                <h5>#{payEmployee.selectedResName}</h5>
                 <p:panelGrid columns="2">
                     <h:outputLabel for="empname" value="Name" />
                     <h:inputText id="empname" value="#{employeeAdd.name}"/>                                       

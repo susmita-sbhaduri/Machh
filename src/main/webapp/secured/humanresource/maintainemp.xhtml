@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content">
+        <h4>List of Employees.</h4>
+        <p:growl id="growl" showDetail="true" />
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        &nbsp;&nbsp;&nbsp;
+        
+        <f:metadata>
+            <f:viewAction action="#{maintainEmp.fillValues()}" />
+        </f:metadata>
+
+        <div class="card">            
+            <h:form id="empgrid" style="text-align: center">                
+                <p:dataTable var="emp" value="#{maintainEmp.emps}" reflow="true">
+                    <p:column headerText="Employee Name">
+                        <h:outputText value="#{emp.name}" />
+                    </p:column>
+<!--                    <p:column headerText="Payment Type">
+                    
+                    <p:selectOneMenu id="pmttype" value="#{emp.paymentcat}">
+                            <f:selectItem itemLabel="Salary" itemValue="salary"/>
+                            <f:selectItem itemLabel="Loan" itemValue="loan"/>
+                            <f:selectItem itemLabel="Bonus" itemValue="bonus"/>
+                            <f:selectItem itemLabel="Leave Allowance" itemValue="leave"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column headerText="Amount(Rs.)">                    
+                        <p:inputText id="amount" value="#{emp.payment}">                        
+                        <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>
+                    </p:column>    -->
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Pay"
+                                         action="#{maintainEmp.payEmployee()}" >
+                            <f:setPropertyActionListener value="#{emp}" target="#{maintainEmp.selectedEmp}" />    
+                        </p:commandButton>
+                    </p:column>
+                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
+                    
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
