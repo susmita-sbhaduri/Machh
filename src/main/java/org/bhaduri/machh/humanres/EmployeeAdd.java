@@ -14,7 +14,6 @@ import java.util.Date;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.EmployeeDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.services.MasterDataServices;
@@ -96,7 +95,12 @@ public class EmployeeAdd implements Serializable {
             f.addMessage(null, message);
 //            return "/secured/userhome?faces-redirect=true";
             return redirectUrl;
-        } else {            
+        } else {  
+            if (empaddres == DB_DUPLICATE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                        Integer.toString(DB_DUPLICATE));
+                f.addMessage(null, message);
+            } 
             if (empaddres == DB_SEVERE) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
                         Integer.toString(DB_SEVERE));

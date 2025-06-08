@@ -9,17 +9,9 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
-import org.bhaduri.machh.DTO.EmpExpDTO;
 import org.bhaduri.machh.DTO.EmployeeDTO;
-import org.bhaduri.machh.DTO.ExpenseDTO;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.services.MasterDataServices;
 
 /**
@@ -113,7 +105,7 @@ public class MaintainEmp implements Serializable {
 //    }
     
     public String payEmployee(){
-        String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedEmp=" + selectedEmp.getId();
+        String redirectUrl = "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp.getId();
         return redirectUrl;
     }
     

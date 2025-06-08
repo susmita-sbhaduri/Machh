@@ -19,9 +19,9 @@
 
         <div class="card">
             <h:form id="empaddform" style="text-align: center">
-                <h5>#{payEmployee.selectedResName}</h5>
+                <h5>#{payEmployee.selectedEmpName}</h5>
                 <p:panelGrid columns="2">
-                    <h:outputLabel value="Salary" />
+                    <h:outputLabel value="Salary(Rs.)" />
                     <h:outputText value="#{payEmployee.salary}" style="font-weight:bold;"/>                                   
                     <h:outputLabel for="loan" value="Loan Amount"/>
                     <p:inputText id="loan" value="#{payEmployee.totalLoan}">
@@ -40,21 +40,26 @@
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
-
-                    <p:outputLabel for="empsal" value="Salary(Rs.)" />
-                    <p:inputText id="empsal" value="#{employeeAdd.salary}">
+                    <h:outputLabel for="sdate" value="Loan Start Date" />
+                    <p:datePicker id="sdate" value="#{payEmployee.sdate}" pattern="yyyy-MM-dd"/>
+                    <h:outputLabel for="edate" value="Loan End Date" />
+                    <p:datePicker id="edate" value="#{payEmployee.edate}" pattern="yyyy-MM-dd"/>
+                    
+                    <p:outputLabel for="bonus" value="Bonus(Rs.)" />
+                    <p:inputText id="bonus" value="#{payEmployee.bonus}">
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
-                    <h:outputLabel for="sdate" value="Start Date" />
-                    <p:datePicker id="sdate" value="#{employeeAdd.sdate}" pattern="yyyy-MM-dd"/>
-                    <h:outputLabel for="edate" value="End Date" />
-                    <p:datePicker id="edate" value="#{employeeAdd.edate}" pattern="yyyy-MM-dd"/>
+                    <p:outputLabel for="leave" value="Leave Allowance(Rs.)" />
+                    <p:inputText id="leave" value="#{payEmployee.leave}">
+                        <f:convertNumber pattern="#0.00" />
+                        <p:keyFilter regEx="/[\d\.]/" />
+                    </p:inputText>
 
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{employeeAdd.goToSaveEmp()}" >                        
+                                     value="Pay"
+                                     action="#{employeeAdd.payEmp()}" >                        
                     </p:commandButton>
                     <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
                 </p:panelGrid>
