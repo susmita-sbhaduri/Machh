@@ -26,20 +26,25 @@
                     <h:outputLabel for="loan" value="Loan Amount"/>
                     <p:inputText id="loan" value="#{payEmployee.totalLoan}">
                         <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                        <p:ajax event="keyup"
+                        <p:keyFilter regEx="/[\d\.]/" /> 
+                        <p:ajax event="change"
                         listener="#{payEmployee.calculateOutstanding}"
-                        update="outstanding"
-                        oncomplete="if(event.key === 'Enter')
-                        {document.getElementById('empaddform:payback').focus();}" />
+                        update=":empaddform:outstanding" />
                     </p:inputText>
-                    <h:outputLabel for="outstanding" value="Outstanding Amt(Rs.)" />
-                    <h:inputText id="outstanding" value="#{payEmployee.outstanding}" readonly="true"/>
+                    
                     <p:outputLabel for="payback" value="Payback(Rs.)" />
                     <p:inputText id="payback" value="#{payEmployee.payback}">
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
+                        <p:ajax event="change"
+                        listener="#{payEmployee.calculateOutstanding}"
+                        update=":empaddform:outstanding"/>                         
                     </p:inputText>
+                    
+                    <h:outputLabel for="outstanding" value="Outstanding Amt(Rs.)" />
+                    <h:inputText id="outstanding" value="#{payEmployee.outstanding}" readonly="true"/>
+                    
+                    
                     <h:outputLabel for="sdate" value="Loan Start Date" />
                     <p:datePicker id="sdate" value="#{payEmployee.sdate}" pattern="yyyy-MM-dd"/>
                     <h:outputLabel for="edate" value="Loan End Date" />
@@ -55,7 +60,9 @@
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" />
                     </p:inputText>
-
+                    
+                    <h:outputLabel for="paydate" value="Payment Date" />
+                    <p:datePicker id="paydate" value="#{payEmployee.paydate}" pattern="yyyy-MM-dd"/>
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
                                      value="Pay"

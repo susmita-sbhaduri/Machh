@@ -29,7 +29,7 @@ import java.util.Date;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Empexpense.findAll", query = "SELECT e FROM Empexpense e"),
-    @NamedQuery(name = "Empexpense.findByIs", query = "SELECT e FROM Empexpense e WHERE e.is = :is"),
+    @NamedQuery(name = "Empexpense.findById", query = "SELECT e FROM Empexpense e WHERE e.id = :id"),
     @NamedQuery(name = "Empexpense.findByEmployeeid", query = "SELECT e FROM Empexpense e WHERE e.employeeid = :employeeid"),
     @NamedQuery(name = "Empexpense.findByExpcategory", query = "SELECT e FROM Empexpense e WHERE e.expcategory = :expcategory"),
     @NamedQuery(name = "Empexpense.findByTotalloan", query = "SELECT e FROM Empexpense e WHERE e.totalloan = :totalloan"),
@@ -42,8 +42,8 @@ public class Empexpense implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "is")
-    private Integer is;
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Column(name = "employeeid")
@@ -74,12 +74,12 @@ public class Empexpense implements Serializable {
     public Empexpense() {
     }
 
-    public Empexpense(Integer is) {
-        this.is = is;
+    public Empexpense(Integer id) {
+        this.id = id;
     }
 
-    public Empexpense(Integer is, int employeeid, String expcategory, BigDecimal totalloan, BigDecimal outstanding, Date startdate) {
-        this.is = is;
+    public Empexpense(Integer id, int employeeid, String expcategory, BigDecimal totalloan, BigDecimal outstanding, Date startdate) {
+        this.id = id;
         this.employeeid = employeeid;
         this.expcategory = expcategory;
         this.totalloan = totalloan;
@@ -87,12 +87,12 @@ public class Empexpense implements Serializable {
         this.startdate = startdate;
     }
 
-    public Integer getIs() {
-        return is;
+    public Integer getId() {
+        return id;
     }
 
-    public void setIs(Integer is) {
-        this.is = is;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public int getEmployeeid() {
@@ -146,7 +146,7 @@ public class Empexpense implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (is != null ? is.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -157,7 +157,7 @@ public class Empexpense implements Serializable {
             return false;
         }
         Empexpense other = (Empexpense) object;
-        if ((this.is == null && other.is != null) || (this.is != null && !this.is.equals(other.is))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -165,7 +165,7 @@ public class Empexpense implements Serializable {
 
     @Override
     public String toString() {
-        return "org.bhaduri.machh.entities.Empexpense[ is=" + is + " ]";
+        return "org.bhaduri.machh.entities.Empexpense[ id=" + id + " ]";
     }
     
 }

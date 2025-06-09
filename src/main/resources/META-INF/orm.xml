@@ -15,6 +15,12 @@
     <named-query name="Employee.activeList">
         <query>SELECT e FROM Employee e WHERE e.enddate IS NULL</query>
     </named-query>
+    <named-query name="Empexpense.expenseList">
+        <query>SELECT e FROM Empexpense e WHERE e.employeeid = :employeeid AND e.enddate IS NULL</query>
+    </named-query>
+    <named-query name="Empexpense.getMaxId">
+        <query>SELECT MAX(e.id) FROM Empexpense e</query>
+    </named-query>
     <named-query name="Crop.cropPerPK">
         <query>SELECT c FROM Crop c WHERE c.cropid = :cropid</query>
     </named-query>

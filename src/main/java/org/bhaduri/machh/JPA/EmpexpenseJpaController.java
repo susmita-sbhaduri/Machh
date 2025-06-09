@@ -48,7 +48,7 @@ public class EmpexpenseJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findEmpexpense(empexpense.getIs()) != null) {
+            if (findEmpexpense(empexpense.getId()) != null) {
                 throw new PreexistingEntityException("Empexpense " + empexpense + " already exists.", ex);
             }
             throw ex;
@@ -74,7 +74,7 @@ public class EmpexpenseJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = empexpense.getIs();
+                Integer id = empexpense.getId();
                 if (findEmpexpense(id) == null) {
                     throw new NonexistentEntityException("The empexpense with id " + id + " no longer exists.");
                 }
@@ -95,7 +95,7 @@ public class EmpexpenseJpaController implements Serializable {
             Empexpense empexpense;
             try {
                 empexpense = em.getReference(Empexpense.class, id);
-                empexpense.getIs();
+                empexpense.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The empexpense with id " + id + " no longer exists.", enfe);
             }

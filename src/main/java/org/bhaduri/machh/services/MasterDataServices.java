@@ -18,6 +18,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.bhaduri.machh.DA.CropDAO;
+import org.bhaduri.machh.DA.EmpexpenseDAO;
 import org.bhaduri.machh.DA.EmployeeDAO;
 import org.bhaduri.machh.DA.ExpenseDAO;
 import org.bhaduri.machh.DA.HarvestDAO;
@@ -34,6 +35,7 @@ import org.bhaduri.machh.DA.SiteDAO;
 
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
+import org.bhaduri.machh.DTO.EmpExpDTO;
 import org.bhaduri.machh.DTO.EmployeeDTO;
 import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
@@ -56,6 +58,7 @@ import org.bhaduri.machh.DTO.UsersDTO;
 import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
+import org.bhaduri.machh.entities.Empexpense;
 import org.bhaduri.machh.entities.Employee;
 import org.bhaduri.machh.entities.Expense;
 
@@ -1639,6 +1642,97 @@ public class MasterDataServices {
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getResourceNameForId(int resourceid).");
             return null;
+        }
+    }
+    
+    public List<EmpExpDTO> getEmpActiveExpRecs(String empid) {
+        EmpexpenseDAO empexpdao = new EmpexpenseDAO(utx, emf);  
+        List<EmpExpDTO> recordList = new ArrayList<>();
+        EmpExpDTO record = new EmpExpDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Empexpense> reclist = empexpdao.getExpenseList(Integer.parseInt(empid));
+            for (int i = 0; i < reclist.size(); i++) {
+                record.setId(String.valueOf(reclist.get(i).getId()));
+                record.setEmpid(empid);
+                record.setExpcategory(reclist.get(i).getExpcategory());
+                record.setTotal(String.format("%.2f", reclist.get(i).getTotalloan()));
+                record.setOutstanding(String.format("%.2f", reclist.get(i).getOutstanding()));
+                
+                if(reclist.get(i).getStartdate()==null){
+                   record.setSdate(null);
+                } else {
+                   mysqlDate = reclist.get(i).getStartdate();
+                   record.setSdate(formatter.format(mysqlDate));
+                }
+                record.setEdate(null);
+//                if(reclist.get(i).getEnddate()==null){
+//                   record.setEdate(null);
+//                } else {
+//                   mysqlDate = reclist.get(i).getEnddate();
+//                   record.setEdate(formatter.format(mysqlDate));
+//                }
+                recordList.add(record);
+                record = new EmpExpDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No employee expense records are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getEmployeeExpRecs.");
+            return null;
+        }
+    }
+    
+    public int getMaxEmpExpenseId(){
+        EmpexpenseDAO empexpdao = new EmpexpenseDAO(utx, emf);
+        try {
+            return empexpdao.getMaxId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in empexpense table");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getMaxEmpExpenseId().");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int addEmpExpRecord(EmpExpDTO empexprec) {
+        EmpexpenseDAO empexpdao = new EmpexpenseDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Empexpense rec = new Empexpense();
+            rec.setId(Integer.valueOf(empexprec.getId()));
+            rec.setEmployeeid(Integer.parseInt(empexprec.getEmpid()));
+            rec.setTotalloan(BigDecimal.valueOf(Double.parseDouble(empexprec.getTotal())));
+            rec.setTotalloan(BigDecimal.valueOf(Double.parseDouble(empexprec.getOutstanding())));
+            rec.setExpcategory(empexprec.getExpcategory());
+            
+            mysqlDate = formatter.parse(empexprec.getSdate());
+            rec.setStartdate(mysqlDate);
+            
+            if (empexprec.getEdate()!= null) {
+                rec.setEnddate(formatter.parse(empexprec.getEdate()));
+            } else {
+                rec.setEnddate(null);
+            }
+            empexpdao.create(rec);
+            return SUCCESS;
+        } catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this empexpense record");
+            return DB_DUPLICATE;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in addEmpExpRecord.");
+            return DB_SEVERE;
         }
     }
 // **********************commented   
