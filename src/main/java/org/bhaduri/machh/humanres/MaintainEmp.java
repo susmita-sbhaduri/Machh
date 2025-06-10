@@ -109,7 +109,10 @@ public class MaintainEmp implements Serializable {
         return redirectUrl;
     }
     
-
+    public String loanDetails(){
+        String redirectUrl = "/secured/humanresource/emploan?faces-redirect=true&selectedEmp=" + selectedEmp.getId();
+        return redirectUrl;
+    }
     public EmployeeDTO getSelectedEmp() {
         return selectedEmp;
     }

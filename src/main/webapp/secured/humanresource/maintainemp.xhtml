@@ -23,25 +23,20 @@
                     <p:column headerText="Employee Name">
                         <h:outputText value="#{emp.name}" />
                     </p:column>
-<!--                    <p:column headerText="Payment Type">
-                    
-                    <p:selectOneMenu id="pmttype" value="#{emp.paymentcat}">
-                            <f:selectItem itemLabel="Salary" itemValue="salary"/>
-                            <f:selectItem itemLabel="Loan" itemValue="loan"/>
-                            <f:selectItem itemLabel="Bonus" itemValue="bonus"/>
-                            <f:selectItem itemLabel="Leave Allowance" itemValue="leave"/>
-                        </p:selectOneMenu>
-                    </p:column>
-                    <p:column headerText="Amount(Rs.)">                    
-                        <p:inputText id="amount" value="#{emp.payment}">                        
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    </p:column>    -->
+
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Pay"
                                          action="#{maintainEmp.payEmployee()}" >
+                            <f:setPropertyActionListener value="#{emp}" target="#{maintainEmp.selectedEmp}" />    
+                        </p:commandButton>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Loan"
+                                         action="#{maintainEmp.loanDetails()}" >
                             <f:setPropertyActionListener value="#{emp}" target="#{maintainEmp.selectedEmp}" />    
                         </p:commandButton>
                     </p:column>

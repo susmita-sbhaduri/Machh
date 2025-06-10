@@ -1714,7 +1714,7 @@ public class MasterDataServices {
             rec.setId(Integer.valueOf(empexprec.getId()));
             rec.setEmployeeid(Integer.parseInt(empexprec.getEmpid()));
             rec.setTotalloan(BigDecimal.valueOf(Double.parseDouble(empexprec.getTotal())));
-            rec.setTotalloan(BigDecimal.valueOf(Double.parseDouble(empexprec.getOutstanding())));
+            rec.setOutstanding(BigDecimal.valueOf(Double.parseDouble(empexprec.getOutstanding())));
             rec.setExpcategory(empexprec.getExpcategory());
             
             mysqlDate = formatter.parse(empexprec.getSdate());
@@ -1732,6 +1732,38 @@ public class MasterDataServices {
             return DB_DUPLICATE;
         } catch (Exception exception) {
             System.out.println(exception + " has occurred in addEmpExpRecord.");
+            return DB_SEVERE;
+        }
+    }
+    public int editEmpExpRecord(EmpExpDTO empexprec) {
+        EmpexpenseDAO empexpdao = new EmpexpenseDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Empexpense rec = new Empexpense();
+            
+            rec.setId(Integer.valueOf(empexprec.getId()));
+            rec.setEmployeeid(Integer.parseInt(empexprec.getEmpid()));
+            rec.setTotalloan(BigDecimal.valueOf(Double.parseDouble(empexprec.getTotal())));
+            rec.setOutstanding(BigDecimal.valueOf(Double.parseDouble(empexprec.getOutstanding())));
+            rec.setExpcategory(empexprec.getExpcategory());
+            
+            mysqlDate = formatter.parse(empexprec.getSdate());
+            rec.setStartdate(mysqlDate);
+            
+            if (empexprec.getEdate()!= null) {
+                rec.setEnddate(formatter.parse(empexprec.getEdate()));
+            } else rec.setEnddate(null);            
+            empexpdao.edit(rec);
+            return SUCCESS;
+        }
+        catch (NoResultException e) {
+            System.out.println("This empexpense record does not exist.");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in editEmpExpRecord.");
             return DB_SEVERE;
         }
     }

@@ -11,44 +11,31 @@
         <p:growl id="growl" showDetail="true" />
         <h4>Payment Details.</h4>
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        <p:button value="Cancel" outcome="/secured/resource/maintainresource"/>
+        &nbsp;&nbsp;&nbsp;
+        <p:button value="Cancel" outcome="/secured/humanresource/maintainemp"/>
         <f:metadata>
             <f:viewParam name="selectedEmp" value="#{payEmployee.selectedEmp}"></f:viewParam>
             <f:viewAction action="#{payEmployee.fillValues()}" />
         </f:metadata>
 
         <div class="card">
-            <h:form id="empaddform" style="text-align: center">
+            <h:form id="emppayform" style="text-align: center">
                 <h5>#{payEmployee.selectedEmpName}</h5>
                 <p:panelGrid columns="2">
-                    <h:outputLabel value="Salary(Rs.)" />
-                    <h:outputText value="#{payEmployee.salary}" style="font-weight:bold;"/>                                   
-                    <h:outputLabel for="loan" value="Loan Amount"/>
-                    <p:inputText id="loan" value="#{payEmployee.totalLoan}">
+                                                    
+                    <p:outputLabel for="salary" value="Salary(Rs.)" />
+                    <p:inputText id="salary" value="#{payEmployee.salary}">
                         <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" /> 
-                        <p:ajax event="change"
-                        listener="#{payEmployee.calculateOutstanding}"
-                        update=":empaddform:outstanding" />
+                        <p:keyFilter regEx="/[\d\.]/" />                                               
                     </p:inputText>
                     
-                    <p:outputLabel for="payback" value="Payback(Rs.)" />
-                    <p:inputText id="payback" value="#{payEmployee.payback}">
+                    <p:outputLabel for="payback" value="Loan Repayment(Rs.)" />
+                    <p:inputText id="payback" 
+                                 value="#{payEmployee.payback}"
+                                 readonly="#{payEmployee.readOnlyCondition}">
                         <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                        <p:ajax event="change"
-                        listener="#{payEmployee.calculateOutstanding}"
-                        update=":empaddform:outstanding"/>                         
-                    </p:inputText>
-                    
-                    <h:outputLabel for="outstanding" value="Outstanding Amt(Rs.)" />
-                    <h:inputText id="outstanding" value="#{payEmployee.outstanding}" readonly="true"/>
-                    
-                    
-                    <h:outputLabel for="sdate" value="Loan Start Date" />
-                    <p:datePicker id="sdate" value="#{payEmployee.sdate}" pattern="yyyy-MM-dd"/>
-                    <h:outputLabel for="edate" value="Loan End Date" />
-                    <p:datePicker id="edate" value="#{payEmployee.edate}" pattern="yyyy-MM-dd"/>
+                        <p:keyFilter regEx="/[\d\.]/" />                                               
+                    </p:inputText> 
                     
                     <p:outputLabel for="bonus" value="Bonus(Rs.)" />
                     <p:inputText id="bonus" value="#{payEmployee.bonus}">
@@ -66,9 +53,9 @@
                     <p:commandButton styleClass="blue-button" 
                                      icon="fa fa-edit" 
                                      value="Pay"
-                                     action="#{employeeAdd.payEmp()}" >                        
+                                     action="#{payEmployee.payEmp()}" >                        
                     </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
+                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/humanresource/maintainemp" />
                 </p:panelGrid>
             </h:form>
         </div>
