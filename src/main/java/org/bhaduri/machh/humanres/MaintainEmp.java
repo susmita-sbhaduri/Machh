@@ -113,6 +113,11 @@ public class MaintainEmp implements Serializable {
         String redirectUrl = "/secured/humanresource/emploan?faces-redirect=true&selectedEmp=" + selectedEmp.getId();
         return redirectUrl;
     }
+    
+    public String goToEditEmp(){
+        String redirectUrl = "/secured/humanresource/empedit?faces-redirect=true&selectedEmp=" + selectedEmp.getId();
+        return redirectUrl;
+    }
     public EmployeeDTO getSelectedEmp() {
         return selectedEmp;
     }

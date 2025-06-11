@@ -30,12 +30,11 @@
                         <p:keyFilter regEx="/[\d\.]/" /> 
                         <p:ajax event="change"
                         listener="#{empLoan.calculateOutstanding}"
-                        update=":emploanform:outstanding" />
+                        update="@form" process="@this" />
                     </p:inputText>
                                         
-                    <h:outputLabel for="outstanding" value="Outstanding Amt(Rs.)" />
-                    <h:inputText id="outstanding" value="#{empLoan.outstanding}" readonly="true"/>
-                    
+                    <h:outputLabel value="Outstanding Amt(Rs.)" />
+                    <h:outputText value="#{empLoan.outstanding}" style="font-weight:bold;"/>                    
                     
                     <h:outputLabel for="sdate" value="Loan Start Date" />
                     <p:datePicker id="sdate" value="#{empLoan.sdate}" pattern="yyyy-MM-dd"/>

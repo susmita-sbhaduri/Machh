@@ -40,6 +40,14 @@
                             <f:setPropertyActionListener value="#{emp}" target="#{maintainEmp.selectedEmp}" />    
                         </p:commandButton>
                     </p:column>
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Edit Employee"
+                                         action="#{maintainEmp.goToEditEmp()}" >
+                            <f:setPropertyActionListener value="#{emp}" target="#{maintainEmp.selectedEmp}" />    
+                        </p:commandButton>
+                    </p:column>
                     <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
                     
                 </p:dataTable>

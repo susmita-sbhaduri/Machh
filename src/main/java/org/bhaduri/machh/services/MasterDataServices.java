@@ -296,7 +296,7 @@ public class MasterDataServices {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {  
-            List<Shopresource> shopreslist = shopresdao.getShopResLstPerRes(Integer.parseInt(resid));
+            List<Shopresource> shopreslist = shopresdao.getShopDtlssForRes(Integer.parseInt(resid));
             for (int i = 0; i < shopreslist.size(); i++) {
                 record.setId(String.valueOf(shopreslist.get(i).getId()));
                 record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
@@ -1573,6 +1573,38 @@ public class MasterDataServices {
             return DB_DUPLICATE;
         } catch (Exception exception) {
             System.out.println(exception + " has occurred in addEmployeeRecord.");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int editEmployeeRecord(EmployeeDTO employeerec) {
+        EmployeeDAO empdao = new EmployeeDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Employee rec = new Employee();
+            rec.setId(Integer.valueOf(employeerec.getId()));
+            rec.setName(employeerec.getName());
+            rec.setAddress(employeerec.getAddress());
+            rec.setContact(employeerec.getPhno());
+            rec.setSalary(BigDecimal.valueOf(Double.parseDouble(employeerec.getSalary())));
+
+            mysqlDate = formatter.parse(employeerec.getSdate());
+            rec.setStartdate(mysqlDate);
+            
+            if (employeerec.getEdate() != null) {
+                rec.setEnddate(formatter.parse(employeerec.getEdate()));
+            } else {
+                rec.setEnddate(null);
+            }
+            empdao.edit(rec);
+            return SUCCESS;
+        } catch (NoResultException e) {
+            System.out.println("This employee record to be edited, does not exist ");
+            return DB_NON_EXISTING;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in editEmployeeRecord.");
             return DB_SEVERE;
         }
     }
