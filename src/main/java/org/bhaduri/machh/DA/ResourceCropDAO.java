@@ -48,13 +48,14 @@ public class ResourceCropDAO extends ResourcecropJpaController{
         return query.getResultList();
     }
     
-    public List<ResCropAllSummaryDTO> getSumForHarvest(Date sdate, Date edate, int harvestid){
+    public List<ResCropAllSummaryDTO> getSumForHarvest(Date sdate, Date edate, int harvestid) {
         EntityManager em = getEntityManager();
-        TypedQuery<ResCropAllSummaryDTO> query = em.createNamedQuery("Resourcecrop.summaryAll", ResCropAllSummaryDTO.class);
-        return query.setParameter("startdate", sdate)
-        .setParameter("enddate", edate)
-        .setParameter("harvestid", harvestid)
-        .getResultList();
+        TypedQuery<ResCropAllSummaryDTO> query = em.createNamedQuery("Resourcecrop.summaryAll",
+                ResCropAllSummaryDTO.class);
+        query.setParameter(1, sdate);
+        query.setParameter(2, edate);
+        query.setParameter(3, harvestid);
+        return query.getResultList();
     }
         
 }

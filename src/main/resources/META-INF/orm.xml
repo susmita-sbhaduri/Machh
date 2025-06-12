@@ -167,7 +167,7 @@
         </constructor-result>
     </sql-result-set-mapping>
     
-    <entity-mappings>
+    
     <named-native-query 
         name="Resourcecrop.summaryAll" 
         result-set-mapping="RescropSummaryAllMapping">
@@ -176,9 +176,9 @@
                    sum(appliedamt) AS appliedAmount, 
                    sum(appamtcost) AS appliedCost
             FROM resourcecrop r
-            WHERE r.appldate &gt;= :startdate 
-              AND r.appldate &lt;= :enddate
-              AND r.harvestid = :harvestid
+            WHERE r.appldate &gt;= ? 
+              AND r.appldate &lt;= ?
+              AND r.harvestid = ?
             GROUP BY resourceid
         </query>
     </named-native-query>
@@ -189,9 +189,6 @@
             <column name="appliedAmount" class="java.math.BigDecimal"/>
             <column name="appliedCost" class="java.math.BigDecimal"/>
         </constructor-result>
-    </sql-result-set-mapping>
-</entity-mappings>
-
-    
+    </sql-result-set-mapping>    
 </entity-mappings>
 
