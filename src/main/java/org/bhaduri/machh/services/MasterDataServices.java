@@ -46,6 +46,7 @@ import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.LabourCropDTO;
 import org.bhaduri.machh.DTO.ResAcquireDTO;
+import org.bhaduri.machh.DTO.ResCropAllSummaryDTO;
 import org.bhaduri.machh.DTO.ResCropSummaryDTO;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.DTO.ShopDTO;
@@ -1386,6 +1387,38 @@ public class MasterDataServices {
             return recordlist;
         } catch (Exception exception) {
             System.out.println(exception + " has occurred in getResSummaryPerID().");
+            return null;
+        }
+    }
+    
+    public List<ResourceCropDTO> getSummaryPerResForHrvst(Date sdate, Date edate, String harvestid) {
+        //this is a group by one
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
+        List<ResourceCropDTO> recordlist = new ArrayList<>();
+        ResourceCropDTO record = new ResourceCropDTO();
+        
+        try {
+            List<ResCropAllSummaryDTO> recordsummary = rescropdao.getSumForHarvest(sdate, 
+                    edate, Integer.parseInt(harvestid));
+            
+            for (int i = 0; i < recordsummary.size(); i++) {
+                record.setApplicationId(null);
+                record.setHarvestId(harvestid);
+                record.setResourceId(Integer.toString(recordsummary.get(i).getResourceId()));
+                record.setResourceName(getResourceNameForId(recordsummary.get(i).getResourceId())
+                        .getResourceName());
+                record.setHarvestDto(getHarvestRecForId(harvestid));
+                record.setApplicationDt(null);
+                record.setAppliedAmount(String.format("%.2f", recordsummary.get(i).
+                        getAppliedAmount().floatValue()));
+                record.setAppliedAmtCost(String.format("%.2f", recordsummary.get(i).
+                        getAppliedCost().floatValue()));
+                recordlist.add(record);
+                record = new ResourceCropDTO();
+            }  
+            return recordlist;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getSummaryPerResForHrvst.");
             return null;
         }
     }

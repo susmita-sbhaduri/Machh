@@ -14,43 +14,46 @@
         &nbsp;&nbsp;&nbsp;
         <p:button value="Cancel" outcome="/secured/harvest/activehrvstlst"/>
         &nbsp;&nbsp;&nbsp;
-
+        <f:metadata>
+            <f:viewAction action="#{hrvstReport.fillHarvestValues()}" />
+        </f:metadata>
         
         <div class="card">
             <h:form id="hrvstrptform" style="text-align: center">
-                <h5>Site:#{hrvstReport.selectedEmpName}</h5>
-                <p:panelGrid columns="3">
-                    <h:outputLabel value="Site" />
-                    <h:outputText value="#{resourceApply.site}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Crop Category" />
-                    <h:outputText value="#{resourceApply.cropcat}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Crop Name" />
-                    <h:outputText value="#{resourceApply.cropname}" style="font-weight:bold;"/>
-
-                    <h:outputLabel for="resid" value="Active Harvests" />
-                    <p:selectOneRadio id="resid" value="#{hrvstReport.selectedHrvst}"
+                
+                <p:panelGrid columns="2">
+                    
+                    <h:outputLabel for="harvestid" value="Active Harvests" />
+                    <p:selectOneRadio id="harvestid" value="#{hrvstReport.selectedHrvst}"
                                       layout="pageDirection">
                         <f:selectItems value="#{hrvstReport.activeharvests}" 
                                        var="hrvst"
-                                       itemLabel="#{hrvstReport.resourceName}" itemValue="#{hrvstReport}"/>                        
+                                       itemLabel="#{hrvst.siteName}-#{hrvst.cropCategory}-
+                                       #{hrvst.cropName}" itemValue="#{hrvst.harvestid}"/>                        
                     </p:selectOneRadio>
 
-                    <h:outputLabel value="Available Amount" />
-                    <h:outputText value="#{resourceApply.amount}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Unit" />
-                    <h:outputText value="#{resourceApply.unit}" style="font-weight:bold;"/>
-                    <p:outputLabel for="amtapplied" value="Amount to be Applied" />
-                    <p:inputText id="amtapplied" value="#{resourceApply.amtapplied}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    <h:outputLabel for="adate" value="Apply Date" />
-                    <p:datePicker id="adate" value="#{resourceApply.applyDt}" pattern="yyyy-MM-dd"/>
+                    
+                    <h:outputLabel for="sdate" value="Start Date" />
+                    <p:datePicker id="sdate" value="#{hrvstReport.startDt}" pattern="yyyy-MM-dd"/>
+                    <h:outputLabel for="edate" value="End Date" />
+                    <p:datePicker id="edate" value="#{hrvstReport.endDt}" pattern="yyyy-MM-dd"/>
                 </p:panelGrid>
                 <p:commandButton styleClass="blue-button" 
                                  icon="fa fa-edit" 
-                                 value="Apply"
-                                 action="#{resourceApply.goToApplyRes()}" >                                     
+                                 value="Summary"
+                                 action="#{hrvstReport.summaryAll()}" >                                     
+                </p:commandButton>
+                &nbsp;&nbsp;&nbsp;
+                <p:commandButton styleClass="blue-button" 
+                                 icon="fa fa-edit" 
+                                 value="Resource Details"
+                                 action="#{hrvstReport.goToApplyRes()}" >                                     
+                </p:commandButton>
+                &nbsp;&nbsp;&nbsp;
+                <p:commandButton styleClass="blue-button" 
+                                 icon="fa fa-edit" 
+                                 value="Labour Details"
+                                 action="#{hrvstReport.goToApplyRes()}" >                                     
                 </p:commandButton>
             </h:form>
         </div>

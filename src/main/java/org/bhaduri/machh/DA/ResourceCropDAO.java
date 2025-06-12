@@ -8,7 +8,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
+import java.util.Date;
 import java.util.List;
+import org.bhaduri.machh.DTO.ResCropAllSummaryDTO;
 import org.bhaduri.machh.DTO.ResCropSummaryDTO;
 import org.bhaduri.machh.JPA.ResourcecropJpaController;
 import org.bhaduri.machh.entities.Resourcecrop;
@@ -44,6 +46,15 @@ public class ResourceCropDAO extends ResourcecropJpaController{
         EntityManager em = getEntityManager();
         TypedQuery<ResCropSummaryDTO> query = em.createNamedQuery("Resourcecrop.sumByResId", ResCropSummaryDTO.class);
         return query.getResultList();
+    }
+    
+    public List<ResCropAllSummaryDTO> getSumForHarvest(Date sdate, Date edate, int harvestid){
+        EntityManager em = getEntityManager();
+        TypedQuery<ResCropAllSummaryDTO> query = em.createNamedQuery("Resourcecrop.summaryAll", ResCropAllSummaryDTO.class);
+        return query.setParameter("startdate", sdate)
+        .setParameter("enddate", edate)
+        .setParameter("harvestid", harvestid)
+        .getResultList();
     }
         
 }
