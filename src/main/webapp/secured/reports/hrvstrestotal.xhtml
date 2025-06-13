@@ -10,8 +10,7 @@
     <ui:define name="content">
         <h4>Summary of applied resource labour for the Harvest.</h4>
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
-        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        &nbsp;&nbsp;&nbsp;
+        
         <f:metadata>   
             <f:viewParam name="harvestId" value="#{hrvstResTotal.harvestId}"></f:viewParam>
             <f:viewParam name="startDt" value="#{hrvstResTotal.startDt}"></f:viewParam>
@@ -19,9 +18,16 @@
             <f:viewAction action="#{hrvstResTotal.fillValues()}" />
         </f:metadata>
         <div class="card">
+            
             <h:form id="labappform" style="text-align: center">
-                
-                <p:dataTable var="rescrop" value="#{hrvstResTotal.rescrops}" reflow="true">                    
+                <div style="text-align: left;">
+                    <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+                    &nbsp;&nbsp;&nbsp;
+                    <p:commandButton value="Export as Excel" ajax="false">
+                        <p:dataExporter type="xlsxstream" target="labappform:rescrop" fileName="Totalresource"/>
+                    </p:commandButton>
+                </div>
+                <p:dataTable id="rescrop" var="rescrop" value="#{hrvstResTotal.rescrops}" reflow="true">                    
                    
                     <p:column headerText="Resource Name">
                         <h:outputText value="#{rescrop.resourceName}" />
@@ -33,6 +39,18 @@
                         <h:outputText value="#{rescrop.appliedAmtCost}" />
                     </p:column>
                 </p:dataTable>
+                
+                <p:dataTable id="labcrop" var="labcrop" value="#{hrvstResTotal.rescrops}" reflow="true">                    
+                   
+                    <p:column headerText="Resource Name">
+                        <h:outputText value="#{rescrop.resourceName}" />
+                    </p:column>
+                    <p:column headerText="Total Applied Amount">
+                        <h:outputText value="#{rescrop.appliedAmount}" />
+                    </p:column>
+                    
+                </p:dataTable>
+                
             </h:form>
         </div>
     </ui:define>    

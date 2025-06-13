@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
+import java.util.Date;
 import java.util.List;
 import org.bhaduri.machh.JPA.LabourcropJpaController;
 import org.bhaduri.machh.entities.Labourcrop;
@@ -38,5 +39,15 @@ public class LabourCropDAO extends LabourcropJpaController{
         TypedQuery<Labourcrop> query = em.createNamedQuery("Labourcrop.getLabCropId", Labourcrop.class);        
         query.setParameter("applicationid", id);
         return query.getSingleResult();
+    }
+    
+    public List<Labourcrop> getForHrstDtRange(int id, Date sdate, Date edate) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Labourcrop> query = em.createNamedQuery("Labourcrop.detailsForHarvest", Labourcrop.class); 
+        
+        query.setParameter("harvestid", id);
+        query.setParameter("startdate", sdate);
+        query.setParameter("enddate", edate);
+        return query.getResultList();
     }
 }

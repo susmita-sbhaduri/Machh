@@ -1529,10 +1529,51 @@ public class MasterDataServices {
             }  
             return recordlist;
         } catch (NoResultException e) {
-            System.out.println("No resourcecrop record is found for this harvest.");
+            System.out.println("No labourcrop record is found for this harvest.");
             return null;
         } catch (Exception exception) {
             System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
+            return null;
+        }
+    }
+    
+    public LabourCropDTO getTotalLabcropReport(String harvestid, Date sdate, Date edate) {
+        LabourCropDAO labcropdao = new LabourCropDAO(utx, emf);
+//        List<LabourCropDTO> recordlist = new ArrayList<>();
+        LabourCropDTO record = new LabourCropDTO();
+//        Date mysqlDate;
+//        String pattern = "yyyy-MM-dd";
+//        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            List<Labourcrop> reclist = labcropdao.getForHrstDtRange(Integer.parseInt(harvestid), sdate, edate);
+            float appliedamt = 0;
+//            int ii = reclist.size()-1;
+            for (int i = 0; i < reclist.size(); i++) {
+//                record.setApplicationId(reclist.get(i).getApplicationid().toString());
+//                record.setHarvestId(harvestid);                
+//                mysqlDate = reclist.get(i).getAppldate();
+//                record.setApplicationDate(formatter.format(mysqlDate));
+                String labourCategory = "LABHRVST";
+                appliedamt = appliedamt + Float.parseFloat(getLabExpenseForHrvst(record.getApplicationId()
+                        , labourCategory).getExpenditure());
+//                record.setAppliedAmount(getLabExpenseForHrvst(record.getApplicationId()
+//                        , labourCategory).getExpenditure());  
+//                record.setExpenseComments(getLabExpenseForHrvst(record.getApplicationId()
+//                        , labourCategory).getCommString());
+//                recordlist.add(record);
+//                record = new LabourCropDTO();
+            }  
+            record.setApplicationId(null);
+            record.setHarvestId(harvestid);
+            record.setApplicationDate(null);
+            record.setAppliedAmount(String.format("%.2f", appliedamt));
+
+            return record;
+        } catch (NoResultException e) {
+            System.out.println("No labourcrop record is found for this harvest and applied date.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getTotalLabcropReport.");
             return null;
         }
     }
