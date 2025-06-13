@@ -21,18 +21,17 @@ import org.bhaduri.machh.services.MasterDataServices;
  *
  * @author sb
  */
-@Named(value = "hrvstResTotal")
+@Named(value = "hrvstDetails")
 @ViewScoped
-public class HrvstResTotal implements Serializable {
+public class HrvstDetails implements Serializable {
     List<ResourceCropDTO> rescrops;
-    List<LabourCropDTO> labcrops;
     private String startDt;
     private String endDt;
     private String harvestId;
     /**
-     * Creates a new instance of HrvstResTotal
+     * Creates a new instance of HrvstDetails
      */
-    public HrvstResTotal() {
+    public HrvstDetails() {
         System.out.println("No resourcecrop record is found for this harvest.");
     }
     public void fillValues() throws NamingException, ParseException {
@@ -43,10 +42,8 @@ public class HrvstResTotal implements Serializable {
         startDate = formatter.parse(startDt);
         endDate = formatter.parse(endDt);
         MasterDataServices masterDataService = new MasterDataServices();
-        rescrops = masterDataService.getSummaryPerResForHrvst(startDate, endDate, harvestId);
-        LabourCropDTO recordtotal = masterDataService.getTotalLabcropReport(harvestId, startDate, endDate);
-        labcrops = new ArrayList<>();
-        labcrops.add(recordtotal);
+        rescrops = masterDataService.getRescropDetails(harvestId, startDate, endDate);
+        
         System.out.println("No resourcecrop record is found for this harvest.");
     }
 
@@ -81,13 +78,6 @@ public class HrvstResTotal implements Serializable {
     public void setHarvestId(String harvestId) {
         this.harvestId = harvestId;
     }
-
-    public List<LabourCropDTO> getLabcrops() {
-        return labcrops;
-    }
-
-    public void setLabcrops(List<LabourCropDTO> labcrops) {
-        this.labcrops = labcrops;
-    }
+    
     
 }

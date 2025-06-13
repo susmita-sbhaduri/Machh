@@ -130,6 +130,11 @@
     <named-query name="Resourcecrop.getResCropHarvest">
         <query>SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid</query>
     </named-query>
+    <named-query name="Resourcecrop.detailsRescrop">
+        <query>SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid 
+            AND r.appldate &gt;= :startdate AND r.appldate &lt;= :enddate
+        </query>
+    </named-query>    
     <named-query name="Resourcecrop.getResCropId">
         <query>SELECT r FROM Resourcecrop r WHERE r.applicationid = :applicationid</query>
     </named-query>
@@ -147,7 +152,7 @@
     </named-query>
     <named-query name="Labourcrop.detailsForHarvest">
         <query>SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid 
-            AND l.appldate >= :startdate AND l.appldate <= :enddate
+            AND l.appldate &gt;= :startdate AND l.appldate &lt;= :enddate
         </query>
     </named-query>
     <named-query name="Labourcrop.getLabCropId">

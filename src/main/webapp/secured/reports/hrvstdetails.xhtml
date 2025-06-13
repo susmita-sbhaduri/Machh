@@ -8,14 +8,14 @@
                 xmlns:h="jakarta.faces.html">
 
     <ui:define name="content">
-        <h4>Summary of applied resources and labour for the Harvest.</h4>
+        <h4>Details of applied resources for the Harvest.</h4>
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
         
         <f:metadata>   
-            <f:viewParam name="harvestId" value="#{hrvstResTotal.harvestId}"></f:viewParam>
-            <f:viewParam name="startDt" value="#{hrvstResTotal.startDt}"></f:viewParam>
-            <f:viewParam name="endDt" value="#{hrvstResTotal.endDt}"></f:viewParam>
-            <f:viewAction action="#{hrvstResTotal.fillValues()}" />
+            <f:viewParam name="harvestId" value="#{hrvstDetails.harvestId}"></f:viewParam>
+            <f:viewParam name="startDt" value="#{hrvstDetails.startDt}"></f:viewParam>
+            <f:viewParam name="endDt" value="#{hrvstDetails.endDt}"></f:viewParam>
+            <f:viewAction action="#{hrvstDetails.fillValues()}" />
         </f:metadata>
         <div class="card">
             
@@ -25,31 +25,27 @@
                     &nbsp;&nbsp;&nbsp;
                     <p:commandButton value="Export as Excel" ajax="false">
                         <p:dataExporter type="xlsxstream" 
-                                        target="resappform:rescrop,resappform:labcrop" 
-                                        fileName="Totalresource"/>
+                                        target="resappform:rescrop" 
+                                        fileName="Resourcedetails"/>
                     </p:commandButton>
                 </div>
-                <p:dataTable id="rescrop" var="rescrop" value="#{hrvstResTotal.rescrops}" reflow="true">                    
+                <p:dataTable id="rescrop" var="rescrop" value="#{hrvstDetails.rescrops}" reflow="true">                    
                    
                     <p:column headerText="Resource Name">
                         <h:outputText value="#{rescrop.resourceName}" />
                     </p:column>
-                    <p:column headerText="Total Applied Amount">
+                    <p:column headerText="Applied Amount">
                         <h:outputText value="#{rescrop.appliedAmount}" />
                     </p:column>
-                    <p:column headerText="Total Applied Cost(Rs.)">
+                    <p:column headerText="Applied Cost(Rs.)">
                         <h:outputText value="#{rescrop.appliedAmtCost}" />
+                    </p:column>
+                    <p:column headerText="Aplication Date">
+                        <h:outputText value="#{rescrop.applicationDt}" />
                     </p:column>
                 </p:dataTable>
                 
-                <p:dataTable id="labcrop" var="labcrop" value="#{hrvstResTotal.labcrops}" reflow="true">                    
-                   
-                    <p:column headerText="Total Labour Cost(Rs.)">
-                        <h:outputText value="#{labcrop.appliedAmount}" />
-                    </p:column>
-                    
-                    
-                </p:dataTable>
+                
                 
             </h:form>
         </div>

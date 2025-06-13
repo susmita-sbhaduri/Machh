@@ -56,6 +56,15 @@ public class HrvstReport implements Serializable {
                 + "&startDt=" + startDate + "&endDt=" + endDate;
         return redirectUrl; 
     }
+    
+    public String resourceDetails() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = sdf.format(startDt);
+        String endDate = sdf.format(endDt);
+        String redirectUrl = "/secured/reports/hrvstdetails?faces-redirect=true&harvestId=" + selectedHrvst 
+                + "&startDt=" + startDate + "&endDt=" + endDate;
+        return redirectUrl; 
+    }
     public String getSelectedHrvst() {
         return selectedHrvst;
     }
