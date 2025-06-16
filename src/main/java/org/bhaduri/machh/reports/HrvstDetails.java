@@ -4,6 +4,8 @@
  */
 package org.bhaduri.machh.reports;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
@@ -34,7 +36,11 @@ public class HrvstDetails implements Serializable {
     public HrvstDetails() {
         System.out.println("No resourcecrop record is found for this harvest.");
     }
-    public void fillValues() throws NamingException, ParseException {
+    public String fillValues() throws NamingException, ParseException {
+        String redirectUrl = "/secured/reports/harvestrpts?faces-redirect=true";
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
         Date startDate;
         Date endDate;
         String pattern = "yyyy-MM-dd";
@@ -43,8 +49,13 @@ public class HrvstDetails implements Serializable {
         endDate = formatter.parse(endDt);
         MasterDataServices masterDataService = new MasterDataServices();
         rescrops = masterDataService.getRescropDetails(harvestId, startDate, endDate);
-        
-        System.out.println("No resourcecrop record is found for this harvest.");
+        if (rescrops.isEmpty() || rescrops == null) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                    "No applied resource found.");
+            f.addMessage(null, message);
+            return redirectUrl;
+        } else
+            return null;        
     }
 
     public List<ResourceCropDTO> getRescrops() {

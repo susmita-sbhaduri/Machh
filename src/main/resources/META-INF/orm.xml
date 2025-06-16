@@ -124,6 +124,9 @@
     <named-query name="Resourceaquire.resAcqPerDt">
         <query>SELECT r FROM Resourceaquire r WHERE r.aquiredate = :aquiredate AND r.resourceid =:resourceid</query>
     </named-query>
+    <named-query name="Resourceaquire.allResAcquired">
+        <query>SELECT r FROM Resourceaquire r</query>
+    </named-query>
     <named-query name="Resourcecrop.getMaxResCropId">
         <query>SELECT MAX(r.applicationid) FROM Resourcecrop r</query>
     </named-query>

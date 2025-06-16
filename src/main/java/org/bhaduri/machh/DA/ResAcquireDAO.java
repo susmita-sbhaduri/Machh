@@ -37,4 +37,10 @@ public class ResAcquireDAO extends ResourceaquireJpaController{
         List<Resourceaquire> result = query.getResultList();
         return result.get(0);
     }
+    
+    public List<Resourceaquire> getAllResAcquired() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Resourceaquire> query = em.createNamedQuery("Resourceaquire.allResAcquired", Resourceaquire.class);        
+        return query.getResultList();
+    }
 }

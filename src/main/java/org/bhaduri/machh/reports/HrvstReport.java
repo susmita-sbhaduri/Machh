@@ -49,7 +49,16 @@ public class HrvstReport implements Serializable {
             return null;        
     }
     public String summaryAll() {
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(startDt==null||endDt==null||selectedHrvst == null || selectedHrvst.trim().isEmpty()){
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                    "All the fields are mandatory");
+            f.addMessage(null, message);
+            return "/secured/reports/harvestrpts?faces-redirect=true";
+        }
         String startDate = sdf.format(startDt);
         String endDate = sdf.format(endDt);
         String redirectUrl = "/secured/reports/hrvstrestotal?faces-redirect=true&harvestId=" + selectedHrvst 
@@ -58,7 +67,17 @@ public class HrvstReport implements Serializable {
     }
     
     public String resourceDetails() {
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
+        if(startDt==null||endDt==null||selectedHrvst == null || selectedHrvst.trim().isEmpty()){
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                    "All the fields are mandatory");
+            f.addMessage(null, message);
+            return "/secured/reports/harvestrpts?faces-redirect=true";
+        }
         String startDate = sdf.format(startDt);
         String endDate = sdf.format(endDt);
         String redirectUrl = "/secured/reports/hrvstdetails?faces-redirect=true&harvestId=" + selectedHrvst 
