@@ -92,7 +92,7 @@ public class ResourceAdd implements Serializable {
         
         MasterDataServices masterDataService = new MasterDataServices();
         FarmresourceDTO existingreswithName = masterDataService.getResourceIdForName(resname);
-        
+        // in Farmresource table, ideally there should be unique id and and associated resourcename
         if (existingreswithName != null) {
             String residprev = existingreswithName.getResourceId();
             //for a newly added resourceid shop id combination ideally there should be one record but as 
@@ -112,7 +112,7 @@ public class ResourceAdd implements Serializable {
         
         int resres = 999;
         FarmresourceDTO resAddBean = new FarmresourceDTO();
-        if (existingreswithName == null) {
+        if (existingreswithName == null) { // there is no record in Farmresource with the given resourcename
             resAddBean.setResourceId(resid);
             resAddBean.setResourceName(resname);
             resAddBean.setUnit(unit);
@@ -133,6 +133,10 @@ public class ResourceAdd implements Serializable {
             }
         } else {
             resid = existingreswithName.getResourceId();
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                    "Resource with same name already exists.");
+            f.addMessage(null, message);
+            return redirectUrl;
         }
 
         ShopResDTO resShopUpdBean = new ShopResDTO();

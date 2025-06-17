@@ -289,7 +289,6 @@ public class MasterDataServices {
             return null;
         }
     }
-    
     public List<ShopResDTO> getShopResForResid(String resid) {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
         List<ShopResDTO> recordList = new ArrayList<>();
@@ -299,6 +298,47 @@ public class MasterDataServices {
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {  
             List<Shopresource> shopreslist = shopresdao.getShopDtlssForRes(Integer.parseInt(resid));
+            for (int i = 0; i < shopreslist.size(); i++) {
+                record.setId(String.valueOf(shopreslist.get(i).getId()));
+                record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
+                record.setResourceId(String.valueOf(shopreslist.get(i).getResourceid()));
+                record.setShopName(getShopNameForId(String.valueOf(shopreslist.get(i).getShopid())).getShopName());
+                record.setResourceName(getResourceNameForId(shopreslist.get(i).getResourceid()).getResourceName());
+                record.setRate(String.format("%.2f", shopreslist.get(i).getRate().floatValue()));              
+                record.setUnit(getResourceNameForId(shopreslist.get(i).getResourceid()).getUnit());
+                record.setResAppId(String.valueOf(shopreslist.get(i).getResappid()));
+                record.setAmtApplied(String.format("%.2f", shopreslist.get(i).getAppliedamt().floatValue()));
+                mysqlDate = shopreslist.get(i).getResrtdate();
+                
+                if (mysqlDate != null) {
+                    record.setResRateDate(formatter.format(mysqlDate));
+                } else {
+                    record.setResRateDate("");
+                }
+                record.setStockPerRate(String.format("%.2f", shopreslist.get(i).getStockperrt()));
+                recordList.add(record);
+                record = new ShopResDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No ShopResource records are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getShopResName().");
+            return null;
+        }
+    }
+    public List<ShopResDTO> getAllShopResForResid(String resid) { // for AcquireResource.java
+        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  
+        List<ShopResDTO> recordList = new ArrayList<>();
+        ShopResDTO record = new ShopResDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Shopresource> shopreslist = shopresdao.getShopResLstPerRes(Integer.parseInt(resid));
             for (int i = 0; i < shopreslist.size(); i++) {
                 record.setId(String.valueOf(shopreslist.get(i).getId()));
                 record.setShopId(String.valueOf(shopreslist.get(i).getShopid()));
@@ -890,9 +930,9 @@ public class MasterDataServices {
             shopresrec.setResourceid(Integer.parseInt(shopres.getResourceId()));
             shopresrec.setShopid(Integer.parseInt(shopres.getShopId()));
             shopresrec.setRate(BigDecimal.valueOf(Double.parseDouble(shopres.getRate())));
-            shopresrec.setResappid(Integer.valueOf(shopres.getResAppId()));            
-            shopresrec.setAppliedamt(BigDecimal
-                    .valueOf(Double.parseDouble(shopres.getAmtApplied())));
+//            shopresrec.setResappid(Integer.valueOf(shopres.getResAppId()));            
+//            shopresrec.setAppliedamt(BigDecimal
+//                    .valueOf(Double.parseDouble(shopres.getAmtApplied())));
             if(shopres.getResRateDate()==null){
                 shopresrec.setResrtdate(null);
             } else {
@@ -900,6 +940,9 @@ public class MasterDataServices {
                 shopresrec.setResrtdate(mysqlDate);
             }
             shopresrec.setStockperrt(BigDecimal.valueOf(Double.parseDouble(shopres.getStockPerRate())));
+            shopresrec.setResappid(Integer.valueOf("0"));            
+            shopresrec.setAppliedamt(BigDecimal
+                    .valueOf(Double.parseDouble("0.00")));
             shopresdao.create(shopresrec);
             return SUCCESS;
         }

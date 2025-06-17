@@ -51,13 +51,13 @@ public class AcquireResource implements Serializable {
     public void fillResourceValues() throws NamingException {
 
         MasterDataServices masterDataService = new MasterDataServices();
-        List<ShopResDTO> shopForSelectedResAll = masterDataService.getShopResForResid(selectedRes);
+        List<ShopResDTO> shopForSelectedResAll = masterDataService.getAllShopResForResid(selectedRes);
         shopForSelectedRes = shopForSelectedResAll.stream()
                 .collect(Collectors.collectingAndThen(
                         Collectors.toMap(
-                                row -> Arrays.asList(row.getShopId(), row.getResourceId()), // key: two columns
+                                row -> Arrays.asList(row.getResourceId(), row.getShopId()), // key: two columns
                                 row -> row,
-                                (row1, row2) -> row1 // keep the first occurrence
+                                (row1, row2) -> row2 // keep the first occurrence
                         ),
                         map -> new ArrayList<>(map.values())
                 ));
@@ -70,8 +70,12 @@ public class AcquireResource implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         
         List<ShopResDTO> selectedShopResLst = masterDataService.getResShopForPk(selectedRes, selectedShop);
+        ///
+        ///It means if the shopresource record is newly added 
+//        then there would be only one record with resid and shopid combination. Hence first record is fetched 
+//        just to check if it's a new record or one of the existing multiple shopresource record.
+        ///
         selectedShopRes = selectedShopResLst.get(0);
-//        rate = Float.parseFloat(selectedShopRes.getRate());
         rate = 0;
         unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes)).getUnit();
 //        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="+ selectedShopRes.getResourceId();
@@ -204,13 +208,9 @@ public class AcquireResource implements Serializable {
                 f.addMessage(null, message);
             }
 
-//            redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
-//                        + selectedShopRes.getResourceId();
-//            return redirectUrl;
         }
 
         if (sqlFlag == 1) {
-
             int expres = masterDataService.addExpenseRecord(expenseRec);
             if (expres == SUCCESS) {
                 sqlFlag = sqlFlag + 1;
@@ -231,9 +231,6 @@ public class AcquireResource implements Serializable {
                             "acquireresource record could not be deleted");
                     f.addMessage(null, message);
                 }
-//                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
-//                        + selectedShopRes.getResourceId();
-//                return redirectUrl;
             }
         }
 
@@ -266,9 +263,6 @@ public class AcquireResource implements Serializable {
                             "expense record could not be deleted");
                     f.addMessage(null, message);
                 }
-//                redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="
-//                        + selectedShopRes.getResourceId();
-//                return redirectUrl;
             }
         }
         
