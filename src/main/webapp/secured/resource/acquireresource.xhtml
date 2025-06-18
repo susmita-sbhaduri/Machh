@@ -32,7 +32,17 @@
                         <p:ajax event="change" listener="#{acquireResource.onShopResSelect}" 
                                 update="@form" process="@this"/>
                     </p:selectOneRadio>
-
+                    
+                    <h:outputLabel value="Previous Rates(Rs.)" />
+                    <p:dataTable var="ratedate" value="#{acquireResource.selectedShopResLst}" style="font-size: 10px;">
+                        <p:column headerText="Rates">
+                            #{ratedate.rate} 
+                        </p:column>
+                        <p:column headerText="Date">
+                            #{ratedate.resRateDate}
+                        </p:column>
+                    </p:dataTable>
+  
                     <h:outputLabel for="rate" value="Rate" />
                     <p:inputText id="rate" value="#{acquireResource.rate}">
                         <f:convertNumber pattern="#0.00" />

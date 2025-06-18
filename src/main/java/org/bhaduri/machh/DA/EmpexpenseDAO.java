@@ -20,10 +20,11 @@ public class EmpexpenseDAO extends EmpexpenseJpaController{
     public EmpexpenseDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
     }
-    public List<Empexpense> getExpenseList(int empid) {
+    public List<Empexpense> getExpenseList(int empid, String expcat) {
         EntityManager em = getEntityManager();
         TypedQuery<Empexpense> query = em.createNamedQuery("Empexpense.expenseList", Empexpense.class);
         query.setParameter("employeeid", empid);
+        query.setParameter("expcategory", expcat);
         return query.getResultList();
     }
     

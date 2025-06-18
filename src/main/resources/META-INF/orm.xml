@@ -16,7 +16,7 @@
         <query>SELECT e FROM Employee e WHERE e.enddate IS NULL</query>
     </named-query>
     <named-query name="Empexpense.expenseList">
-        <query>SELECT e FROM Empexpense e WHERE e.employeeid = :employeeid AND e.enddate IS NULL</query>
+        <query>SELECT e FROM Empexpense e WHERE e.employeeid = :employeeid AND e.enddate IS NULL AND e.expcategory = :expcategory</query>
     </named-query>
     <named-query name="Empexpense.getMaxId">
         <query>SELECT MAX(e.id) FROM Empexpense e</query>

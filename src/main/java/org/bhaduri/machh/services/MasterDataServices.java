@@ -1743,7 +1743,41 @@ public class MasterDataServices {
             return null;
         }
     }
-    
+    public List<LabourCropDTO> getLabcropDetails(String harvestid, Date sdate, Date edate) {
+        LabourCropDAO labcropdao = new LabourCropDAO(utx, emf);
+        List<LabourCropDTO> recordlist = new ArrayList<>();       
+        LabourCropDTO record = new LabourCropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            List<Labourcrop> reclist = labcropdao.getForHrstDtRange(Integer.parseInt(harvestid), 
+                    sdate, edate);
+            
+            for (int i = 0; i < reclist.size(); i++) {
+                record.setApplicationId(reclist.get(i).getApplicationid().toString());
+                record.setHarvestId(harvestid);                
+                mysqlDate = reclist.get(i).getAppldate();
+                record.setApplicationDate(formatter.format(mysqlDate));
+                String labourCategory = "LABHRVST";                
+                record.setAppliedAmount(getLabExpenseForHrvst(record.getApplicationId()
+                        , labourCategory).getExpenditure());  
+                record.setExpenseComments(getLabExpenseForHrvst(record.getApplicationId()
+                        , labourCategory).getCommString());
+                recordlist.add(record);
+                record = new LabourCropDTO();
+            }  
+            return recordlist;
+           
+        }catch (NoResultException e) {
+            System.out.println("No labourcrop record is found for this harvest and applied date.");
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getLabcropDetails().");
+            return null;
+        }
+    }
     public LabourCropDTO getLabCropForId(String appliedid) {
         LabourCropDAO labcropdao = new LabourCropDAO(utx, emf);       
         LabourCropDTO record = new LabourCropDTO();
@@ -1917,7 +1951,7 @@ public class MasterDataServices {
         }
     }
     
-    public List<EmpExpDTO> getEmpActiveExpRecs(String empid) {
+    public List<EmpExpDTO> getEmpActiveExpRecs(String empid, String expcat) {
         EmpexpenseDAO empexpdao = new EmpexpenseDAO(utx, emf);  
         List<EmpExpDTO> recordList = new ArrayList<>();
         EmpExpDTO record = new EmpExpDTO();
@@ -1925,7 +1959,7 @@ public class MasterDataServices {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {  
-            List<Empexpense> reclist = empexpdao.getExpenseList(Integer.parseInt(empid));
+            List<Empexpense> reclist = empexpdao.getExpenseList(Integer.parseInt(empid), expcat);
             for (int i = 0; i < reclist.size(); i++) {
                 record.setId(String.valueOf(reclist.get(i).getId()));
                 record.setEmpid(empid);

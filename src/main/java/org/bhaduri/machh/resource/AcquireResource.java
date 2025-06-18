@@ -44,6 +44,7 @@ public class AcquireResource implements Serializable {
     private float amount;
     private Date purchaseDt = new Date();
     private String comments;
+    private List<ShopResDTO> selectedShopResLst;
 
     public AcquireResource() {
     }
@@ -68,26 +69,20 @@ public class AcquireResource implements Serializable {
     public void onShopResSelect() throws NamingException {
         System.out.println("No crop categories are found." + selectedShop);
         MasterDataServices masterDataService = new MasterDataServices();
-        
-        List<ShopResDTO> selectedShopResLst = masterDataService.getResShopForPk(selectedRes, selectedShop);
+//        selectedShopResLst would contain the existing rates for the selectedRes, selectedShop combination.
+//        they are shown in the datatable of the xhtml page.
+        selectedShopResLst = masterDataService.getResShopForPk(selectedRes, selectedShop);
         ///
         ///It means if the shopresource record is newly added 
 //        then there would be only one record with resid and shopid combination. Hence first record is fetched 
-//        just to check if it's a new record or one of the existing multiple shopresource record.
-        ///
+//        just to check if it's a new record or one of the existing multiple shopresource record. If it's a new 
+//        record, then selectedShopResLst will contain only one record, as resource acquiring has not started
+//        else it will fetch multiple records with same shop and resource id. As we need to take out just the 
+//        shopid and resid hence fetching first record will suffice.
+///
         selectedShopRes = selectedShopResLst.get(0);
         rate = 0;
         unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes)).getUnit();
-//        String redirectUrl = "/secured/resource/acquireresource?faces-redirect=true&selectedRes="+ selectedShopRes.getResourceId();
-//        FacesMessage message;
-//        FacesContext f = FacesContext.getCurrentInstance();
-//        f.getExternalContext().getFlash().setKeepMessages(true);
-//        if(Float.parseFloat(selectedShopRes.getRate())==0){
-//           message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-//                    "This resource is getting acquired for the first time.");
-//            f.addMessage("rate", message); 
-//            return redirectUrl;
-//        } else return null; 
     }
 
     public String goToReviewRes() {
@@ -146,9 +141,12 @@ public class AcquireResource implements Serializable {
         shopResRec.setResRateDate(sdf.format(purchaseDt));
         shopResRec.setStockPerRate(String.format("%.2f", amount));
         if (Float.parseFloat(selectedShopRes.getRate())==0){ 
-            shopResRec.setId(selectedShopRes.getId()); //this shopresource is getting updated for the first time
+            shopResRec.setId(selectedShopRes.getId()); //if the rate= 0, 
+//            it means this shop resource has just been linked, and no
+//            acquiring has been done so far.So, this shopresource is will be updated
             shopresflag = 1;
-        } else {            
+        } else {  
+//            else while we are creating ShopResDTO to add shop acquire record, with the same shop and res id 
             int shopresid = masterDataService.getMaxIdForShopRes();
             if (shopresid == 0 || shopresid == DB_SEVERE) {
                 shopresid = 1;
@@ -327,7 +325,7 @@ public class AcquireResource implements Serializable {
         }
         return redirectUrl;
     }
-
+    
     public String getComments() {
         return comments;
     }
@@ -426,6 +424,16 @@ public class AcquireResource implements Serializable {
     public void setSelectedResName(String selectedResName) {
         this.selectedResName = selectedResName;
     }
+
+    public List<ShopResDTO> getSelectedShopResLst() {
+        return selectedShopResLst;
+    }
+
+    public void setSelectedShopResLst(List<ShopResDTO> selectedShopResLst) {
+        this.selectedShopResLst = selectedShopResLst;
+    }
+
+    
 
     
 }

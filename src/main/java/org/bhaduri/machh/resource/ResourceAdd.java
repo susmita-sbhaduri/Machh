@@ -46,7 +46,7 @@ public class ResourceAdd implements Serializable {
         f.getExternalContext().getFlash().setKeepMessages(true); 
         if (shoplist.isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-                    "No more shops to be attached.");
+                    "No shops to be linked.");
 //            f.addMessage("othershopid", message);
             f.addMessage(null, message);
 //            redirectUrl = "/secured/shop/reshoplist?faces-redirect=true&resourceId=" + resourceId + "&resourceName=" + resourceName;
@@ -131,13 +131,14 @@ public class ResourceAdd implements Serializable {
                 }
                 return redirectUrl;
             }
-        } else {
-            resid = existingreswithName.getResourceId();
-            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-                    "Resource with same name already exists.");
-            f.addMessage(null, message);
-            return redirectUrl;
-        }
+        } 
+//        else {
+//            resid = existingreswithName.getResourceId();
+//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+//                    "Resource with same name already exists.");
+//            f.addMessage(null, message);
+//            return redirectUrl;
+//        }
 
         ShopResDTO resShopUpdBean = new ShopResDTO();
         int shopresid = masterDataService.getMaxIdForShopRes();

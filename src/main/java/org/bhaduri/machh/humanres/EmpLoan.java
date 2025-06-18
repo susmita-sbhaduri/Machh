@@ -49,13 +49,15 @@ public class EmpLoan implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices(); 
         EmployeeDTO empRec = masterDataService.getEmpNameForId(selectedEmp);
         selectedEmpName = empRec.getName();
-        List<EmpExpDTO> empLoanRecs = masterDataService.getEmpActiveExpRecs(selectedEmp);
+        List<EmpExpDTO> empLoanRecs = masterDataService.getEmpActiveExpRecs(selectedEmp, "LOAN");
         if(empLoanRecs.isEmpty()){
             totalLoan = 0;
             outstanding = String.format("%.2f", totalLoan);
             payback = 0;
             newRecord = true;
         } else {
+//          at one time only one 
+//          loan will be active hence 0th record is taken out
             totalLoan = Float.parseFloat(empLoanRecs.get(0).getTotal());
             outstanding = empLoanRecs.get(0).getOutstanding();
             payback = totalLoan-Float.parseFloat(outstanding);
@@ -104,9 +106,9 @@ public class EmpLoan implements Serializable {
             empexpRec.setOutstanding(outstanding);
             empexpRec.setExpcategory("LOAN");
             empexpRec.setSdate(sdf.format(sdate));
-            if(edate!=null){
-                empexpRec.setEdate(sdf.format(sdate));
-            }else  empexpRec.setEdate(null);
+//            if(edate!=null){
+//                empexpRec.setEdate(sdf.format(sdate));
+//            }else  empexpRec.setEdate(null);
             empexpRec.setEmpid(selectedEmp); //######empid as ref id
             
             
@@ -154,14 +156,14 @@ public class EmpLoan implements Serializable {
 //            return redirectUrl;
         }//if newRecord
         if (newRecord == false) {
-            empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp).get(0);
+            empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp,"LOAN").get(0);
             empexpUpd.setOutstanding(outstanding);
             empexpUpd.setSdate(sdf.format(sdate));
-            if (edate != null) {
-                empexpUpd.setEdate(sdf.format(sdate));
-            } else {
-                empexpUpd.setEdate(null);
-            }
+//            if (edate != null) {
+//                empexpUpd.setEdate(sdf.format(sdate));
+//            } else {
+//                empexpUpd.setEdate(null);
+//            }
             int empexpupd = masterDataService.editEmpExpRecord(empexpUpd);
             if (empexpupd == SUCCESS) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",

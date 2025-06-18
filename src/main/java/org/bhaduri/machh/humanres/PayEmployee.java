@@ -50,7 +50,7 @@ public class PayEmployee implements Serializable {
         empRec = masterDataService.getEmpNameForId(selectedEmp);
         selectedEmpName = empRec.getName();
         salary = Float.parseFloat(empRec.getSalary());        
-        List<EmpExpDTO> empLoanRecs = masterDataService.getEmpActiveExpRecs(selectedEmp);
+        List<EmpExpDTO> empLoanRecs = masterDataService.getEmpActiveExpRecs(selectedEmp, "LOAN");
         if(empLoanRecs.isEmpty()){            
            readOnlyCondition = true;
         } 
@@ -125,14 +125,17 @@ public class PayEmployee implements Serializable {
             }
         }
         
-        if(readOnlyCondition==false){
-            
+        if(readOnlyCondition==false){// there is loan hence one can enter payback
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             MasterDataServices masterDataService = new MasterDataServices();
-            EmpExpDTO empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp).get(0);
-            float totalLoan = Float.parseFloat(empexpUpd.getTotal());
-            float outstngcalc = totalLoan - payback;
+            String expCat = "LOAN";
+            EmpExpDTO empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp, expCat).get(0);
+//            float totalLoan = Float.parseFloat(empexpUpd.getTotal());
+            float outstngcalc = Float.parseFloat(empexpUpd.getOutstanding()) - payback;
             empexpUpd.setOutstanding(String.format("%.2f", outstngcalc));
-            
+            if(outstngcalc==0){
+                empexpUpd.setEdate(sdf.format(paydate));
+            }
             int empexpupd = masterDataService.editEmpExpRecord(empexpUpd);
             if (empexpupd == SUCCESS) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
@@ -150,6 +153,40 @@ public class PayEmployee implements Serializable {
                     f.addMessage(null, message);
                 }
                 
+            }
+            if (payback > 0) {
+                //Construction of empexpense record
+                EmpExpDTO empexpRec = new EmpExpDTO();
+                int empexpid = masterDataService.getMaxEmpExpenseId();
+                if (empexpid == 0 || empexpid == DB_SEVERE) {
+                    empexpRec.setId("1");
+                } else {
+                    empexpRec.setId(String.valueOf(empexpid + 1));
+                }
+                empexpRec.setEmpid(selectedEmp);
+                empexpRec.setExpcategory("PAYBACK");
+                empexpRec.setTotal(String.format("%.2f", payback));
+                empexpRec.setOutstanding(String.format("%.2f", 0.0));
+                empexpRec.setSdate(sdf.format(paydate));
+                empexpRec.setEdate(null);
+                int paybackadd = masterDataService.addEmpExpRecord(empexpRec);
+                if (paybackadd == SUCCESS) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                            "Payback updated successfully");
+                    f.addMessage(null, message);
+                } else {
+                    if (empexpupd == DB_DUPLICATE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "This expexpense record already exist.");
+                        f.addMessage(null, message);
+                    }
+                    if (empexpupd == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "Failure on updating expexpense record.");
+                        f.addMessage(null, message);
+                    }
+
+                }
             }
         }
         return redirectUrl;
