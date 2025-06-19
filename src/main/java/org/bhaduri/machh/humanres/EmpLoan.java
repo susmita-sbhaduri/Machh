@@ -9,6 +9,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -44,8 +45,8 @@ public class EmpLoan implements Serializable {
      */
     public EmpLoan() {
     }
-    public void fillValues() throws NamingException {
-
+    public void fillValues() throws NamingException, ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         MasterDataServices masterDataService = new MasterDataServices(); 
         EmployeeDTO empRec = masterDataService.getEmpNameForId(selectedEmp);
         selectedEmpName = empRec.getName();
@@ -61,6 +62,7 @@ public class EmpLoan implements Serializable {
             totalLoan = Float.parseFloat(empLoanRecs.get(0).getTotal());
             outstanding = empLoanRecs.get(0).getOutstanding();
             payback = totalLoan-Float.parseFloat(outstanding);
+            sdate =  sdf.parse(empLoanRecs.get(0).getSdate());
             readOnlyCondition = true;
         }
     }

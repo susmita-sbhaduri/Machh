@@ -49,7 +49,9 @@ public class PayEmployee implements Serializable {
         
         empRec = masterDataService.getEmpNameForId(selectedEmp);
         selectedEmpName = empRec.getName();
-        salary = Float.parseFloat(empRec.getSalary());        
+        salary = Float.parseFloat(empRec.getSalary()); 
+//        If the employee has LOAN then EmpExpense record will have a record. Based on this, Loan Repayment
+//        field is based editable. If there is no record then this field becomes readonly
         List<EmpExpDTO> empLoanRecs = masterDataService.getEmpActiveExpRecs(selectedEmp, "LOAN");
         if(empLoanRecs.isEmpty()){            
            readOnlyCondition = true;
@@ -124,15 +126,19 @@ public class PayEmployee implements Serializable {
 
             }
         }
-        
-        if(readOnlyCondition==false){// there is loan hence one can enter payback
+        // there is loan hence one can enter payback and Loan Repayment is an editable field. 
+        if(readOnlyCondition==false){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             MasterDataServices masterDataService = new MasterDataServices();
             String expCat = "LOAN";
+        //The closed loan that is the enddate field in empexpense record is not filled up, is taken out.
+        //One load can be active at a time. Hence 0th record is selected.
             EmpExpDTO empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp, expCat).get(0);
 //            float totalLoan = Float.parseFloat(empexpUpd.getTotal());
+        //Based on the repayment amount outstngcalc is calculated.
             float outstngcalc = Float.parseFloat(empexpUpd.getOutstanding()) - payback;
             empexpUpd.setOutstanding(String.format("%.2f", outstngcalc));
+        //if outstngcalc = 0 then loan is closed with the repayment date  
             if(outstngcalc==0){
                 empexpUpd.setEdate(sdf.format(paydate));
             }
@@ -154,6 +160,7 @@ public class PayEmployee implements Serializable {
                 }
                 
             }
+           // If there is a payback then PAYBACK record is inserted in empexpense
             if (payback > 0) {
                 //Construction of empexpense record
                 EmpExpDTO empexpRec = new EmpExpDTO();

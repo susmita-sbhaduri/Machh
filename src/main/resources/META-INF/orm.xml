@@ -144,6 +144,10 @@
     <named-query name="Expense.getMaxExpId">
         <query>SELECT MAX(e.expenseid) FROM Expense e</query>
     </named-query>
+    <named-query name="Expense.empPayments">
+        <query>SELECT e FROM Expense e WHERE e.expensetype IN ('SALARY','LOAN','BONUS','LEAVE') AND 
+            e.date &gt;= :startdate AND e.date &lt;= :enddate</query>
+    </named-query>
     <named-query name="Expense.getRecForLabHrvst">
         <query>SELECT e FROM Expense e WHERE e.expenserefid = :expenserefid AND e.expensetype = :expensetype</query>
     </named-query>  

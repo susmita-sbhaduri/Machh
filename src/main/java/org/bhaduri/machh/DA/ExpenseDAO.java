@@ -8,6 +8,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
+import java.util.Date;
+import java.util.List;
 import org.bhaduri.machh.JPA.ExpenseJpaController;
 import org.bhaduri.machh.entities.Expense;
 
@@ -30,5 +32,13 @@ public class ExpenseDAO extends ExpenseJpaController{
         query.setParameter("expenserefid", refid);
         query.setParameter("expensetype", type);
         return query.getSingleResult();
+    }
+    
+    public List<Expense> getEmpExpenses(Date sdate, Date edate) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Expense> query = em.createNamedQuery("Expense.empPayments", Expense.class); 
+        query.setParameter("startdate", sdate);
+        query.setParameter("enddate", edate);
+        return query.getResultList();
     }
 }

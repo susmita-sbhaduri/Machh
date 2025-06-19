@@ -1158,6 +1158,40 @@ public class MasterDataServices {
         }
     }
     
+    public List<ExpenseDTO> getAllEmpExpenseInRange(Date sdate, Date edate) {
+        ExpenseDAO expdao = new ExpenseDAO(utx, emf); 
+        List<ExpenseDTO> recordlist = new ArrayList<>();
+        ExpenseDTO retexpdto = new ExpenseDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            List<Expense> reclist = expdao.getEmpExpenses(sdate, edate);
+            for (int i = 0; i < reclist.size(); i++) {
+                retexpdto.setExpenseId(reclist.get(i).getExpenseid().toString());
+                mysqlDate = reclist.get(i).getDate();
+                retexpdto.setDate(formatter.format(mysqlDate));
+                retexpdto.setExpenseType(reclist.get(i).getExpensetype());
+                //Here the emp id is the ref id. we are populating the employee name in this field for this method
+                retexpdto.setExpenseRefId(getEmpNameForId(
+                        reclist.get(i).getExpenserefid().toString()).getName());
+                retexpdto.setExpenditure(String.format("%.2f", reclist.get(i).getExpediture()));
+                retexpdto.setCommString(reclist.get(i).getComments());
+                recordlist.add(retexpdto);
+                retexpdto = new ExpenseDTO();
+            }
+            return recordlist;
+        }
+        catch (NoResultException e) {
+            System.out.println("No Expense record found for this employees and date range.");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getAllEmpExpenseInRange().");
+            return null;
+        }
+    }
+    
     public int delExpenseRecord(ExpenseDTO exrec) {
         ExpenseDAO expdao = new ExpenseDAO(utx, emf);                 
         try {
