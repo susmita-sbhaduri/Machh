@@ -25,7 +25,7 @@
                     <h:outputLabel for="loan" value="Loan Amount(Rs.)"/>
                     <p:inputText id="loan" 
                                  value="#{empLoan.totalLoan}"
-                                    readonly="#{empLoan.readOnlyCondition}">
+                                 readonly="#{empLoan.readOnlyCondition}">
                         <f:convertNumber pattern="#0.00" />
                         <p:keyFilter regEx="/[\d\.]/" /> 
                         <p:ajax event="change"
@@ -37,7 +37,7 @@
                     <h:outputText value="#{empLoan.outstanding}" style="font-weight:bold;"/>                    
                     
                     <h:outputLabel for="sdate" value="Loan Start Date" />
-                    <p:datePicker id="sdate" value="#{empLoan.sdate}" pattern="yyyy-MM-dd"/>
+                    <p:datePicker id="sdate" value="#{empLoan.sdate}" pattern="yyyy-MM-dd" readonly="#{empLoan.readOnlyCondition}"/>
                     
                     
                     <p:commandButton styleClass="blue-button" 

@@ -34,7 +34,7 @@ public class EmpLoan implements Serializable {
     private String selectedEmpName;
     private float totalLoan;
     private Date sdate = new Date();
-    private Date edate;    
+//    private Date edate;    
     private String outstanding;
     private float payback;
     private EmpExpDTO empexpUpd;
@@ -54,21 +54,22 @@ public class EmpLoan implements Serializable {
         if(empLoanRecs.isEmpty()){
             totalLoan = 0;
             outstanding = String.format("%.2f", totalLoan);
-            payback = 0;
+//            payback = 0;
             newRecord = true;
+            readOnlyCondition = false;
         } else {
 //          at one time only one 
 //          loan will be active hence 0th record is taken out
             totalLoan = Float.parseFloat(empLoanRecs.get(0).getTotal());
             outstanding = empLoanRecs.get(0).getOutstanding();
-            payback = totalLoan-Float.parseFloat(outstanding);
+//            payback = totalLoan-Float.parseFloat(outstanding);
             sdate =  sdf.parse(empLoanRecs.get(0).getSdate());
             readOnlyCondition = true;
         }
     }
     public void calculateOutstanding() throws NamingException {
-        float outstngcalc = totalLoan - payback; 
-        outstanding = String.format("%.2f", outstngcalc);
+//        float outstngcalc = totalLoan - payback; 
+        outstanding = String.format("%.2f", totalLoan);
     }
     
     public String saveDetails() throws NamingException {
@@ -80,7 +81,8 @@ public class EmpLoan implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if (newRecord && (Float.parseFloat(outstanding) == totalLoan)
-                && (payback == 0) && (totalLoan > 0)) {
+//                && (payback == 0) && (totalLoan > 0)) {
+                && (totalLoan > 0)) {
 //              Construction of expense record, as newRecord is true 2 records would be inserted in 
 //              two tables.            
             ExpenseDTO expenseRec = new ExpenseDTO();
@@ -220,13 +222,13 @@ public class EmpLoan implements Serializable {
         this.sdate = sdate;
     }
 
-    public Date getEdate() {
-        return edate;
-    }
-
-    public void setEdate(Date edate) {
-        this.edate = edate;
-    }
+//    public Date getEdate() {
+//        return edate;
+//    }
+//
+//    public void setEdate(Date edate) {
+//        this.edate = edate;
+//    }
 
     public String getOutstanding() {
         return outstanding;
@@ -236,13 +238,13 @@ public class EmpLoan implements Serializable {
         this.outstanding = outstanding;
     }
 
-    public float getPayback() {
-        return payback;
-    }
-
-    public void setPayback(float payback) {
-        this.payback = payback;
-    }
+//    public float getPayback() {
+//        return payback;
+//    }
+//
+//    public void setPayback(float payback) {
+//        this.payback = payback;
+//    }
 
     public boolean isNewRecord() {
         return newRecord;
