@@ -9,6 +9,7 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +61,7 @@ public class PayEmployee implements Serializable {
         leave = 0;
     }
     
-    public String payEmp() throws NamingException {
+    public String payEmp() throws NamingException, ParseException {
         String redirectUrl = "/secured/humanresource/maintainemp?faces-redirect=true"; 
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
@@ -134,7 +135,15 @@ public class PayEmployee implements Serializable {
         //The closed loan that is the enddate field in empexpense record is not filled up, is taken out.
         //One load can be active at a time. Hence 0th record is selected.
             EmpExpDTO empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp, expCat).get(0);
-//            float totalLoan = Float.parseFloat(empexpUpd.getTotal());
+            if (payback > 0) {
+                Date loanStartDate = sdf.parse(empexpUpd.getSdate());
+                if (paydate.compareTo(loanStartDate) < 0) {//if paydate is before loanStartDate
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Repayment date must be after Loan granted date");
+                    f.addMessage(null, message);
+                    return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
+                }
+            }
         //Based on the repayment amount outstngcalc is calculated.
             float outstngcalc = Float.parseFloat(empexpUpd.getOutstanding()) - payback;
             empexpUpd.setOutstanding(String.format("%.2f", outstngcalc));
@@ -161,7 +170,7 @@ public class PayEmployee implements Serializable {
                 
             }
            // If there is a payback then PAYBACK record is inserted in empexpense
-            if (payback > 0) {
+            if (payback > 0) {                
                 //Construction of empexpense record
                 EmpExpDTO empexpRec = new EmpExpDTO();
                 int empexpid = masterDataService.getMaxEmpExpenseId();
@@ -176,6 +185,7 @@ public class PayEmployee implements Serializable {
                 empexpRec.setOutstanding(String.format("%.2f", 0.0));
                 empexpRec.setSdate(sdf.format(paydate));
                 empexpRec.setEdate(null);
+                empexpRec.setEmprefid(empexpUpd.getId());
                 int paybackadd = masterDataService.addEmpExpRecord(empexpRec);
                 if (paybackadd == SUCCESS) {
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",

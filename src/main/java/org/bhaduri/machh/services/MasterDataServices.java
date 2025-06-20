@@ -1088,7 +1088,7 @@ public class MasterDataServices {
             rec.setExpensetype(exrec.getExpenseType());
             rec.setExpenserefid(Integer.valueOf(exrec.getExpenseRefId()));
             rec.setExpediture(BigDecimal.valueOf(Double.parseDouble(exrec.getExpenditure())));
-            rec.setComments(exrec.getCommString());
+            rec.setComments(exrec.getCommString());            
             expdao.create(rec);
             return SUCCESS;
         }
@@ -2000,7 +2000,7 @@ public class MasterDataServices {
                 record.setExpcategory(reclist.get(i).getExpcategory());
                 record.setTotal(String.format("%.2f", reclist.get(i).getTotalloan()));
                 record.setOutstanding(String.format("%.2f", reclist.get(i).getOutstanding()));
-                
+                record.setEmprefid(String.valueOf(reclist.get(i).getExprefid()));
                 if(reclist.get(i).getStartdate()==null){
                    record.setSdate(null);
                 } else {
@@ -2008,12 +2008,6 @@ public class MasterDataServices {
                    record.setSdate(formatter.format(mysqlDate));
                 }
                 record.setEdate(null);
-//                if(reclist.get(i).getEnddate()==null){
-//                   record.setEdate(null);
-//                } else {
-//                   mysqlDate = reclist.get(i).getEnddate();
-//                   record.setEdate(formatter.format(mysqlDate));
-//                }
                 recordList.add(record);
                 record = new EmpExpDTO();
             }        
@@ -2025,6 +2019,85 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getEmployeeExpRecs.");
+            return null;
+        }
+    }
+    
+    
+    
+    
+    public List<EmpExpDTO> getEmpActiveLoans() {
+        EmpexpenseDAO empexpdao = new EmpexpenseDAO(utx, emf);  
+        List<EmpExpDTO> recordList = new ArrayList<>();
+        EmpExpDTO record = new EmpExpDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Empexpense> reclist = empexpdao.getLoanList();
+            for (int i = 0; i < reclist.size(); i++) {
+                record.setId(String.valueOf(reclist.get(i).getId()));
+                record.setEmpid(String.valueOf(reclist.get(i).getEmployeeid()));
+                record.setExpcategory(reclist.get(i).getExpcategory());
+                record.setTotal(String.format("%.2f", reclist.get(i).getTotalloan()));
+                record.setOutstanding(String.format("%.2f", reclist.get(i).getOutstanding()));
+                record.setEmprefid(String.valueOf(reclist.get(i).getExprefid()));
+                if(reclist.get(i).getStartdate()==null){
+                   record.setSdate(null);
+                } else {
+                   mysqlDate = reclist.get(i).getStartdate();
+                   record.setSdate(formatter.format(mysqlDate));
+                }
+                record.setEdate(null);
+                recordList.add(record);
+                record = new EmpExpDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No employee loan records are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getEmpActiveLoans.");
+            return null;
+        }
+    }
+    
+    public List<EmpExpDTO> getPaybackList(String empid, String loanrefid) {
+        EmpexpenseDAO empexpdao = new EmpexpenseDAO(utx, emf);  
+        List<EmpExpDTO> recordList = new ArrayList<>();
+        EmpExpDTO record = new EmpExpDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Empexpense> reclist = empexpdao.getPaybkLst(Integer.parseInt(empid), Integer.parseInt(loanrefid));
+            for (int i = 0; i < reclist.size(); i++) {
+                record.setId(String.valueOf(reclist.get(i).getId()));                
+                record.setEmpid(String.valueOf(reclist.get(i).getEmployeeid()));
+                record.setExpcategory(reclist.get(i).getExpcategory());
+                record.setTotal(String.format("%.2f", reclist.get(i).getTotalloan()));
+                record.setOutstanding(String.format("%.2f", reclist.get(i).getOutstanding()));
+                record.setEmprefid(String.valueOf(reclist.get(i).getExprefid()));
+                if(reclist.get(i).getStartdate()==null){
+                   record.setSdate(null);
+                } else {
+                   mysqlDate = reclist.get(i).getStartdate();
+                   record.setSdate(formatter.format(mysqlDate));
+                }
+                record.setEdate(null);
+                recordList.add(record);
+                record = new EmpExpDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No employee payback records are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getPaybackList.");
             return null;
         }
     }
@@ -2056,7 +2129,7 @@ public class MasterDataServices {
             rec.setTotalloan(BigDecimal.valueOf(Double.parseDouble(empexprec.getTotal())));
             rec.setOutstanding(BigDecimal.valueOf(Double.parseDouble(empexprec.getOutstanding())));
             rec.setExpcategory(empexprec.getExpcategory());
-            
+            rec.setExprefid(Integer.valueOf(empexprec.getEmprefid()));
             mysqlDate = formatter.parse(empexprec.getSdate());
             rec.setStartdate(mysqlDate);
             

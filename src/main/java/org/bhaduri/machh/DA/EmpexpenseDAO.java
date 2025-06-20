@@ -27,6 +27,21 @@ public class EmpexpenseDAO extends EmpexpenseJpaController{
         query.setParameter("expcategory", expcat);
         return query.getResultList();
     }
+    public List<Empexpense> getLoanList() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Empexpense> query = em.createNamedQuery("Empexpense.loanList", Empexpense.class);
+//        query.setParameter("employeeid", empid);
+//        query.setParameter("expcategory", expcat);
+        return query.getResultList();
+    }
+    
+    public List<Empexpense> getPaybkLst(int empid, int refid) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Empexpense> query = em.createNamedQuery("Empexpense.paybackList", Empexpense.class);
+        query.setParameter("employeeid", empid);
+        query.setParameter("refid", refid);
+        return query.getResultList();
+    }
     
     public int getMaxId() {
         EntityManager em = getEntityManager();

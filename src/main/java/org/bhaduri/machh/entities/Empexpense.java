@@ -32,6 +32,7 @@ import java.util.Date;
     @NamedQuery(name = "Empexpense.findById", query = "SELECT e FROM Empexpense e WHERE e.id = :id"),
     @NamedQuery(name = "Empexpense.findByEmployeeid", query = "SELECT e FROM Empexpense e WHERE e.employeeid = :employeeid"),
     @NamedQuery(name = "Empexpense.findByExpcategory", query = "SELECT e FROM Empexpense e WHERE e.expcategory = :expcategory"),
+    @NamedQuery(name = "Empexpense.findByExprefid", query = "SELECT e FROM Empexpense e WHERE e.exprefid = :exprefid"),
     @NamedQuery(name = "Empexpense.findByTotalloan", query = "SELECT e FROM Empexpense e WHERE e.totalloan = :totalloan"),
     @NamedQuery(name = "Empexpense.findByOutstanding", query = "SELECT e FROM Empexpense e WHERE e.outstanding = :outstanding"),
     @NamedQuery(name = "Empexpense.findByStartdate", query = "SELECT e FROM Empexpense e WHERE e.startdate = :startdate"),
@@ -53,6 +54,8 @@ public class Empexpense implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "expcategory")
     private String expcategory;
+    @Column(name = "exprefid")
+    private Integer exprefid;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -109,6 +112,14 @@ public class Empexpense implements Serializable {
 
     public void setExpcategory(String expcategory) {
         this.expcategory = expcategory;
+    }
+
+    public Integer getExprefid() {
+        return exprefid;
+    }
+
+    public void setExprefid(Integer exprefid) {
+        this.exprefid = exprefid;
     }
 
     public BigDecimal getTotalloan() {

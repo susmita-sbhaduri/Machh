@@ -14,6 +14,7 @@ public class EmpExpDTO implements Serializable {
     private String id;
     private String empid;
     private String expcategory;
+    private String emprefid;
     private String total;
     private String outstanding;
     private String sdate;
@@ -73,6 +74,14 @@ public class EmpExpDTO implements Serializable {
 
     public void setEdate(String edate) {
         this.edate = edate;
+    }
+
+    public String getEmprefid() {
+        return emprefid;
+    }
+
+    public void setEmprefid(String emprefid) {
+        this.emprefid = emprefid;
     }
     
     

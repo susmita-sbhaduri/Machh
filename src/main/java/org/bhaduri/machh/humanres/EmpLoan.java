@@ -18,7 +18,6 @@ import org.bhaduri.machh.DTO.EmpExpDTO;
 import org.bhaduri.machh.DTO.EmployeeDTO;
 import org.bhaduri.machh.DTO.ExpenseDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.services.MasterDataServices;
@@ -34,7 +33,6 @@ public class EmpLoan implements Serializable {
     private String selectedEmpName;
     private float totalLoan;
     private Date sdate = new Date();
-//    private Date edate;    
     private String outstanding;
     private float payback;
     private EmpExpDTO empexpUpd;
@@ -54,21 +52,18 @@ public class EmpLoan implements Serializable {
         if(empLoanRecs.isEmpty()){
             totalLoan = 0;
             outstanding = String.format("%.2f", totalLoan);
-//            payback = 0;
             newRecord = true;
             readOnlyCondition = false;
         } else {
-//          at one time only one 
-//          loan will be active hence 0th record is taken out
+//          at one time only one loan will be active hence 0th record is taken out
+//          This is an existing loan. hence all the records are populated and made read only
             totalLoan = Float.parseFloat(empLoanRecs.get(0).getTotal());
             outstanding = empLoanRecs.get(0).getOutstanding();
-//            payback = totalLoan-Float.parseFloat(outstanding);
             sdate =  sdf.parse(empLoanRecs.get(0).getSdate());
             readOnlyCondition = true;
         }
     }
     public void calculateOutstanding() throws NamingException {
-//        float outstngcalc = totalLoan - payback; 
         outstanding = String.format("%.2f", totalLoan);
     }
     
@@ -81,7 +76,6 @@ public class EmpLoan implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         if (newRecord && (Float.parseFloat(outstanding) == totalLoan)
-//                && (payback == 0) && (totalLoan > 0)) {
                 && (totalLoan > 0)) {
 //              Construction of expense record, as newRecord is true 2 records would be inserted in 
 //              two tables.            
@@ -110,11 +104,8 @@ public class EmpLoan implements Serializable {
             empexpRec.setOutstanding(outstanding);
             empexpRec.setExpcategory("LOAN");
             empexpRec.setSdate(sdf.format(sdate));
-//            if(edate!=null){
-//                empexpRec.setEdate(sdf.format(sdate));
-//            }else  empexpRec.setEdate(null);
-            empexpRec.setEmpid(selectedEmp); //######empid as ref id
-            
+            empexpRec.setEmpid(selectedEmp); //######empid as ref id   
+            empexpRec.setEmprefid("0");
             
             int expres = masterDataService.addExpenseRecord(expenseRec);
             if (expres == SUCCESS) {
@@ -130,7 +121,6 @@ public class EmpLoan implements Serializable {
                             "Failure on insert in expense table");
                     f.addMessage(null, message);
                 }
-//                return redirectUrl;
             }
             if (sqlFlag == 1) {
                 int insempexp = masterDataService.addEmpExpRecord(empexpRec);
@@ -148,7 +138,6 @@ public class EmpLoan implements Serializable {
                                 "Failure on insert in empexpense table");
                         f.addMessage(null, message);
                     }
-//                    return redirectUrl;
                 }
             }
             if (sqlFlag == 2) {
@@ -157,36 +146,35 @@ public class EmpLoan implements Serializable {
                 f.addMessage(null, message);
                 
             }
-//            return redirectUrl;
         }//if newRecord
-        if (newRecord == false) {
-            empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp,"LOAN").get(0);
-            empexpUpd.setOutstanding(outstanding);
-            empexpUpd.setSdate(sdf.format(sdate));
-//            if (edate != null) {
-//                empexpUpd.setEdate(sdf.format(sdate));
+//        if (newRecord == false) {
+//            empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp,"LOAN").get(0);
+//            empexpUpd.setOutstanding(outstanding);
+//            empexpUpd.setSdate(sdf.format(sdate));
+////            if (edate != null) {
+////                empexpUpd.setEdate(sdf.format(sdate));
+////            } else {
+////                empexpUpd.setEdate(null);
+////            }
+//            int empexpupd = masterDataService.editEmpExpRecord(empexpUpd);
+//            if (empexpupd == SUCCESS) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+//                        "Loan updated successfully");
+//                f.addMessage(null, message);
 //            } else {
-//                empexpUpd.setEdate(null);
+//                if (empexpupd == DB_NON_EXISTING) {
+//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                            "This expexpense record does not exist.");
+//                    f.addMessage(null, message);
+//                }
+//                if (empexpupd == DB_SEVERE) {
+//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                            "Failure on updating expexpense record.");
+//                    f.addMessage(null, message);
+//                }
+//                
 //            }
-            int empexpupd = masterDataService.editEmpExpRecord(empexpUpd);
-            if (empexpupd == SUCCESS) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-                        "Loan updated successfully");
-                f.addMessage(null, message);
-            } else {
-                if (empexpupd == DB_NON_EXISTING) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "This expexpense record does not exist.");
-                    f.addMessage(null, message);
-                }
-                if (empexpupd == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "Failure on updating expexpense record.");
-                    f.addMessage(null, message);
-                }
-                
-            }
-        }//if not newRecord
+//        }//if not newRecord
         return redirectUrl;
     }
 
@@ -222,13 +210,6 @@ public class EmpLoan implements Serializable {
         this.sdate = sdate;
     }
 
-//    public Date getEdate() {
-//        return edate;
-//    }
-//
-//    public void setEdate(Date edate) {
-//        this.edate = edate;
-//    }
 
     public String getOutstanding() {
         return outstanding;
@@ -237,14 +218,6 @@ public class EmpLoan implements Serializable {
     public void setOutstanding(String outstanding) {
         this.outstanding = outstanding;
     }
-
-//    public float getPayback() {
-//        return payback;
-//    }
-//
-//    public void setPayback(float payback) {
-//        this.payback = payback;
-//    }
 
     public boolean isNewRecord() {
         return newRecord;
