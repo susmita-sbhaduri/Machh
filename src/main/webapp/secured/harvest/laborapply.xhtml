@@ -20,28 +20,49 @@
             <f:viewAction action="#{laborApply.fillValues()}" />
         </f:metadata>
         <div class="card">
-            <h:form id="labappform" style="text-align: center">
-                <p:panelGrid columns="2">
-                    <h:outputLabel value="Site" />
-                    <h:outputText value="#{laborApply.site}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Crop Category" />
-                    <h:outputText value="#{laborApply.cropcat}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Crop Name" />
-                    <h:outputText value="#{laborApply.cropname}" style="font-weight:bold;"/>
-
-                    
-
-                    <p:outputLabel for="amtpaid" value="Amount Paid(in Rs.)" />
-                    <p:inputText id="amtpaid" value="#{laborApply.amountPaid}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    <h:outputLabel for="adate" value="Apply Date" />
-                    <p:datePicker id="adate" value="#{laborApply.applyDt}" pattern="yyyy-MM-dd"/>
-                    <p:outputLabel for="comments" value="Comments" />
-                    <p:inputText id="comments" value="#{laborApply.comments}"/>
-                    
-                </p:panelGrid>
+            <h:form id="labappform" style="text-align: left">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Site" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{laborApply.site}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Crop Category" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{laborApply.cropcat}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Crop Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{laborApply.cropname}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="amtpaid" value="Amount Paid(in Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="amtpaid" value="#{laborApply.amountPaid}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="adate" value="Apply Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="adate" value="#{laborApply.applyDt}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="comments" value="Comments" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="comments" value="#{laborApply.comments}"/>
+                    </div>
+                </div> 
+                
                 <p:commandButton styleClass="blue-button" 
                                  icon="fa fa-edit" 
                                  value="Apply"

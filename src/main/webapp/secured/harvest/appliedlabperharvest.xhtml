@@ -8,7 +8,7 @@
                 xmlns:h="jakarta.faces.html">
 
     <ui:define name="content">
-        <h4>Applied Resources.</h4>
+        <h4>Applied Labor.</h4>
         <p:growl id="growl" showDetail="true" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         &nbsp;&nbsp;&nbsp;
@@ -20,25 +20,20 @@
         </f:metadata>
 
         <div class="card">            
-            <h:form id="harvestgrid" style="text-align: center">                
+            <h:form id="harvestgrid" style="text-align: left">                
                 <p:dataTable var="appliedlabour" value="#{appliedLabPerHarvest.appliedlabours}" reflow="true">
                     <f:facet name="header">
-                        <h:panelGroup layout="block" style="display: flex; align-items: center;">
-                            <!-- Heading text -->
-                            <!-- Static Colon -->
-                            <h:outputText value="Site:" style="font-size: 20px; margin: 0 5px;" />
-                            <h:outputText value="#{appliedLabPerHarvest.sitename}" 
-                                          style="font-weight: bold; font-size: 20px;" />
-                            <h:outputText value=",Crop Category:" style="font-size: 20px; margin: 0 5px;" />
-                            <h:outputText value="#{appliedLabPerHarvest.cropcat}" 
-                                          style="font-weight: bold; font-size: 20px;" />
-
-                            <!-- Static Colon -->
-                            <h:outputText value="-" style="font-size: 20px; margin: 0 5px;" />
-
-                            <h:outputText value="#{appliedLabPerHarvest.cropname}" 
-                                          style="font-weight: bold; font-size: 20px;" />
-                        </h:panelGroup>
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-4 ui-g-4">
+                                <h:outputText value="#{appliedLabPerHarvest.sitename}" style="font-weight: bold;" />
+                            </div>
+                            <div class="ui-g-12 ui-md-4 ui-g-4">
+                                <h:outputText value="Crop Category:#{appliedLabPerHarvest.cropcat}" style="font-weight: bold;" />
+                            </div>               
+                            <div class="ui-g-12 ui-md-4 ui-g-4">
+                                <h:outputText value="Crop:#{appliedLabPerHarvest.cropname}" style="font-weight: bold;" />
+                            </div>
+                        </div>
                     </f:facet>
                     <p:column headerText="Application ID">
                         <h:outputText value="#{appliedlabour.applicationId}" />
