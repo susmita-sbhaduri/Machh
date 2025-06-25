@@ -18,8 +18,8 @@
         </f:metadata>
 
         <div class="card">            
-            <h:form id="empgrid" style="text-align: center">                
-                <p:dataTable var="emp" value="#{maintainEmp.emps}" reflow="true">
+            <h:form id="empgrid" style="text-align: left">                
+                <p:dataTable var="emp" value="#{maintainEmp.emps}">
                     <p:column headerText="Employee Name">
                         <h:outputText value="#{emp.name}" />
                     </p:column>

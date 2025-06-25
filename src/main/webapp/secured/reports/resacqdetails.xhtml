@@ -26,9 +26,9 @@
                                         fileName="Acquiredres"/>
                     </p:commandButton>
                 </div>
-                <p:dataTable id="resacq" var="resacq" value="#{resAcqDetails.resacqs}" reflow="true">                    
+                <p:dataTable id="resacq" var="resacq" value="#{resAcqDetails.resacqs}">                   
 
-                    <p:column headerText="Resource Name">
+                    <p:column headerText="Resource Name" >
                         <h:outputText value="#{resacq.resName}" />
                     </p:column>
                     <p:column headerText="Resource Acq. Date">

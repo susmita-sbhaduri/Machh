@@ -14,35 +14,61 @@
 
 
         <div class="card">
-            <h:form id="empaddform" style="text-align: center">
-                <p:panelGrid columns="2">
-                    <h:outputLabel for="empname" value="Name" />
-                    <h:inputText id="empname" value="#{employeeAdd.name}"/>                                       
-                    <h:outputLabel for="empaddr" value="Address"/>
-                    <h:inputText id="empaddr" value="#{employeeAdd.address}" />
-                    <p:outputLabel for="empph" value="Contact No." />
-                    <p:inputText id="empph" value="#{employeeAdd.phno}" maxlength="10">
-                        <p:keyFilter regEx="/[0-9]/" />
-                        <f:validateRegex pattern="\d{10}" />
-                    </p:inputText>
-
-                    <p:outputLabel for="empsal" value="Salary(Rs.)" />
-                    <p:inputText id="empsal" value="#{employeeAdd.salary}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    <h:outputLabel for="sdate" value="Start Date" />
-                    <p:datePicker id="sdate" value="#{employeeAdd.sdate}" pattern="yyyy-MM-dd"/>
-                    <h:outputLabel for="edate" value="End Date" />
-                    <p:datePicker id="edate" value="#{employeeAdd.edate}" pattern="yyyy-MM-dd"/>
-
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{employeeAdd.goToSaveEmp()}" >                        
-                    </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
-                </p:panelGrid>
+            <h:form id="empaddform" style="text-align: left">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="empname" value="Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="empname" value="#{employeeAdd.name}"/>   
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="empaddr" value="Address"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="empaddr" value="#{employeeAdd.address}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="empph" value="Contact No." />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="empph" value="#{employeeAdd.phno}" maxlength="10">
+                            <p:keyFilter regEx="/[0-9]/" />
+                            <f:validateRegex pattern="\d{10}" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="empsal" value="Salary(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="empsal" value="#{employeeAdd.salary}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="sdate" value="Start Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="sdate" value="#{employeeAdd.sdate}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="edate" value="End Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="edate" value="#{employeeAdd.edate}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{employeeAdd.goToSaveEmp()}" >                        
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
+                    </div>
+                </div>
             </h:form>
         </div>
     </ui:define>

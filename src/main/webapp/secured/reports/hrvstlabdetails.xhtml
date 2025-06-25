@@ -19,7 +19,7 @@
         </f:metadata>
         <div class="card">
             
-            <h:form id="labappform" style="text-align: center">
+            <h:form id="labappform" style="text-align: left">
                 <div style="text-align: left;">
                     <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
                     &nbsp;&nbsp;&nbsp;
@@ -29,7 +29,7 @@
                                         fileName="Labourdetails"/>
                     </p:commandButton>
                 </div>
-                <p:dataTable id="labcrop" var="labcrop" value="#{hrvstLabDetails.labcrops}" reflow="true">                    
+                <p:dataTable id="labcrop" var="labcrop" value="#{hrvstLabDetails.labcrops}">                    
                    
                     
                     <p:column headerText="Applied Cost(Rs.)">

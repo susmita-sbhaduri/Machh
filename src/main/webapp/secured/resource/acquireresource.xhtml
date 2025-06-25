@@ -18,64 +18,91 @@
             <f:viewAction action="#{acquireResource.fillResourceValues()}" />
         </f:metadata>
         <div class="card">
-            <h:form id="respayform" style="text-align: center">
-                <h5>#{acquireResource.selectedResName}</h5> <!-- Your dynamic heading variable -->
-               
-                <p:panelGrid columns="2">
-
-                    <h:outputLabel for="shopid" value="Shops where found(select one)" />
-                    <p:selectOneRadio id="shopid" value="#{acquireResource.selectedShop}"
-                                      layout="pageDirection">
-                        <f:selectItems value="#{acquireResource.shopForSelectedRes}" 
-                                       var="shop"
-                                       itemLabel="#{shop.shopName}" itemValue="#{shop.shopId}"/>
-                        <p:ajax event="change" listener="#{acquireResource.onShopResSelect}" 
-                                update="@form" process="@this"/>
-                    </p:selectOneRadio>
-                    
-                    <h:outputLabel value="Previous Rates(Rs.)" />
-                    <p:dataTable var="ratedate" value="#{acquireResource.selectedShopResLst}" style="font-size: 10px;">
-                        <p:column headerText="Rates">
-                            #{ratedate.rate} 
-                        </p:column>
-                        <p:column headerText="Date">
-                            #{ratedate.resRateDate}
-                        </p:column>
-                    </p:dataTable>
-  
-                    <h:outputLabel for="rate" value="Rate" />
-                    <p:inputText id="rate" value="#{acquireResource.rate}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    <h:outputLabel for="unit" value="per Unit" />
-                    <h:inputText id="unit" value="#{acquireResource.unit}" readonly="true"/>
-                    <h:outputLabel for="pdate" value="Purchase Date" />
-                    <p:datePicker id="pdate" value="#{acquireResource.purchaseDt}" pattern="yyyy-MM-dd"/>
-                    <p:outputLabel for="amount" value="Amount" />
-                    <p:inputText id="amount" value="#{acquireResource.amount}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    <h:outputLabel for="comments" value="Comments" />
-                    <h:inputText id="comments" value="#{acquireResource.comments}"/>
-
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Review First"
-                                     action="#{acquireResource.goToReviewRes()}" 
-                                     update="growl saveBtn" > 
-                    </p:commandButton>
-
-                    <p:commandButton id="saveBtn"
-                                     styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{acquireResource.goToSaveRes()}" 
-                                     disabled="#{acquireResource.saveDisabled}"> 
-                    </p:commandButton>
-
-                </p:panelGrid>
+            <h:form id="respayform" style="text-align: left">
+                <h5 style="text-align: center;">
+                    #{acquireResource.selectedResName}
+                </h5> <!-- Your dynamic heading variable -->
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="shopid" value="Shops where found(select one)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:selectOneRadio id="shopid" value="#{acquireResource.selectedShop}"
+                                          layout="pageDirection">
+                            <f:selectItems value="#{acquireResource.shopForSelectedRes}" 
+                                           var="shop"
+                                           itemLabel="#{shop.shopName}" itemValue="#{shop.shopId}"/>
+                            <p:ajax event="change" listener="#{acquireResource.onShopResSelect}" 
+                                    update="@form" process="@this"/>
+                        </p:selectOneRadio>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Previous Rates(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:dataTable var="ratedate" value="#{acquireResource.selectedShopResLst}" style="font-size: 10px;">
+                            <p:column headerText="Rates">
+                                #{ratedate.rate} 
+                            </p:column>
+                            <p:column headerText="Date">
+                                #{ratedate.resRateDate}
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="rate" value="Rate" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="rate" value="#{acquireResource.rate}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="unit" value="per Unit" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="unit" value="#{acquireResource.unit}" readonly="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="pdate" value="Purchase Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="pdate" value="#{acquireResource.purchaseDt}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="amount" value="Amount" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="amount" value="#{acquireResource.amount}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="comments" value="Comments" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="comments" value="#{acquireResource.comments}"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Review First"
+                                         action="#{acquireResource.goToReviewRes()}" 
+                                         update="growl saveBtn" > 
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton id="saveBtn"
+                                         styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{acquireResource.goToSaveRes()}" 
+                                         disabled="#{acquireResource.saveDisabled}"> 
+                        </p:commandButton>
+                    </div>
+                </div>    
             </h:form>
         </div>
     </ui:define>    

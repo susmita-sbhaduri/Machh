@@ -16,7 +16,7 @@
         </f:metadata>
         <div class="card">
             
-            <h:form id="emploans" style="text-align: center">
+            <h:form id="emploans" style="text-align: left">
                 <div style="text-align: left;">
                     <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
                     &nbsp;&nbsp;&nbsp;
@@ -26,7 +26,7 @@
                                         fileName="Emploans"/>
                     </p:commandButton>
                 </div>
-                <p:dataTable id="loanexp" var="loanexp" value="#{empLoanDetails.loanrecords}" reflow="true">                    
+                <p:dataTable id="loanexp" var="loanexp" value="#{empLoanDetails.loanrecords}">                    
                    
                     <p:column headerText="Employee Name">
                         <h:outputText value="#{loanexp.empid}" />

@@ -9,7 +9,7 @@
 
    <ui:define name="content">
         <p:growl id="growl" showDetail="true" />
-        <h4>Add New Inventory.</h4>
+        <h4>Add New Resource and Link to Existing Shop.</h4>
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         
         <f:metadata>            
@@ -17,28 +17,47 @@
         </f:metadata>
         
         <div class="card">
-            <h:form id="resaddform" style="text-align: center">
-                <p:panelGrid columns="2">
-                    <h:outputLabel for="resid" value="Resource ID" />
-                    <h:inputText id="resid" value="#{resourceAdd.resid}" readonly="true"/>                                       
-                    <h:outputLabel for="resname" value="Resource Name"/>
-                    <h:inputText id="resname" value="#{resourceAdd.resname}" />
-                    <p:outputLabel for="shopid" value="Shop Names" />
-                    <p:selectOneMenu id="shopid" value="#{resourceAdd.selectedIndex}" >
-                        <f:selectItems value="#{resourceAdd.shoplist}" var="shop" 
-                                       itemValue="#{resourceAdd.shoplist.indexOf(shop)}" 
-                                       itemLabel="#{shop.shopName}" />
-                    </p:selectOneMenu>
-                    
-                    <h:outputLabel for="unit" value="Unit"/>
-                    <h:inputText id="unit" value="#{resourceAdd.unit}" />
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{resourceAdd.goToSaveRes()}" >                        
-                    </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/resource/maintainresource" />
-                </p:panelGrid>
+            <h:form id="resaddform" style="text-align: left">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="resid" value="Resource ID" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="resid" value="#{resourceAdd.resid}" readonly="true"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="resname" value="Resource Name"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="resname" value="#{resourceAdd.resname}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="shopid" value="Shop Names" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:selectOneMenu id="shopid" value="#{resourceAdd.selectedIndex}" >
+                            <f:selectItems value="#{resourceAdd.shoplist}" var="shop" 
+                                           itemValue="#{resourceAdd.shoplist.indexOf(shop)}" 
+                                           itemLabel="#{shop.shopName}" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="unit" value="Unit"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="unit" value="#{resourceAdd.unit}" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{resourceAdd.goToSaveRes()}" >                        
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/resource/maintainresource" />
+                    </div>
+                </div>
             </h:form>
         </div>
     </ui:define>

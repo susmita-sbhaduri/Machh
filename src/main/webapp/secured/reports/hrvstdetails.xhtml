@@ -19,7 +19,7 @@
         </f:metadata>
         <div class="card">
             
-            <h:form id="resappform" style="text-align: center">
+            <h:form id="resappform" style="text-align: left">
                 <div style="text-align: left;">
                     <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
                     &nbsp;&nbsp;&nbsp;
@@ -29,7 +29,7 @@
                                         fileName="Resourcedetails"/>
                     </p:commandButton>
                 </div>
-                <p:dataTable id="rescrop" var="rescrop" value="#{hrvstDetails.rescrops}" reflow="true">                    
+                <p:dataTable id="rescrop" var="rescrop" value="#{hrvstDetails.rescrops}">                    
                    
                     <p:column headerText="Resource Name">
                         <h:outputText value="#{rescrop.resourceName}" />

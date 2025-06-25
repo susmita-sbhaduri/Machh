@@ -19,46 +19,65 @@
         </f:metadata>
 
         <div class="card">
-            <h:form id="emppayform" style="text-align: center">
-                <h5>#{payEmployee.selectedEmpName}</h5>
-                <p:panelGrid columns="2">
-                                                    
-                    <p:outputLabel for="salary" value="Salary(Rs.)" />
-                    <p:inputText id="salary" value="#{payEmployee.salary}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />                                               
-                    </p:inputText>
-                    
-                    <p:outputLabel for="payback" value="Loan Repayment(Rs.)" />
-                    <p:inputText id="payback" 
-                                 value="#{payEmployee.payback}"
-                                 readonly="#{payEmployee.readOnlyCondition}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />                                               
-                    </p:inputText> 
-                    
-                    <p:outputLabel for="bonus" value="Bonus(Rs.)" />
-                    <p:inputText id="bonus" value="#{payEmployee.bonus}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    <p:outputLabel for="leave" value="Leave Allowance(Rs.)" />
-                    <p:inputText id="leave" value="#{payEmployee.leave}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    
-                    <h:outputLabel for="paydate" value="Payment Date" />
-                    <p:datePicker id="paydate" value="#{payEmployee.paydate}" pattern="yyyy-MM-dd"/>
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Pay"
-                                     action="#{payEmployee.payEmp()}" >                        
-                    </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/humanresource/maintainemp" />
-                </p:panelGrid>
+            <h:form id="emppayform" style="text-align: left">
+                <h5 style="text-align: center;">#{payEmployee.selectedEmpName}</h5>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="salary" value="Salary(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="salary" value="#{payEmployee.salary}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />                                               
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="payback" value="Loan Repayment(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="payback" 
+                                     value="#{payEmployee.payback}"
+                                     readonly="#{payEmployee.readOnlyCondition}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />                                               
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="bonus" value="Bonus(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="bonus" value="#{payEmployee.bonus}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="leave" value="Leave Allowance(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="leave" value="#{payEmployee.leave}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="paydate" value="Payment Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="paydate" value="#{payEmployee.paydate}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Pay"
+                                         action="#{payEmployee.payEmp()}" >                        
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/humanresource/maintainemp" />
+                    </div>
+                </div>
             </h:form>
         </div>
     </ui:define>
-
 </ui:composition>

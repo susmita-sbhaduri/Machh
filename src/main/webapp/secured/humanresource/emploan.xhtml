@@ -19,34 +19,46 @@
         </f:metadata>
 
         <div class="card">
-            <h:form id="emploanform" style="text-align: center">
-                <h5>#{empLoan.selectedEmpName}</h5>
-                <p:panelGrid columns="2">                                                     
-                    <h:outputLabel for="loan" value="Loan Amount(Rs.)"/>
-                    <p:inputText id="loan" 
-                                 value="#{empLoan.totalLoan}"
-                                 readonly="#{empLoan.readOnlyCondition}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" /> 
-                        <p:ajax event="change"
-                        listener="#{empLoan.calculateOutstanding}"
-                        update="@form" process="@this" />
-                    </p:inputText>
-                                        
-                    <h:outputLabel value="Outstanding Amt(Rs.)" />
-                    <h:outputText value="#{empLoan.outstanding}" style="font-weight:bold;"/>                    
-                    
-                    <h:outputLabel for="sdate" value="Loan Start Date" />
-                    <p:datePicker id="sdate" value="#{empLoan.sdate}" pattern="yyyy-MM-dd" readonly="#{empLoan.readOnlyCondition}"/>
-                    
-                    
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{empLoan.saveDetails()}" >                        
-                    </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/humanresource/maintainemp" />
-                </p:panelGrid>
+            <h:form id="emploanform" style="text-align: left">
+                <h5 style="text-align: center;">#{empLoan.selectedEmpName}</h5>
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="loan" value="Loan Amount(Rs.)"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="loan" 
+                                     value="#{empLoan.totalLoan}"
+                                     readonly="#{empLoan.readOnlyCondition}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" /> 
+                            <p:ajax event="change"
+                                    listener="#{empLoan.calculateOutstanding}"
+                                    update="@form" process="@this" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Outstanding Amt(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{empLoan.outstanding}" style="font-weight:bold;"/> 
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="sdate" value="Loan Start Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="sdate" value="#{empLoan.sdate}" pattern="yyyy-MM-dd" readonly="#{empLoan.readOnlyCondition}"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{empLoan.saveDetails()}" >                        
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/humanresource/maintainemp" />
+                    </div>
+                </div>
             </h:form>
         </div>
     </ui:define>
