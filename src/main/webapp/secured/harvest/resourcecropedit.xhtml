@@ -20,42 +20,80 @@
             <f:viewAction action="#{resourceCropEdit.fillValues()}" />
         </f:metadata>
         <div class="card">
-            <h:form id="resappform" style="text-align: center">
-                <p:panelGrid columns="2">
-                    <h:outputLabel value="Site" />
-                    <h:outputText value="#{resourceCropEdit.site}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Crop Category" />
-                    <h:outputText value="#{resourceCropEdit.cropcat}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Crop Name" />
-                    <h:outputText value="#{resourceCropEdit.cropname}" style="font-weight:bold;"/>
-
-                    <h:outputLabel for="resid" value="Resource Name" />
-                    <h:outputText value="#{resourceCropEdit.resName}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Available Amount" />
-                    <h:outputText value="#{resourceCropEdit.amount}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Unit" />
-                    <h:outputText value="#{resourceCropEdit.unit}" style="font-weight:bold;"/>
-                    <p:outputLabel for="amtapplied" value="Amount to be Applied" />
-                    <p:inputText id="amtapplied" value="#{resourceCropEdit.amtapplied}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-
-                    <h:outputLabel for="adate" value="Apply Date" />
-                    <p:datePicker id="adate" value="#{resourceCropEdit.applyDt}" pattern="yyyy-MM-dd"/>
-
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{resourceCropEdit.goToSave()}" >                                     
-                    </p:commandButton>                                                         
-                    
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Applied Resources"
-                                     action="#{resourceCropEdit.goToAppliedRes()}" >                                     
-                    </p:commandButton>
-                </p:panelGrid>
+            <h:form id="resappform" style="text-align: left">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Site" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.site}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Crop Category" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.cropcat}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Crop Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.cropname}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="resid" value="Resource Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.resName}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="resid" value="Resource Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.resName}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Available Amount" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.amount}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Unit" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.unit}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="amtapplied" value="Amount to be Applied" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="amtapplied" value="#{resourceCropEdit.amtapplied}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="adate" value="Apply Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="adate" value="#{resourceCropEdit.applyDt}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{resourceCropEdit.goToSave()}" >                                     
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Applied Resources"
+                                         action="#{resourceCropEdit.goToAppliedRes()}" >                                     
+                        </p:commandButton>
+                    </div>
+                </div>
             </h:form>
         </div>
     </ui:define>    
