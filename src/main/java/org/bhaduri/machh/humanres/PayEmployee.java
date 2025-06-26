@@ -68,7 +68,7 @@ public class PayEmployee implements Serializable {
         f.getExternalContext().getFlash().setKeepMessages(true);
         int resp;
         if (salary > 0) {
-            resp = createExpenseRec("SALARY", empRec.getSalary());
+            resp = createExpenseRec("SALARY", String.format("%.2f",salary));
             if (resp == SUCCESS) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
                         "Salary added successfully");
@@ -143,35 +143,33 @@ public class PayEmployee implements Serializable {
                     f.addMessage(null, message);
                     return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
                 }
-            }
-        //Based on the repayment amount outstngcalc is calculated.
-            float outstngcalc = Float.parseFloat(empexpUpd.getOutstanding()) - payback;
-            empexpUpd.setOutstanding(String.format("%.2f", outstngcalc));
-        //if outstngcalc = 0 then loan is closed with the repayment date  
-            if(outstngcalc==0){
-                empexpUpd.setEdate(sdf.format(paydate));
-            }
-            int empexpupd = masterDataService.editEmpExpRecord(empexpUpd);
-            if (empexpupd == SUCCESS) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-                        "Loan updated successfully");
-                f.addMessage(null, message);
-            } else {
-                if (empexpupd == DB_NON_EXISTING) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "This expexpense record does not exist.");
-                    f.addMessage(null, message);
+                //Based on the repayment amount outstngcalc is calculated.
+                float outstngcalc = Float.parseFloat(empexpUpd.getOutstanding()) - payback;
+                empexpUpd.setOutstanding(String.format("%.2f", outstngcalc));
+                //if outstngcalc = 0 then loan is closed with the repayment date  
+                if (outstngcalc == 0) {
+                    empexpUpd.setEdate(sdf.format(paydate));
                 }
-                if (empexpupd == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "Failure on updating expexpense record.");
+                int empexpupd = masterDataService.editEmpExpRecord(empexpUpd);
+                if (empexpupd == SUCCESS) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                            "Loan updated successfully");
                     f.addMessage(null, message);
+                } else {
+                    if (empexpupd == DB_NON_EXISTING) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "This expexpense record does not exist.");
+                        f.addMessage(null, message);
+                    }
+                    if (empexpupd == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "Failure on updating expexpense record.");
+                        f.addMessage(null, message);
+                    }
+
                 }
-                
-            }
-           // If there is a payback then PAYBACK record is inserted in empexpense
-            if (payback > 0) {                
-                //Construction of empexpense record
+                // If there is a payback then PAYBACK record is inserted in empexpense
+                 //Construction of empexpense record
                 EmpExpDTO empexpRec = new EmpExpDTO();
                 int empexpid = masterDataService.getMaxEmpExpenseId();
                 if (empexpid == 0 || empexpid == DB_SEVERE) {
@@ -192,19 +190,24 @@ public class PayEmployee implements Serializable {
                             "Payback updated successfully");
                     f.addMessage(null, message);
                 } else {
-                    if (empexpupd == DB_DUPLICATE) {
+                    if (paybackadd == DB_DUPLICATE) {
                         message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
                                 "This expexpense record already exist.");
                         f.addMessage(null, message);
                     }
-                    if (empexpupd == DB_SEVERE) {
+                    if (paybackadd == DB_SEVERE) {
                         message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                                "Failure on updating expexpense record.");
+                                "Failure on adding expexpense record.");
                         f.addMessage(null, message);
                     }
 
                 }
             }
+        
+//           
+//            if (payback > 0) {                
+//               
+//            }
         }
         return redirectUrl;
 

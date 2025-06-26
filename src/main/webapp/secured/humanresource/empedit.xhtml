@@ -20,32 +20,60 @@
 
 
         <div class="card">
-            <h:form id="empeditform" style="text-align: center">
-                <p:panelGrid columns="2">
-                    <h:outputLabel value="Name" />
-                    <h:outputText value="#{editEmp.name}" style="font-weight:bold;"/>                                                        
-                    <h:outputLabel value="Address"/>
-                    <h:outputText value="#{editEmp.address}" style="font-weight:bold;"/>
-                    <h:outputLabel value="Contact No." />
-                    <h:outputText value="#{editEmp.phno}" style="font-weight:bold;"/>                        
-
-                    <p:outputLabel for="empsal" value="Salary(Rs.)" />
-                    <p:inputText id="empsal" value="#{editEmp.salary}">
-                        <f:convertNumber pattern="#0.00" />
-                        <p:keyFilter regEx="/[\d\.]/" />
-                    </p:inputText>
-                    <h:outputLabel for="sdate" value="Start Date" />
-                    <p:datePicker id="sdate" value="#{editEmp.sdate}" pattern="yyyy-MM-dd"/>
-                    <h:outputLabel for="edate" value="End Date" />
-                    <p:datePicker id="edate" value="#{editEmp.edate}" pattern="yyyy-MM-dd"/>
-
-                    <p:commandButton styleClass="blue-button" 
-                                     icon="fa fa-edit" 
-                                     value="Save"
-                                     action="#{editEmp.goToSaveEmp()}" >                        
-                    </p:commandButton>
-                    <p:button icon="pi pi-times" value="Cancel" outcome="/secured/humanresource/maintainemp" />
-                </p:panelGrid>
+            <h:form id="empeditform" style="text-align: left">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{editEmp.name}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Address"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{editEmp.address}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Contact No." />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{editEmp.phno}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="empsal" value="Salary(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="empsal" value="#{editEmp.salary}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Start Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{editEmp.sdate}" style="font-weight:bold;">
+                            <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="edate" value="End Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="edate" value="#{editEmp.edate}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{editEmp.goToSaveEmp()}" >                        
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/humanresource/maintainemp" />
+                    </div>
+                </div>
             </h:form>
         </div>
     </ui:define>

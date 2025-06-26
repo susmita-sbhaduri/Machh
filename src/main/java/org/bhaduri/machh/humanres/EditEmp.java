@@ -60,7 +60,7 @@ public class EditEmp implements Serializable {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-        String redirectUrl = "/secured/humanresource/createemp?faces-redirect=true";
+        String redirectUrl = "/secured/humanresource/maintainemp?faces-redirect=true";
         
         if (salary == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
