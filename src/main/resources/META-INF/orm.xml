@@ -165,7 +165,7 @@
     </named-query>
     <named-query name="Labourcrop.detailsForHarvest">
         <query>SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid 
-            AND l.appldate &gt;= :startdate AND l.appldate &lt;= :enddate
+            AND l.appldate &gt;= :startdate AND l.appldate &lt;= :enddate ORDER BY l.appldate DESC
         </query>
     </named-query>
     <named-query name="Labourcrop.getLabCropId">

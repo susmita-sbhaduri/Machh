@@ -53,13 +53,21 @@ public class HrvstResTotal implements Serializable {
         LabourCropDTO recordtotal = masterDataService.getTotalLabcropReport(harvestId, startDate, endDate);
         labcrops = new ArrayList<>();
         labcrops.add(recordtotal);
-        if (rescrops.isEmpty() || rescrops == null || (recordtotal == null)) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-                    "No applied resource or labour records found.");
-            f.addMessage(null, message);
-            return redirectUrl;
+        if (rescrops.isEmpty() || rescrops == null) {
+            if (recordtotal == null) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                        "No applied resource or labour records found.");
+                f.addMessage(null, message);
+                return redirectUrl;
+            } else {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                        "No applied resources found.");
+                f.addMessage(null, message);
+                return null;
+            }
         } else
-            return null;
+            return null;       
+        
     }
 
     public List<ResourceCropDTO> getRescrops() {
