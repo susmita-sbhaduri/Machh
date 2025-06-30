@@ -11,7 +11,7 @@
                 <span class="pi pi-bars"/>
             </a>
 
-            <span class="topbar-title"><ui:insert name="title"/></span>
+<!--            <span class="topbar-title"><ui:insert name="title"/></span>-->
         </div>
 
         <a id="options-menu-button" href="#">
@@ -26,7 +26,7 @@
             <a href="#">
                 <span class="topbar-item-text">Messages</span>
                 <span class="topbar-icon pi pi-envelope"/>
-                <span class="topbar-badge animated rubberBand">5</span>
+                <span class="topbar-badge animated rubberBand">0</span>
             </a>
             <a href="#">
                 <span class="topbar-item-text">Settings</span>
@@ -34,10 +34,7 @@
             </a>
             <a href="#">                
                 <h:form style="display:inline;">
-                <h:commandLink action="#{loginController.logout()}" >
-                    <span class="topbar-item-text">Logout</span>
-                <span class="topbar-icon pi pi-user"/>
-                </h:commandLink>
+                <p:commandButton value="Logout" icon="pi pi-sign-out" action="#{loginController.logout}" />
             </h:form>
             </a>
         </div>

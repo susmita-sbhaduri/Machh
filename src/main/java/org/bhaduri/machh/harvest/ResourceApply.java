@@ -41,6 +41,9 @@ public class ResourceApply implements Serializable {
     private String unit;
     private float amtapplied;
     private Date applyDt = new Date();
+    private String rescat;
+    private String cropwt;
+    private String cropwtunit;
     private float resCropAppliedCost=0;
     
     public ResourceApply() {
@@ -62,6 +65,15 @@ public class ResourceApply implements Serializable {
                 .getAvailableAmt();
         unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
                 .getUnit();
+        if(masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
+                .getCropwtunit()!=null){
+            rescat = "Crop";
+            cropwt = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
+                    .getCropweight();
+            cropwtunit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
+                    .getCropwtunit();
+            
+        } else rescat = "Other";
     }
     
 //    public String goToSubmitRes() {
@@ -390,6 +402,30 @@ public class ResourceApply implements Serializable {
 
     public void setResCropAppliedCost(float resCropAppliedCost) {
         this.resCropAppliedCost = resCropAppliedCost;
+    }
+
+    public String getRescat() {
+        return rescat;
+    }
+
+    public void setRescat(String rescat) {
+        this.rescat = rescat;
+    }
+
+    public String getCropwt() {
+        return cropwt;
+    }
+
+    public void setCropwt(String cropwt) {
+        this.cropwt = cropwt;
+    }
+
+    public String getCropwtunit() {
+        return cropwtunit;
+    }
+
+    public void setCropwtunit(String cropwtunit) {
+        this.cropwtunit = cropwtunit;
     }
     
         

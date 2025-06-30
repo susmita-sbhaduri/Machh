@@ -43,8 +43,12 @@ public class AcquireResource implements Serializable {
     private ShopResDTO selectedShopRes;
     private float amount;
     private Date purchaseDt = new Date();
+    private String rescat;
+    private float cropwt;
+    private String cropwtunit;
     private String comments;
     private List<ShopResDTO> selectedShopResLst;
+    private boolean cropwtReadonly = true; // default as readonly
 
     public AcquireResource() {
     }
@@ -63,6 +67,12 @@ public class AcquireResource implements Serializable {
                         map -> new ArrayList<>(map.values())
                 ));
         FarmresourceDTO selectedResDto = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes));
+        if(selectedResDto.getCropwtunit()!=null){
+            rescat = "Crop";
+            cropwtunit = selectedResDto.getCropwtunit();
+            cropwtReadonly = false;
+        } else rescat = "Other";
+        
         selectedResName = selectedResDto.getResourceName();
     }
 
@@ -108,6 +118,16 @@ public class AcquireResource implements Serializable {
             f.addMessage("amount", message);
             return null;
         }
+        
+        if(rescat.equals("Crop")){
+            if (cropwt == 0) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                        "Cropweight has to be given.");
+                f.addMessage("cropwt", message);
+                return null;
+            }            
+        }
+        
         float calculatedAmount = rate*amount;
         message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Total cost for "+selectedShopRes.getResourceName()
                 +" for shop "+selectedShopRes.getShopName(),
@@ -190,7 +210,15 @@ public class AcquireResource implements Serializable {
                 selectedShopRes.getResourceId()));
         float amountAcquired = amount + Float.parseFloat(resourceRec.getAvailableAmt());
         resourceRec.setAvailableAmt(String.format("%.2f", amountAcquired));
-
+        if (cropwt > 0) {
+            if(resourceRec.getCropweight()==null)
+                amountAcquired = cropwt + Float.parseFloat("0.00");
+            else
+                amountAcquired = cropwt + Float.parseFloat(resourceRec.getCropweight());
+            resourceRec.setCropweight(String.format("%.2f", amountAcquired));
+        } else resourceRec.setCropweight(null);
+        
+        
         int acqres = masterDataService.addAcquireResource(resAcquireRec);
         if (acqres == SUCCESS) {
             sqlFlag = sqlFlag + 1;
@@ -431,6 +459,38 @@ public class AcquireResource implements Serializable {
 
     public void setSelectedShopResLst(List<ShopResDTO> selectedShopResLst) {
         this.selectedShopResLst = selectedShopResLst;
+    }
+
+    public String getRescat() {
+        return rescat;
+    }
+
+    public void setRescat(String rescat) {
+        this.rescat = rescat;
+    }
+
+    public float getCropwt() {
+        return cropwt;
+    }
+
+    public void setCropwt(float cropwt) {
+        this.cropwt = cropwt;
+    }
+
+    public String getCropwtunit() {
+        return cropwtunit;
+    }
+
+    public void setCropwtunit(String cropwtunit) {
+        this.cropwtunit = cropwtunit;
+    }
+
+    public boolean isCropwtReadonly() {
+        return cropwtReadonly;
+    }
+
+    public void setCropwtReadonly(boolean cropwtReadonly) {
+        this.cropwtReadonly = cropwtReadonly;
     }
 
     

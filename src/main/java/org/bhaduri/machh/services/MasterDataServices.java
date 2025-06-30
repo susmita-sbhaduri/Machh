@@ -518,6 +518,12 @@ public class MasterDataServices {
            record.setResourceName(resrec.getResourcename());
            record.setAvailableAmt(String.format("%.2f",resrec.getAvailableamount().floatValue()));
            record.setUnit(resrec.getUnit());
+           if(resrec.getCropweight()!=null){
+             record.setCropweight(String.format("%.2f", resrec.getCropweight().floatValue()));  
+           }
+           if(resrec.getCropwtunit()!=null){
+               record.setCropwtunit(resrec.getCropwtunit());
+           }
            return record;
         }
         catch (NoResultException e) {
@@ -539,6 +545,12 @@ public class MasterDataServices {
            record.setResourceName(resourcename);
            record.setAvailableAmt(String.format("%.2f",resrec.getAvailableamount().floatValue()));
            record.setUnit(resrec.getUnit());
+           if(resrec.getCropweight()!=null){
+             record.setCropweight(String.format("%.2f", resrec.getCropweight().floatValue()));  
+           }
+           if(resrec.getCropwtunit()!=null){
+               record.setCropwtunit(resrec.getCropwtunit());
+           }
            return record;
         }
         catch (NoResultException e) {
@@ -561,7 +573,13 @@ public class MasterDataServices {
                 record.setResourceId(Integer.toString(resourcelist.get(i).getResourceid()));
                 record.setResourceName(resourcelist.get(i).getResourcename());
                 record.setAvailableAmt(String.format("%.2f",resourcelist.get(i).getAvailableamount().floatValue()));
-                record.setUnit(resourcelist.get(i).getUnit());                         
+                record.setUnit(resourcelist.get(i).getUnit());
+                if (resourcelist.get(i).getCropweight() != null) {
+                    record.setCropweight(String.format("%.2f", resourcelist.get(i).getCropweight().floatValue()));
+                }
+                if (resourcelist.get(i).getCropwtunit() != null) {
+                    record.setCropwtunit(resourcelist.get(i).getCropwtunit());
+                }
                 recordList.add(record);
                 record = new FarmresourceDTO();
             }        
@@ -587,7 +605,13 @@ public class MasterDataServices {
                 record.setResourceId(Integer.toString(resourcelist.get(i).getResourceid()));
                 record.setResourceName(resourcelist.get(i).getResourcename());
                 record.setAvailableAmt(String.format("%.2f",resourcelist.get(i).getAvailableamount().floatValue()));
-                record.setUnit(resourcelist.get(i).getUnit());                         
+                record.setUnit(resourcelist.get(i).getUnit());  
+                if (resourcelist.get(i).getCropweight() != null) {
+                    record.setCropweight(String.format("%.2f", resourcelist.get(i).getCropweight().floatValue()));
+                }
+                if (resourcelist.get(i).getCropwtunit() != null) {
+                    record.setCropwtunit(resourcelist.get(i).getCropwtunit());
+                }
                 recordList.add(record);
                 record = new FarmresourceDTO();
             }        
@@ -626,6 +650,12 @@ public class MasterDataServices {
             recentity.setAvailableamount(BigDecimal.
                     valueOf(Double.parseDouble(res.getAvailableAmt())));
             recentity.setUnit(res.getUnit());
+            if (res.getCropweight() != null) {
+                recentity.setCropweight(BigDecimal.
+                        valueOf(Double.parseDouble(res.getCropweight())));
+            } else 
+                recentity.setCropweight(null);
+            recentity.setCropwtunit(res.getCropwtunit());
             
             resourcedao.create(recentity);
             return SUCCESS;
@@ -649,7 +679,12 @@ public class MasterDataServices {
             recentity.setAvailableamount(BigDecimal.valueOf(Double.parseDouble
             (res.getAvailableAmt())));
             recentity.setUnit(res.getUnit());
-            
+            if (res.getCropweight() != null) {
+                recentity.setCropweight(BigDecimal.
+                        valueOf(Double.parseDouble(res.getCropweight())));
+            } else 
+                recentity.setCropweight(null);
+            recentity.setCropwtunit(res.getCropwtunit());
             resourcedao.edit(recentity);
             return SUCCESS;
         }

@@ -80,6 +80,28 @@
                         </p:inputText>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Resource Category" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{acquireResource.rescat}" style="font-weight:bold;"/> 
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="cropwt" value="Amount(Crop Weight) if applicable" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:inputText id="cropwt" value="#{acquireResource.cropwt}" 
+                                     readonly="#{acquireResource.cropwtReadonly}">
+                            <f:convertNumber pattern="#0.00" />
+                            <p:keyFilter regEx="/[\d\.]/" />
+                        </p:inputText>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Crop Weight Unit" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{acquireResource.cropwtunit}" style="font-weight:bold;"/> 
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputLabel for="comments" value="Comments" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">

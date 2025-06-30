@@ -32,6 +32,9 @@ public class ResourceAdd implements Serializable {
     private List<ShopDTO> shoplist;
     private float rate;
     private String unit;
+    private String rescat;
+    private String unitcrop;
+    private boolean unitcropReadonly = true; // default as readonly
 
     public String fillExistingDetails() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
@@ -55,7 +58,15 @@ public class ResourceAdd implements Serializable {
         }
         else return null;
     }
-    
+    public void onResourceCatChange() {
+        if ("other".equalsIgnoreCase(rescat)) {
+            unitcropReadonly = true;
+            unitcrop = ""; // optionally clear the field
+        } 
+        if ("crop".equalsIgnoreCase(rescat)) {
+            unitcropReadonly = false;
+        } 
+    }
     public String goToSaveRes() throws NamingException {
         String redirectUrl = "/secured/resource/addinventory?faces-redirect=true";
         FacesMessage message = null;
@@ -76,17 +87,20 @@ public class ResourceAdd implements Serializable {
             f.addMessage("shopid", message);
             return redirectUrl;
         }
-//        if (rate == 0) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Resource Rate cannot be 0.",
-//                    "Resource Rate cannot be 0.");
-//            f.addMessage("rate", message);
-//            return redirectUrl;
-//        }
 
         if (unit.isBlank()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unit cannot be empty.",
                     "Unit cannot be empty.");
             f.addMessage("unit", message);
+            return redirectUrl;
+        }
+        
+        
+        
+        if ("crop".equalsIgnoreCase(rescat) && unitcrop.isEmpty()) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                    "Unit for crop is mandatory.");
+            f.addMessage("unitcrop", message);
             return redirectUrl;
         }
         
@@ -117,6 +131,12 @@ public class ResourceAdd implements Serializable {
             resAddBean.setResourceName(resname);
             resAddBean.setUnit(unit);
             resAddBean.setAvailableAmt(String.format("%.2f", 0.00));
+            if ("crop".equalsIgnoreCase(rescat) && !unitcrop.isEmpty()){
+                resAddBean.setCropwtunit(unitcrop);
+            }
+            if ("other".equalsIgnoreCase(rescat)){
+                resAddBean.setCropwtunit(null);
+            }
             resres = masterDataService.addResource(resAddBean);
             if (resres != SUCCESS) {
                 if (resres == DB_DUPLICATE) {
@@ -259,6 +279,30 @@ public class ResourceAdd implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getRescat() {
+        return rescat;
+    }
+
+    public void setRescat(String rescat) {
+        this.rescat = rescat;
+    }
+
+    public String getUnitcrop() {
+        return unitcrop;
+    }
+
+    public void setUnitcrop(String unitcrop) {
+        this.unitcrop = unitcrop;
+    }
+
+    public boolean isUnitcropReadonly() {
+        return unitcropReadonly;
+    }
+
+    public void setUnitcropReadonly(boolean unitcropReadonly) {
+        this.unitcropReadonly = unitcropReadonly;
     }
     
 }

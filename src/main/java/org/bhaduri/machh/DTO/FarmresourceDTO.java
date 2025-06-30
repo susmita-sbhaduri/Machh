@@ -15,6 +15,8 @@ public class FarmresourceDTO implements Serializable {
     private String resourceName;
     private String availableAmt;
     private String unit;
+    private String cropweight;
+    private String cropwtunit;
 
     public String getResourceId() {
         return resourceId;
@@ -46,6 +48,22 @@ public class FarmresourceDTO implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getCropweight() {
+        return cropweight;
+    }
+
+    public void setCropweight(String cropweight) {
+        this.cropweight = cropweight;
+    }
+
+    public String getCropwtunit() {
+        return cropwtunit;
+    }
+
+    public void setCropwtunit(String cropwtunit) {
+        this.cropwtunit = cropwtunit;
     }
     
 }

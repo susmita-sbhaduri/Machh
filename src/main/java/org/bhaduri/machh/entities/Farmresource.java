@@ -29,7 +29,9 @@ import java.math.BigDecimal;
     @NamedQuery(name = "Farmresource.findByResourceid", query = "SELECT f FROM Farmresource f WHERE f.resourceid = :resourceid"),
     @NamedQuery(name = "Farmresource.findByResourcename", query = "SELECT f FROM Farmresource f WHERE f.resourcename = :resourcename"),
     @NamedQuery(name = "Farmresource.findByAvailableamount", query = "SELECT f FROM Farmresource f WHERE f.availableamount = :availableamount"),
-    @NamedQuery(name = "Farmresource.findByUnit", query = "SELECT f FROM Farmresource f WHERE f.unit = :unit")})
+    @NamedQuery(name = "Farmresource.findByUnit", query = "SELECT f FROM Farmresource f WHERE f.unit = :unit"),
+    @NamedQuery(name = "Farmresource.findByCropweight", query = "SELECT f FROM Farmresource f WHERE f.cropweight = :cropweight"),
+    @NamedQuery(name = "Farmresource.findByCropwtunit", query = "SELECT f FROM Farmresource f WHERE f.cropwtunit = :cropwtunit")})
 public class Farmresource implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,6 +55,11 @@ public class Farmresource implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "unit")
     private String unit;
+    @Column(name = "cropweight")
+    private BigDecimal cropweight;
+    @Size(max = 45)
+    @Column(name = "cropwtunit")
+    private String cropwtunit;
 
     public Farmresource() {
     }
@@ -98,6 +105,22 @@ public class Farmresource implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public BigDecimal getCropweight() {
+        return cropweight;
+    }
+
+    public void setCropweight(BigDecimal cropweight) {
+        this.cropweight = cropweight;
+    }
+
+    public String getCropwtunit() {
+        return cropwtunit;
+    }
+
+    public void setCropwtunit(String cropwtunit) {
+        this.cropwtunit = cropwtunit;
     }
 
     @Override
