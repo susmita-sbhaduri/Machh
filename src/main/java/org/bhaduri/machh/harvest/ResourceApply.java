@@ -73,7 +73,11 @@ public class ResourceApply implements Serializable {
             cropwtunit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
                     .getCropwtunit();
             
-        } else rescat = "Other";
+        } else{ 
+            rescat = "Other";
+            cropwt = "";
+            cropwtunit = "";
+        }
     }
     
 //    public String goToSubmitRes() {

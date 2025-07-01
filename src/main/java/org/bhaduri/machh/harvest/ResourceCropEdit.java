@@ -40,16 +40,15 @@ public class ResourceCropEdit implements Serializable {
     private String site;
     private String cropcat;
     private String cropname;
-//    private List<FarmresourceDTO> existingresources;
     private String amount;
     private String unit;
     private float amtapplied;
-//    private float amtappliedprev;
     private Date applyDt;
-//    private Date applyDtPrev;
+    private String rescat;
+    private String cropwt;
+    private String cropwtunit;
     private FarmresourceDTO farmresPrev;
     private ResourceCropDTO rescropPrev;
-//    private float resCropAppliedCostPrev;
     private float resCropAppliedCost=0;
 
     public ResourceCropEdit() {
@@ -72,7 +71,19 @@ public class ResourceCropEdit implements Serializable {
                 getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()));
         amount = farmresPrev.getAvailableAmt();
         unit = farmresPrev.getUnit();
-//        existingresources = masterDataService.getNonzeroResList();
+        if(masterDataService.getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()))
+                .getCropwtunit()!=null){
+            rescat = "Crop";
+            cropwt = masterDataService.getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()))
+                    .getCropweight();
+            cropwtunit = masterDataService.getResourceNameForId(Integer.parseInt(rescropPrev.getResourceId()))
+                    .getCropwtunit();
+            
+        } else{ 
+            rescat = "Other";
+            cropwt = "";
+            cropwtunit = "";
+        }
         
        // for autofill        
         this.amtapplied = Float.parseFloat(rescropPrev.getAppliedAmount());
@@ -509,6 +520,30 @@ public class ResourceCropEdit implements Serializable {
 
     public void setResName(String resName) {
         this.resName = resName;
+    }
+
+    public String getRescat() {
+        return rescat;
+    }
+
+    public void setRescat(String rescat) {
+        this.rescat = rescat;
+    }
+
+    public String getCropwt() {
+        return cropwt;
+    }
+
+    public void setCropwt(String cropwt) {
+        this.cropwt = cropwt;
+    }
+
+    public String getCropwtunit() {
+        return cropwtunit;
+    }
+
+    public void setCropwtunit(String cropwtunit) {
+        this.cropwtunit = cropwtunit;
     }
     
     

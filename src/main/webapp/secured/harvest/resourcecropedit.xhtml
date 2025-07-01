@@ -80,6 +80,24 @@
                         <p:datePicker id="adate" value="#{resourceCropEdit.applyDt}" pattern="yyyy-MM-dd"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Resource Category" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.rescat}" style="font-weight:bold;"/> 
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Amount(Crop Weight) if applicable" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">                        
+                        <h:outputText value="#{resourceCropEdit.cropwt}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Crop Weight Unit" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceCropEdit.cropwtunit}" style="font-weight:bold;"/> 
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Save"

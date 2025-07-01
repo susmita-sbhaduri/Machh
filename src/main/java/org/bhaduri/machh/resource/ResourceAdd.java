@@ -69,6 +69,7 @@ public class ResourceAdd implements Serializable {
     }
     public String goToSaveRes() throws NamingException {
         String redirectUrl = "/secured/resource/addinventory?faces-redirect=true";
+        
         FacesMessage message = null;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
@@ -152,6 +153,7 @@ public class ResourceAdd implements Serializable {
                 return redirectUrl;
             }
         } 
+        
 //        else {
 //            resid = existingreswithName.getResourceId();
 //            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
@@ -170,8 +172,13 @@ public class ResourceAdd implements Serializable {
         resShopUpdBean.setId(String.valueOf(shopresid));
         resShopUpdBean.setShopId(selectedShop.getShopId());
         resShopUpdBean.setShopName(selectedShop.getShopName());
-        resShopUpdBean.setResourceId(resid);
-        resShopUpdBean.setResourceName(resname);
+        if (existingreswithName == null) {
+            resShopUpdBean.setResourceId(resid);
+            resShopUpdBean.setResourceName(resname);
+        } else {
+            resShopUpdBean.setResourceId(existingreswithName.getResourceId());
+            resShopUpdBean.setResourceName(existingreswithName.getResourceName());
+        }
         resShopUpdBean.setRate(String.format("%.2f", 0.00));
         resShopUpdBean.setStockPerRate(String.format("%.2f", 0.00));
         int shopres = masterDataService.addShopResource(resShopUpdBean);

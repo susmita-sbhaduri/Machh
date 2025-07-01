@@ -26,7 +26,14 @@
                     </p:column>
                     <p:column headerText="Crop Name">
                         <h:outputText value="#{harvest.cropName}" />
-                    </p:column>                    
+                    </p:column>   
+                    <p:column>
+                        <p:commandButton icon="pi pi-info-circle"
+                                         value="Details"
+                                         action="#{activeHarvestList.goHarvestDetails()}" >
+                            <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
+                        </p:commandButton>
+                    </p:column>
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
