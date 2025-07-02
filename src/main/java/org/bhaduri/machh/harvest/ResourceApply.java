@@ -37,6 +37,7 @@ public class ResourceApply implements Serializable {
     private String cropcat;
     private String cropname;
     private List<FarmresourceDTO> existingresources;
+    private int selectedIndex;
     private String amount;
     private String unit;
     private float amtapplied;
@@ -61,6 +62,7 @@ public class ResourceApply implements Serializable {
     
     public void onResSelect() throws NamingException {        
         MasterDataServices masterDataService = new MasterDataServices();
+        selectedRes = existingresources.get(selectedIndex).getResourceId();
         amount = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
                 .getAvailableAmt();
         unit = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes))
@@ -430,6 +432,14 @@ public class ResourceApply implements Serializable {
 
     public void setCropwtunit(String cropwtunit) {
         this.cropwtunit = cropwtunit;
+    }
+
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedIndex = selectedIndex;
     }
     
         

@@ -196,7 +196,7 @@ public class MasterDataServices {
                 
                 mysqlDate = harvestlist.get(i).getSowingdt();                    
                 record.setSowingDate(formatter.format(mysqlDate));
-                                             
+                record.setDesc(harvestlist.get(i).getDescription());
                 recordList.add(record);
                 record = new HarvestDTO();
             }        
@@ -239,6 +239,7 @@ public class MasterDataServices {
             } else {
                 record.setHarvestDate("");
             }
+            record.setDesc(harvestrec.getDescription());
             return record;
         } catch (NoResultException e) {
             System.out.println("No harvest record found for the given harvestid.");
@@ -248,6 +249,37 @@ public class MasterDataServices {
             return null;
         }
     }  
+    
+    public int editHarvestRecord(HarvestDTO harvestrec) {        
+        HarvestDAO harvestdao = new HarvestDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Harvest record = new Harvest();
+            record.setHarvestid(Integer.valueOf(harvestrec.getHarvestid()));
+            record.setSiteid(Integer.parseInt(harvestrec.getSiteid()));                      
+            record.setCropid(Integer.parseInt(harvestrec.getCropid()));
+            
+            mysqlDate = formatter.parse(harvestrec.getSowingDate());
+            record.setSowingdt(mysqlDate);
+            if (harvestrec.getHarvestDate() != null) {
+                mysqlDate = formatter.parse(harvestrec.getHarvestDate());
+                record.setHarvestingdt(mysqlDate);
+            } else {
+                record.setHarvestingdt(null);
+            }
+            record.setDescription(harvestrec.getDesc());            
+            harvestdao.edit(record);
+            return SUCCESS;
+        } catch (NoResultException e) {
+            System.out.println("This harvest record to be edited, does not exist ");
+            return DB_NON_EXISTING;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in editHarvestRecord.");
+            return DB_SEVERE;
+        }
+    }
     
     public List<ShopResDTO> getShopResName() {
         ShopResDAO shopresdao = new ShopResDAO(utx, emf);  

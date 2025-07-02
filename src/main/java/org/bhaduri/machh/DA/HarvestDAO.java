@@ -9,14 +9,14 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.UserTransaction;
 import java.util.List;
-import org.bhaduri.machh.JPA.CropJpaController;
+import org.bhaduri.machh.JPA.HarvestJpaController;
 import org.bhaduri.machh.entities.Harvest;
 
 /**
  *
  * @author sb
  */
-public class HarvestDAO extends CropJpaController{
+public class HarvestDAO extends HarvestJpaController{
     
     public HarvestDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);

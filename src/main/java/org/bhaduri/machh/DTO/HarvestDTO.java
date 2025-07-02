@@ -19,6 +19,7 @@ public class HarvestDTO implements Serializable {
     private String cropCategory;
     private String sowingDate;
     private String harvestDate;
+    private String desc;
 
     public String getHarvestid() {
         return harvestid;
@@ -82,6 +83,14 @@ public class HarvestDTO implements Serializable {
 
     public void setCropCategory(String cropCategory) {
         this.cropCategory = cropCategory;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     

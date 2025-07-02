@@ -4,15 +4,21 @@
  */
 package org.bhaduri.machh.harvest;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
 import org.bhaduri.machh.DTO.LabourCropDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.ResourceCropDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -23,15 +29,13 @@ import org.bhaduri.machh.services.MasterDataServices;
 @Named(value = "harvestDetails")
 @ViewScoped
 public class HarvestDetails implements Serializable {
-    private String selectedRes;
+    
     private String selectedHarvest;
     private String site;
     private String cropcat;
     private String cropname;
-    private List<ResourceCropDTO> appliedreslist = new ArrayList<>();
-    private List<ResourceCropDTO> applresourcelist = new ArrayList<>();
-    private List<LabourCropDTO> appliedlablist = new ArrayList<>();
-    private List<ResourceCropDTO> appliedcroplist = new ArrayList<>();
+    private String desc;
+    private HarvestDTO harvestRecord;
     /**
      * Creates a new instance of HarvestDetails
      */
@@ -39,37 +43,60 @@ public class HarvestDetails implements Serializable {
     }
     public void fillValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
-        appliedreslist = masterDataService.getResCropForHarvest(selectedHarvest);
-        int j = 0;
-        ResourceCropDTO record = new ResourceCropDTO();
-        for (int i = 0; i < appliedreslist.size(); i++) {
-            FarmresourceDTO farmres = masterDataService.getResourceNameForId(Integer.parseInt(
-                    appliedreslist.get(i).getResourceId()));
-            if(farmres.getCropwtunit()!=null){
-                record.setResourceName(farmres.getResourceName());
-                record.setAppliedAmount(appliedreslist.get(i).getAppliedAmount());
-                record.setApplicationDt(appliedreslist.get(i).getApplicationDt());
-                appliedcroplist.add(record);                
-            } else  {
-                applresourcelist.add(record);
-            }
-            record = new ResourceCropDTO();
-        }
+//        appliedreslist = masterDataService.getResCropForHarvest(selectedHarvest);        
+//        ResourceCropDTO record = new ResourceCropDTO();
+//        for (int i = 0; i < appliedreslist.size(); i++) {
+//            FarmresourceDTO farmres = masterDataService.getResourceNameForId(Integer.parseInt(
+//                    appliedreslist.get(i).getResourceId()));
+//            if(farmres.getCropwtunit()!=null){
+//                record.setResourceName(farmres.getResourceName());
+//                record.setAppliedAmount(appliedreslist.get(i).getAppliedAmount());
+//                record.setApplicationDt(appliedreslist.get(i).getApplicationDt());
+//                appliedcroplist.add(record);                
+//            } else  {
+//                applresourcelist.add(record);
+//            }
+//            record = new ResourceCropDTO();
+//        }
         
-        HarvestDTO harvestRecord = masterDataService.getHarvestRecForId(selectedHarvest);
+        harvestRecord = masterDataService.getHarvestRecForId(selectedHarvest);
         site = harvestRecord.getSiteName();
         cropcat = harvestRecord.getCropCategory();
         cropname = harvestRecord.getCropName();
     }
-
-    public String getSelectedRes() {
-        return selectedRes;
+    
+    public String saveDesc() throws NamingException {
+        
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        String redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+        harvestRecord.setDesc(desc);
+        
+        MasterDataServices masterDataService = new MasterDataServices();
+        int empeditres = masterDataService.editHarvestRecord(harvestRecord);
+        if (empeditres == SUCCESS) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                    "Harvest description updated successfully");
+            f.addMessage(null, message);
+//            return "/secured/userhome?faces-redirect=true";
+            return redirectUrl;
+        } else {  
+            if (empeditres == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                        Integer.toString(DB_NON_EXISTING));
+                f.addMessage(null, message);
+            } 
+            if (empeditres == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure", 
+                        Integer.toString(DB_SEVERE));
+                f.addMessage(null, message);
+            } 
+//            return "/secured/userhome?faces-redirect=true";
+        }
+        return redirectUrl;
     }
-
-    public void setSelectedRes(String selectedRes) {
-        this.selectedRes = selectedRes;
-    }
-
+    
     public String getSelectedHarvest() {
         return selectedHarvest;
     }
@@ -102,37 +129,15 @@ public class HarvestDetails implements Serializable {
         this.cropname = cropname;
     }
 
-    public List<ResourceCropDTO> getAppliedreslist() {
-        return appliedreslist;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setAppliedreslist(List<ResourceCropDTO> appliedreslist) {
-        this.appliedreslist = appliedreslist;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    public List<ResourceCropDTO> getApplresourcelist() {
-        return applresourcelist;
-    }
-
-    public void setApplresourcelist(List<ResourceCropDTO> applresourcelist) {
-        this.applresourcelist = applresourcelist;
-    }
-
-    public List<LabourCropDTO> getAppliedlablist() {
-        return appliedlablist;
-    }
-
-    public void setAppliedlablist(List<LabourCropDTO> appliedlablist) {
-        this.appliedlablist = appliedlablist;
-    }
-
-    public List<ResourceCropDTO> getAppliedcroplist() {
-        return appliedcroplist;
-    }
-
-    public void setAppliedcroplist(List<ResourceCropDTO> appliedcroplist) {
-        this.appliedcroplist = appliedcroplist;
-    }
+    
     
     
 }

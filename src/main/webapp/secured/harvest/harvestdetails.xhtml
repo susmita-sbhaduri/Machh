@@ -34,23 +34,17 @@
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{harvestDetails.cropname}" style="font-weight:bold;"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel value="Harvested Crops" />
+                        <p:outputLabel for="comments" value="Description" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:dataTable var="farmres" value="#{harvestDetails.appliedcroplist}" style="font-size: 10px;">
-                            <p:column headerText="Crop">
-                                #{farmres.resourceName} 
-                            </p:column>
-                            <p:column headerText="Applied Count">
-                                #{farmres.appliedAmount}
-                            </p:column>
-                            <p:column headerText="Date(app.)">
-                                #{farmres.applicationDt}
-                            </p:column>
-                        </p:dataTable>
+                        <p:inputText id="comments" value="#{harvestDetails.desc}"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:button icon="pi pi-times" value="Go back" outcome="/secured/userhome" />
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{harvestDetails.saveDesc()}" >                                     
+                        </p:commandButton>
                     </div>
                 </div>
             </h:form>
