@@ -56,7 +56,7 @@
     </named-query>-->
     
     <named-query name="Site.listSite">
-        <query>SELECT s.id FROM Site s</query>
+        <query>SELECT s FROM Site s</query>
     </named-query>
     <named-query name="Site.siteNameForId">
         <query>SELECT s FROM Site s WHERE s.id = :id</query>
@@ -73,6 +73,10 @@
     <named-query name="Harvest.harvestPerId">
         <query>SELECT h FROM Harvest h WHERE h.harvestid = :harvestid</query>
     </named-query>
+    <named-query name="Harvest.getMaxId">
+        <query>SELECT MAX(h.harvestid) FROM Harvest h</query>
+    </named-query>
+    
     <named-query name="Shopresource.shopResList">
         <query>SELECT s FROM Shopresource s</query>
     </named-query>

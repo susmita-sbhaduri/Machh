@@ -63,6 +63,7 @@ public class HarvestDetails implements Serializable {
         site = harvestRecord.getSiteName();
         cropcat = harvestRecord.getCropCategory();
         cropname = harvestRecord.getCropName();
+        desc = harvestRecord.getDesc();
     }
     
     public String saveDesc() throws NamingException {

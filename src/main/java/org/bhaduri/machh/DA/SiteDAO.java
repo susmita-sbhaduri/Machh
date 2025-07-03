@@ -21,10 +21,10 @@ public class SiteDAO extends SiteJpaController{
         super(utx, emf);
     }
         
-    public List<String> listSite() {
+    public List<Site> listSite() {
         EntityManager em = getEntityManager();
-        TypedQuery<String> query = em.createNamedQuery("Site.listSite", String.class);
-        List<String> listofsite = query.getResultList();
+        TypedQuery<Site> query = em.createNamedQuery("Site.listSite", Site.class);
+        List<Site> listofsite = query.getResultList();
         return listofsite;
     }
     

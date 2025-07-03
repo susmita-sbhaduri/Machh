@@ -36,4 +36,10 @@ public class HarvestDAO extends HarvestJpaController{
         Harvest rec = query.getSingleResult();
         return rec;
     }
+    
+    public int getMaxId() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Integer> query = em.createNamedQuery("Harvest.getMaxId", Integer.class);        
+        return query.getSingleResult();
+    }
 }

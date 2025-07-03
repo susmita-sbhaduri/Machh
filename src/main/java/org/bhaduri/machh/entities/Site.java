@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 
 /**
  *
@@ -49,11 +49,10 @@ public class Site implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "sitetype")
     private String sitetype;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "size")
-    private BigInteger size;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
+    private BigDecimal size;
+    @Size(max = 45)
     @Column(name = "unit")
     private String unit;
 
@@ -64,11 +63,10 @@ public class Site implements Serializable {
         this.id = id;
     }
 
-    public Site(Integer id, String sitename, String sitetype, String unit) {
+    public Site(Integer id, String sitename, String sitetype) {
         this.id = id;
         this.sitename = sitename;
         this.sitetype = sitetype;
-        this.unit = unit;
     }
 
     public Integer getId() {
@@ -95,11 +93,11 @@ public class Site implements Serializable {
         this.sitetype = sitetype;
     }
 
-    public BigInteger getSize() {
+    public BigDecimal getSize() {
         return size;
     }
 
-    public void setSize(BigInteger size) {
+    public void setSize(BigDecimal size) {
         this.size = size;
     }
 
