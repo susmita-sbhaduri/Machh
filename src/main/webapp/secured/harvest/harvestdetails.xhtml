@@ -19,7 +19,7 @@
             <f:viewAction action="#{harvestDetails.fillValues()}" />
         </f:metadata>
         <div class="card">
-            <h:form id="resappform" style="text-align: left">
+            <h:form id="reseditform" style="text-align: left">
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Site Name" />
                     </div>
@@ -32,6 +32,18 @@
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Crop Name" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{harvestDetails.cropname}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="sdate" value="Sowing Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="sdate" value="#{harvestDetails.sdate}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="hdate" value="Harvesting Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="hdate" value="#{harvestDetails.hdate}" pattern="yyyy-MM-dd"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:outputLabel for="desc" value="Description" />

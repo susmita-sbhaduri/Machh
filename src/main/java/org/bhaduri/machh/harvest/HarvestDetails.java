@@ -9,8 +9,10 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
@@ -34,6 +36,8 @@ public class HarvestDetails implements Serializable {
     private String site;
     private String cropcat;
     private String cropname;
+    private Date sdate;
+    private Date hdate;
     private String desc;
     private HarvestDTO harvestRecord;
     /**
@@ -41,7 +45,7 @@ public class HarvestDetails implements Serializable {
      */
     public HarvestDetails() {
     }
-    public void fillValues() throws NamingException {
+    public void fillValues() throws NamingException, ParseException {
         MasterDataServices masterDataService = new MasterDataServices();
 //        appliedreslist = masterDataService.getResCropForHarvest(selectedHarvest);        
 //        ResourceCropDTO record = new ResourceCropDTO();
@@ -58,11 +62,19 @@ public class HarvestDetails implements Serializable {
 //            }
 //            record = new ResourceCropDTO();
 //        }
-        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         harvestRecord = masterDataService.getHarvestRecForId(selectedHarvest);
         site = harvestRecord.getSiteName();
         cropcat = harvestRecord.getCropCategory();
         cropname = harvestRecord.getCropName();
+        
+        sdate = sdf.parse(harvestRecord.getSowingDate());
+        if (harvestRecord.getHarvestDate() != null) {
+            hdate = sdf.parse(harvestRecord.getHarvestDate());
+        } else {
+            hdate = null;
+        }
+        
         desc = harvestRecord.getDesc();
     }
     
@@ -136,6 +148,30 @@ public class HarvestDetails implements Serializable {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public Date getSdate() {
+        return sdate;
+    }
+
+    public void setSdate(Date sdate) {
+        this.sdate = sdate;
+    }
+
+    public Date getHdate() {
+        return hdate;
+    }
+
+    public void setHdate(Date hdate) {
+        this.hdate = hdate;
+    }
+
+    public HarvestDTO getHarvestRecord() {
+        return harvestRecord;
+    }
+
+    public void setHarvestRecord(HarvestDTO harvestRecord) {
+        this.harvestRecord = harvestRecord;
     }
 
     

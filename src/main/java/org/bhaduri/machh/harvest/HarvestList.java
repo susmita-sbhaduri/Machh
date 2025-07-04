@@ -18,17 +18,16 @@ import org.bhaduri.machh.services.MasterDataServices;
  *
  * @author sb
  */
-@Named(value = "activeHarvestList")
+@Named(value = "harvestList")
 @ViewScoped
-public class ActiveHarvestList implements Serializable {
-
+public class HarvestList implements Serializable {
     private HarvestDTO selectedHarvest;
     List<HarvestDTO> harvests;
     
-    public ActiveHarvestList() {
+    public HarvestList() {
     }
-
-    public String fillHarvestValues() throws NamingException {
+    
+    public String fillValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         harvests = masterDataService.getActiveHarvestList();
         String redirectUrl = "/secured/userhome?faces-redirect=true";
@@ -44,29 +43,8 @@ public class ActiveHarvestList implements Serializable {
         } else 
             return null;        
     }
-    
-    public String goApplyResource(){
-        String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest.getHarvestid();
-        return redirectUrl;
-    }
-    
-//    public String goHarvestDetails(){
-//        String redirectUrl = "/secured/harvest/harvestdetails?faces-redirect=true&selectedHarvest=" + selectedHarvest.getHarvestid();
-//        return redirectUrl;
-//    }
-    
-    public String goReviewResource(){
-        String redirectUrl = "/secured/harvest/appliedresperharvest?faces-redirect=true&appliedHarvest=" + selectedHarvest.getHarvestid();
-        return redirectUrl;
-    }
-    
-    public String goApplyLabour(){
-        String redirectUrl = "/secured/harvest/laborapply?faces-redirect=true&selectedHarvest=" + selectedHarvest.getHarvestid();
-        return redirectUrl;
-    }
-    
-    public String goReviewLabour(){
-        String redirectUrl = "/secured/harvest/appliedlabperharvest?faces-redirect=true&appliedHarvest=" + selectedHarvest.getHarvestid();
+    public String goHarvestDetails(){
+        String redirectUrl = "/secured/harvest/harvestdetails?faces-redirect=true&selectedHarvest=" + selectedHarvest.getHarvestid();
         return redirectUrl;
     }
 
@@ -76,7 +54,7 @@ public class ActiveHarvestList implements Serializable {
 
     public void setSelectedHarvest(HarvestDTO selectedHarvest) {
         this.selectedHarvest = selectedHarvest;
-    }   
+    }
 
     public List<HarvestDTO> getHarvests() {
         return harvests;
@@ -85,6 +63,5 @@ public class ActiveHarvestList implements Serializable {
     public void setHarvests(List<HarvestDTO> harvests) {
         this.harvests = harvests;
     }
-    
     
 }
