@@ -29,7 +29,8 @@
                 <p:dataTable id="resacq" var="resacq" value="#{resAcqDetails.resacqs}">                   
 
                     <p:column headerText="Resource Name" >
-                        <h:outputText value="#{resacq.resName}" />
+                        <h:outputText value="#{resacq.resName}" 
+                                      style="#{resacq.resName eq 'Total' ? 'font-weight:bold;' : ''}"/>
                     </p:column>
                     <p:column headerText="Resource Acq. Date">
                         <h:outputText value="#{resacq.acqDt}" />

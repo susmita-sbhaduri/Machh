@@ -175,6 +175,9 @@
     <named-query name="Labourcrop.getLabCropId">
         <query>SELECT l FROM Labourcrop l WHERE l.applicationid = :applicationid</query>
     </named-query>
+    <named-query name="Taskplan.activeList">
+        <query>SELECT t FROM Taskplan t WHERE t.taskdate = :tdate</query>
+    </named-query>
     <named-native-query 
         name="Resourcecrop.sumByResId" 
         result-set-mapping="RescropSummaryMapping">

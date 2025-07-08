@@ -30,6 +30,7 @@ import org.bhaduri.machh.DA.ShopDAO;
 import org.bhaduri.machh.DA.ShopResCropDAO;
 import org.bhaduri.machh.DA.ShopResDAO;
 import org.bhaduri.machh.DA.SiteDAO;
+import org.bhaduri.machh.DA.TaskplanDAO;
 
 
 
@@ -54,6 +55,7 @@ import org.bhaduri.machh.DTO.ShopDTO;
 import org.bhaduri.machh.DTO.ShopResCropDTO;
 import org.bhaduri.machh.DTO.ShopResDTO;
 import org.bhaduri.machh.DTO.SiteDTO;
+import org.bhaduri.machh.DTO.TaskPlanDTO;
 import org.bhaduri.machh.entities.Users;
 //import org.bhaduri.machh.UserAuthentication;
 import org.bhaduri.machh.DTO.UsersDTO;
@@ -73,6 +75,7 @@ import org.bhaduri.machh.entities.Labourcrop;
 import org.bhaduri.machh.entities.Resourceaquire;
 import org.bhaduri.machh.entities.Resourcecrop;
 import org.bhaduri.machh.entities.Shoprescrop;
+import org.bhaduri.machh.entities.Taskplan;
 
 public class MasterDataServices {
     private final EntityManagerFactory emf;
@@ -2326,6 +2329,46 @@ public class MasterDataServices {
         catch (Exception exception) {
             System.out.println(exception + " has occurred in editEmpExpRecord.");
             return DB_SEVERE;
+        }
+    }
+    
+    
+    public List<TaskPlanDTO> getTaskPlanListForDate(Date plandate) {
+        TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);  
+        List<TaskPlanDTO> recordList = new ArrayList<>();
+        TaskPlanDTO record = new TaskPlanDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Taskplan> taskplanlist = taskplandao.getListForDate(plandate);
+            for (int i = 0; i < taskplanlist.size(); i++) {
+                record.setHarvestid(String.valueOf(harvestlist.get(i).getHarvestid()));
+                record.setSiteid(String.valueOf(harvestlist.get(i).getSiteid()));
+                record.setSiteName(getSiteNameForId(String.valueOf(harvestlist.get(i).getSiteid()))
+                        .getSiteName());
+                
+                record.setCropid(String.valueOf(harvestlist.get(i).getCropid()));
+                record.setCropName(getCropPerPk(String.valueOf(harvestlist.get(i).getCropid()))
+                        .getCropName());
+                record.setCropCategory(getCropPerPk(String.valueOf(harvestlist.get(i).getCropid()))
+                        .getCropCategory());
+                
+                mysqlDate = harvestlist.get(i).getSowingdt();                    
+                record.setSowingDate(formatter.format(mysqlDate));
+                record.setDesc(harvestlist.get(i).getDescription());
+                recordList.add(record);
+                record = new HarvestDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crops are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getActiveHarvestList.");
+            return null;
         }
     }
 // **********************commented   
