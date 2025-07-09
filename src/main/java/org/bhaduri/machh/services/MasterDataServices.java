@@ -2332,7 +2332,20 @@ public class MasterDataServices {
         }
     }
     
-    
+    public int getMaxTaskplanId(){
+        TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);
+        try {
+            return taskplandao.getMaxId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in resourcecrop table");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getMaxIdForResCrop().");
+            return DB_SEVERE;
+        }
+    }
     public List<TaskPlanDTO> getTaskPlanListForDate(Date plandate) {
         TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);  
         List<TaskPlanDTO> recordList = new ArrayList<>();
@@ -2343,32 +2356,75 @@ public class MasterDataServices {
         try {  
             List<Taskplan> taskplanlist = taskplandao.getListForDate(plandate);
             for (int i = 0; i < taskplanlist.size(); i++) {
-                record.setHarvestid(String.valueOf(harvestlist.get(i).getHarvestid()));
-                record.setSiteid(String.valueOf(harvestlist.get(i).getSiteid()));
-                record.setSiteName(getSiteNameForId(String.valueOf(harvestlist.get(i).getSiteid()))
-                        .getSiteName());
+                record.setTaskId(taskplanlist.get(i).toString());
+                record.setTaskType(taskplanlist.get(i).getTasktype());
+                mysqlDate = taskplanlist.get(i).getTaskdate();                    
+                record.setTaskDt(formatter.format(mysqlDate));
+                record.setTaskName(taskplanlist.get(i).getTaskname());
+                record.setHarvestId(String.valueOf(taskplanlist.get(i).getHasvestid()));
+                record.setHarvestDto(getHarvestRecForId(String.valueOf(taskplanlist.get(i).getHasvestid())));
+                if (taskplanlist.get(i).getResourceid() == null)
+                    record.setResourceId(null);
+                else
+                    record.setResourceId(String.valueOf(taskplanlist.get(i).getResourceid()));
                 
-                record.setCropid(String.valueOf(harvestlist.get(i).getCropid()));
-                record.setCropName(getCropPerPk(String.valueOf(harvestlist.get(i).getCropid()))
-                        .getCropName());
-                record.setCropCategory(getCropPerPk(String.valueOf(harvestlist.get(i).getCropid()))
-                        .getCropCategory());
+                record.setAppliedAmtCost(String.format("%.2f", taskplanlist.get(i).getAppamtcost()));
                 
-                mysqlDate = harvestlist.get(i).getSowingdt();                    
-                record.setSowingDate(formatter.format(mysqlDate));
-                record.setDesc(harvestlist.get(i).getDescription());
+                if (taskplanlist.get(i).getAppliedamt() == null)
+                    record.setAppliedAmount(null);
+                else
+                    record.setAppliedAmount(String.format("%.2f", taskplanlist.get(i).getAppliedamt()));
+                
                 recordList.add(record);
-                record = new HarvestDTO();
+                record = new TaskPlanDTO();
             }        
             return recordList;
         }
         catch (NoResultException e) {
-            System.out.println("No crops are found");            
+            System.out.println("No task is planned for this date.");            
             return null;
         }
         catch (Exception exception) {
-            System.out.println(exception + " has occurred in getActiveHarvestList.");
+            System.out.println(exception + " has occurred in getTaskPlanListForDate.");
             return null;
+        }
+    }
+    public int addTaskplanRecord(TaskPlanDTO taskrec) {        
+        TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Taskplan record = new Taskplan();
+            record.setId(Integer.valueOf(taskrec.getTaskId()));
+            record.setTasktype(taskrec.getTaskType());
+            record.setTaskname(taskrec.getTaskName());
+            record.setHasvestid(Integer.parseInt(taskrec.getHarvestId()));
+            if(taskrec.getResourceId()==null){
+               record.setResourceid(null);
+            } else record.setResourceid(Integer.parseInt(taskrec.getResourceId()));
+             if(taskrec.getAppliedAmount()==null){
+               record.setAppliedamt(null);
+            } else record.setAppliedamt(BigDecimal.valueOf(Double.parseDouble(taskrec
+                    .getAppliedAmount())));
+             
+            if(taskrec.getAppliedAmtCost()==null){
+               record.setAppamtcost(null);
+            } else record.setAppamtcost(BigDecimal.valueOf(Double.parseDouble(taskrec
+                    .getAppliedAmtCost())));
+            
+            mysqlDate = formatter.parse(taskrec.getTaskDt());
+            record.setTaskdate(mysqlDate);       
+            taskplandao.create(record);
+            return SUCCESS;
+        } 
+        catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this taskplan record");            
+            return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addTaskplanRecord.");
+            return DB_SEVERE;
         }
     }
 // **********************commented   

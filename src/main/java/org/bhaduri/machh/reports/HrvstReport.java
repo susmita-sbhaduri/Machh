@@ -24,6 +24,7 @@ import org.bhaduri.machh.services.MasterDataServices;
 @ViewScoped
 public class HrvstReport implements Serializable {
     private String selectedHrvst;
+    private int selectedIndexHarvest;
     List<HarvestDTO> activeharvests;
     private Date startDt;
     private Date endDt;
@@ -53,6 +54,7 @@ public class HrvstReport implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        selectedHrvst = activeharvests.get(selectedIndexHarvest).getHarvestid();
         if(startDt==null||endDt==null||selectedHrvst == null || selectedHrvst.trim().isEmpty()){
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                     "All the fields are mandatory");
@@ -71,7 +73,7 @@ public class HrvstReport implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        
+        selectedHrvst = activeharvests.get(selectedIndexHarvest).getHarvestid();
         if(startDt==null||endDt==null||selectedHrvst == null || selectedHrvst.trim().isEmpty()){
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                     "All the fields are mandatory");
@@ -90,7 +92,7 @@ public class HrvstReport implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        
+        selectedHrvst = activeharvests.get(selectedIndexHarvest).getHarvestid();
         if(startDt==null||endDt==null||selectedHrvst == null || selectedHrvst.trim().isEmpty()){
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                     "All the fields are mandatory");
@@ -135,5 +137,14 @@ public class HrvstReport implements Serializable {
     public void setEndDt(Date endDt) {
         this.endDt = endDt;
     }
+
+    public int getSelectedIndexHarvest() {
+        return selectedIndexHarvest;
+    }
+
+    public void setSelectedIndexHarvest(int selectedIndexHarvest) {
+        this.selectedIndexHarvest = selectedIndexHarvest;
+    }
+    
     
 }

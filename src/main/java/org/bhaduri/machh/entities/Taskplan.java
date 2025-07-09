@@ -69,8 +69,6 @@ public class Taskplan implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "appliedamt")
     private BigDecimal appliedamt;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "appamtcost")
     private BigDecimal appamtcost;
 
@@ -81,13 +79,12 @@ public class Taskplan implements Serializable {
         this.id = id;
     }
 
-    public Taskplan(Integer id, String tasktype, Date taskdate, String taskname, int hasvestid, BigDecimal appamtcost) {
+    public Taskplan(Integer id, String tasktype, Date taskdate, String taskname, int hasvestid) {
         this.id = id;
         this.tasktype = tasktype;
         this.taskdate = taskdate;
         this.taskname = taskname;
         this.hasvestid = hasvestid;
-        this.appamtcost = appamtcost;
     }
 
     public Integer getId() {

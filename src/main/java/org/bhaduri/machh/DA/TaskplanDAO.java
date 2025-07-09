@@ -21,8 +21,12 @@ public class TaskplanDAO extends TaskplanJpaController{
      public TaskplanDAO(UserTransaction utx, EntityManagerFactory emf) {
         super(utx, emf);
     }
-     
-     public List<Taskplan> getListForDate(Date dateinput) {
+    public int getMaxId() {
+        EntityManager em = getEntityManager();
+        TypedQuery<Integer> query = em.createNamedQuery("Taskplan.getMaxId", Integer.class);        
+        return query.getSingleResult();
+    } 
+    public List<Taskplan> getListForDate(Date dateinput) {
         EntityManager em = getEntityManager();
         TypedQuery<Taskplan> query = em.createNamedQuery("Taskplan.activeList", Taskplan.class);  
         query.setParameter("tdate", dateinput);

@@ -25,13 +25,14 @@
                         <h:outputLabel for="harvestid" value="Active Harvests" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:selectOneRadio id="harvestid" value="#{hrvstReport.selectedHrvst}"
-                                          layout="pageDirection">
+                        
+                        <p:selectOneMenu id="harvestid" value="#{hrvstReport.selectedIndexHarvest}">
                             <f:selectItems value="#{hrvstReport.activeharvests}" 
                                            var="hrvst"
                                            itemLabel="#{hrvst.siteName}-#{hrvst.cropCategory}-
-                                           #{hrvst.cropName}" itemValue="#{hrvst.harvestid}"/>                        
-                        </p:selectOneRadio>
+                                           #{hrvst.cropName}" 
+                                           itemValue="#{hrvstReport.activeharvests.indexOf(hrvst)}"/>                        
+                        </p:selectOneMenu>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputLabel for="sdate" value="Start Date" />

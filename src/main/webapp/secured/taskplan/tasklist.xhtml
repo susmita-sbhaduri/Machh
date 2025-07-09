@@ -34,12 +34,13 @@
                         <h:outputText value="#{task.taskType}" />
                     </p:column>   
                     <p:column headerText="Harvest name">
-                        <h:outputText value="#{task.harvestDto.cropName}" />
+                        <h:outputText value="#{task.harvestDto.siteName}-#{task.harvestDto.cropCategory}-
+                                      #{task.harvestDto.cropName}" />
                     </p:column>
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
-                                         value="Apply Task"
+                                         value="Apply"
                                          action="#{taskList.goApplyResource()}" >
                             <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />    
                         </p:commandButton>
@@ -47,7 +48,7 @@
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
-                                         value="Edit Task"
+                                         value="Edit"
                                          action="#{taskList.goApplyResource()}" >
                             <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />    
                         </p:commandButton>
@@ -68,7 +69,9 @@
                             <p:selectOneRadio id="tasktype" value="#{taskList.selectedTaskType}"
                                               layout="pageDirection">
                                 <f:selectItem itemLabel="Resource" itemValue="res"/>
-                                <f:selectItem itemLabel="Labour" itemValue="lab"/>                                                   
+                                <f:selectItem itemLabel="Labour" itemValue="lab"/>  
+                                <p:ajax event="change" listener="#{taskList.onTaskTypeSelect}" 
+                                    update="tasklist" process="@this"/>
                             </p:selectOneRadio>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
@@ -78,7 +81,8 @@
                             <p:selectOneMenu id="harvestid" value="#{taskList.selectedIndexHarvest}" >
                                 <f:selectItems value="#{taskList.activeharvests}" 
                                                var="harvest"
-                                               itemLabel="#{harvest.resourceName}" 
+                                               itemLabel="#{harvest.siteName}-#{harvest.cropCategory}-
+                                               #{harvest.cropName}" 
                                                itemValue="#{taskList.activeharvests.indexOf(harvest)}"/>
 
                             </p:selectOneMenu>
@@ -87,27 +91,53 @@
                             <h:outputLabel for="resourceid" value="Available Resources" />
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
-                            <p:selectOneMenu id="resourceid" value="#{taskList.selectedIndexRes}" >
+                            <p:selectOneMenu id="resourceid" 
+                                             value="#{taskList.selectedIndexRes}" 
+                                             disabled="#{taskList.resReadonly}">
                                 <f:selectItems value="#{taskList.availableresources}" 
                                                var="res"
                                                itemLabel="#{res.resourceName}" 
                                                itemValue="#{taskList.availableresources.indexOf(res)}"/>
-
+                                <p:ajax event="change" listener="#{taskList.onResourceSelect}" 
+                                    update="unitPanel" process="@this"/>
                             </p:selectOneMenu>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
-                            <p:outputLabel for="amtapplied" value="Amount to be Applied" />
+                            <p:outputLabel for="amtapplied" value="Resource Amt to be Applied" />
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
-                            <p:inputText id="amtapplied" value="#{taskList.amtapplied}">
+                            <p:inputText id="amtapplied" 
+                                         value="#{taskList.amtapplied}"
+                                         readonly="#{taskList.resReadonly}" >
                                 <f:convertNumber pattern="#0.00" />
                                 <p:keyFilter regEx="/[\d\.]/" />
+                                
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel for="unit" value="Unit" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputPanel id="unitPanel">
+                                <h:outputText id="unit" value="#{taskList.unit}" style="font-weight:bold;"/>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel for="appliedcost" value="Cost to be Applied" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:inputText id="appliedcost" 
+                                         value="#{taskList.appliedcost}"
+                                         readonly="#{taskList.costReadonly}" >
+                                <f:convertNumber pattern="#0.00" />
+                                <p:keyFilter regEx="/[\d\.]/" />
+                                
                             </p:inputText>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <p:commandButton styleClass="blue-button" 
                                              icon="fa fa-edit" 
-                                             value="Proceed"
+                                             value="Save"
                                              action="#{taskList.goToSaveTask()}" >                        
                             </p:commandButton>
                         </div>
