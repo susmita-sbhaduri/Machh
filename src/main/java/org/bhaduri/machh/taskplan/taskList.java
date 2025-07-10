@@ -70,10 +70,14 @@ public class taskList implements Serializable {
         }
     }
 
-    public void goApplyResource() throws NamingException {
-//        System.out.println("No crop categories are found." + selectedShop);
+    public String goApplyResource(){
+        String redirectUrl = "/secured/taskplan/taskedit?faces-redirect=true&selectedTask=" + selectedTask.getTaskId();
+        return redirectUrl;
     }
-
+    public String goEditResource(){
+        String redirectUrl = "/secured/taskplan/taskedit?faces-redirect=true&selectedTask=" + selectedTask.getTaskId();
+        return redirectUrl;
+    }
     public void onTaskTypeSelect() throws NamingException{
 //        System.out.println("No crop categories are found." + selectedShop);
         if (selectedTaskType.equals("lab")) {

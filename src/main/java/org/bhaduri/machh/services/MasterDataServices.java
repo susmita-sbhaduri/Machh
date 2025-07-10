@@ -2356,7 +2356,7 @@ public class MasterDataServices {
         try {  
             List<Taskplan> taskplanlist = taskplandao.getListForDate(plandate);
             for (int i = 0; i < taskplanlist.size(); i++) {
-                record.setTaskId(taskplanlist.get(i).toString());
+                record.setTaskId(taskplanlist.get(i).getId().toString());
                 record.setTaskType(taskplanlist.get(i).getTasktype());
                 mysqlDate = taskplanlist.get(i).getTaskdate();                    
                 record.setTaskDt(formatter.format(mysqlDate));
@@ -2368,7 +2368,10 @@ public class MasterDataServices {
                 else
                     record.setResourceId(String.valueOf(taskplanlist.get(i).getResourceid()));
                 
-                record.setAppliedAmtCost(String.format("%.2f", taskplanlist.get(i).getAppamtcost()));
+                if (taskplanlist.get(i).getAppamtcost() == null)
+                    record.setAppliedAmtCost(null);
+                else
+                    record.setAppliedAmtCost(String.format("%.2f", taskplanlist.get(i).getAppamtcost()));
                 
                 if (taskplanlist.get(i).getAppliedamt() == null)
                     record.setAppliedAmount(null);
@@ -2434,39 +2437,40 @@ public class MasterDataServices {
         Date mysqlDate;
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-        try {  
-            Taskplan taskplanrec = taskplandao.getListForDate(plandate);
-            for (int i = 0; i < taskplanlist.size(); i++) {
-                record.setTaskId(taskplanlist.get(i).toString());
-                record.setTaskType(taskplanlist.get(i).getTasktype());
-                mysqlDate = taskplanlist.get(i).getTaskdate();                    
-                record.setTaskDt(formatter.format(mysqlDate));
-                record.setTaskName(taskplanlist.get(i).getTaskname());
-                record.setHarvestId(String.valueOf(taskplanlist.get(i).getHasvestid()));
-                record.setHarvestDto(getHarvestRecForId(String.valueOf(taskplanlist.get(i).getHasvestid())));
-                if (taskplanlist.get(i).getResourceid() == null)
-                    record.setResourceId(null);
+        try {
+            Taskplan taskplanrec = taskplandao.getTaskplanPerId(Integer.parseInt(id));
+
+            record.setTaskId(taskplanrec.getId().toString());
+            record.setTaskType(taskplanrec.getTasktype());
+            mysqlDate = taskplanrec.getTaskdate();
+            record.setTaskDt(formatter.format(mysqlDate));
+            record.setTaskName(taskplanrec.getTaskname());
+            record.setHarvestId(String.valueOf(taskplanrec.getHasvestid()));
+            record.setHarvestDto(getHarvestRecForId(String.valueOf(taskplanrec.getHasvestid())));
+            if (taskplanrec.getResourceid() == null) {
+                record.setResourceId(null);
+            } else {
+                record.setResourceId(String.valueOf(taskplanrec.getResourceid()));
+            }
+            
+            if (taskplanrec.getAppamtcost() == null)
+                    record.setAppliedAmtCost(null);
                 else
-                    record.setResourceId(String.valueOf(taskplanlist.get(i).getResourceid()));
-                
-                record.setAppliedAmtCost(String.format("%.2f", taskplanlist.get(i).getAppamtcost()));
-                
-                if (taskplanlist.get(i).getAppliedamt() == null)
-                    record.setAppliedAmount(null);
-                else
-                    record.setAppliedAmount(String.format("%.2f", taskplanlist.get(i).getAppliedamt()));
-                
-                recordList.add(record);
-                record = new TaskPlanDTO();
-            }        
-            return recordList;
+                    record.setAppliedAmtCost(String.format("%.2f", taskplanrec.getAppamtcost()));
+            
+            if (taskplanrec.getAppliedamt() == null) {
+                record.setAppliedAmount(null);
+            } else {
+                record.setAppliedAmount(String.format("%.2f", taskplanrec.getAppliedamt()));
+            }
+            return record;
         }
         catch (NoResultException e) {
-            System.out.println("No task is planned for this date.");            
+            System.out.println("No task is found for this id.");            
             return null;
         }
         catch (Exception exception) {
-            System.out.println(exception + " has occurred in getTaskPlanListForDate.");
+            System.out.println(exception + " has occurred in getTaskPlanForId.");
             return null;
         }
     }
