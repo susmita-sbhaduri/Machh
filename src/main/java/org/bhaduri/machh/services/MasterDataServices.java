@@ -2427,6 +2427,49 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
+    
+    public TaskPlanDTO getTaskPlanForId(String id) {
+        TaskplanDAO taskplandao = new TaskplanDAO(utx, emf); 
+        TaskPlanDTO record = new TaskPlanDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            Taskplan taskplanrec = taskplandao.getListForDate(plandate);
+            for (int i = 0; i < taskplanlist.size(); i++) {
+                record.setTaskId(taskplanlist.get(i).toString());
+                record.setTaskType(taskplanlist.get(i).getTasktype());
+                mysqlDate = taskplanlist.get(i).getTaskdate();                    
+                record.setTaskDt(formatter.format(mysqlDate));
+                record.setTaskName(taskplanlist.get(i).getTaskname());
+                record.setHarvestId(String.valueOf(taskplanlist.get(i).getHasvestid()));
+                record.setHarvestDto(getHarvestRecForId(String.valueOf(taskplanlist.get(i).getHasvestid())));
+                if (taskplanlist.get(i).getResourceid() == null)
+                    record.setResourceId(null);
+                else
+                    record.setResourceId(String.valueOf(taskplanlist.get(i).getResourceid()));
+                
+                record.setAppliedAmtCost(String.format("%.2f", taskplanlist.get(i).getAppamtcost()));
+                
+                if (taskplanlist.get(i).getAppliedamt() == null)
+                    record.setAppliedAmount(null);
+                else
+                    record.setAppliedAmount(String.format("%.2f", taskplanlist.get(i).getAppliedamt()));
+                
+                recordList.add(record);
+                record = new TaskPlanDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No task is planned for this date.");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getTaskPlanListForDate.");
+            return null;
+        }
+    }
 // **********************commented   
 //    public List<ShopResDTO> getShopResForResidRate(String resid) {
 //        ShopResDAO shopresdao = new ShopResDAO(utx, emf);  

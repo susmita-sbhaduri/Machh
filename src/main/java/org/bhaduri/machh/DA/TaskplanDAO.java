@@ -11,6 +11,7 @@ import jakarta.transaction.UserTransaction;
 import java.util.Date;
 import java.util.List;
 import org.bhaduri.machh.JPA.TaskplanJpaController;
+import org.bhaduri.machh.entities.Harvest;
 import org.bhaduri.machh.entities.Taskplan;
 
 /**
@@ -33,5 +34,11 @@ public class TaskplanDAO extends TaskplanJpaController{
         List<Taskplan> activecroplist = query.getResultList();
         return activecroplist;
     }
-    
+    public Taskplan getTaskplanPerId(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Taskplan> query = em.createNamedQuery("Taskplan.taskplanPerId", Taskplan.class);  
+        query.setParameter("id", id); 
+        Taskplan rec = query.getSingleResult();
+        return rec;
+    }
 }

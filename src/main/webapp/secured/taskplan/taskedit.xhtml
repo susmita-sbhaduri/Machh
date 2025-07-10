@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content">
+        <h4>Edit Task.</h4>
+        <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        &nbsp;&nbsp;&nbsp;
+        <p:button value="Go back" outcome="/secured/taskplan/tasklist"/>
+        &nbsp;&nbsp;&nbsp;
+
+        <f:metadata>
+            <f:viewParam name="selectedHarvest" value="#{taskEdit.selectedTask}"></f:viewParam>
+            <f:viewAction action="#{taskEdit.fillValues()}" />
+        </f:metadata>
+        <div class="card">
+            <h:form id="taskeditform" style="text-align: left">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Task Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="tdate" value="#{taskEdit.taskDt}" pattern="yyyy-MM-dd"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Task Type" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{taskEdit.taskType}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Task Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{taskEdit.taskName}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel for="harvestid" value="Active Harvests" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
+                            <p:selectOneMenu id="harvestid" value="#{taskEdit.selectedIndexHarvest}" >
+                                <f:selectItems value="#{taskEdit.activeharvests}" 
+                                               var="harvest"
+                                               itemLabel="#{harvest.siteName}-#{harvest.cropCategory}-
+                                               #{harvest.cropName}" 
+                                               itemValue="#{taskEdit.activeharvests.indexOf(harvest)}"/>
+
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel for="resourceid" value="Available Resources" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
+                            <p:selectOneMenu id="resourceid" 
+                                             value="#{taskEdit.selectedIndexRes}" 
+                                             disabled="#{taskEdit.resReadonly}">
+                                <f:selectItems value="#{taskEdit.availableresources}" 
+                                               var="res"
+                                               itemLabel="#{res.resourceName}" 
+                                               itemValue="#{taskEdit.availableresources.indexOf(res)}"/>
+                                <p:ajax event="change" listener="#{taskEdit.onResourceSelect}" 
+                                    update="unitPanel" process="@this"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel for="amtapplied" value="Resource Amt to be Applied" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:inputText id="amtapplied" 
+                                         value="#{taskEdit.amtapplied}"
+                                         readonly="#{taskEdit.resReadonly}" >
+                                <f:convertNumber pattern="#0.00" />
+                                <p:keyFilter regEx="/[\d\.]/" />
+                                
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel for="unit" value="Unit" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputPanel id="unitPanel">
+                                <h:outputText id="unit" value="#{taskEdit.unit}" style="font-weight:bold;"/>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputLabel for="appliedcost" value="Cost to be Applied" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:inputText id="appliedcost" 
+                                         value="#{taskEdit.appliedcost}"
+                                         readonly="#{taskEdit.costReadonly}" >
+                                <f:convertNumber pattern="#0.00" />
+                                <p:keyFilter regEx="/[\d\.]/" />
+                                
+                            </p:inputText>
+                        </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Initial Amount(Crop) if applicable" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">                        
+                        <h:outputText value="#{resourceApply.cropwt}" style="font-weight:bold;"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Crop Amount Unit" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{resourceApply.cropwtunit}" style="font-weight:bold;"/> 
+                    </div>
+                </div>
+                <p:commandButton styleClass="blue-button" 
+                                 icon="fa fa-edit" 
+                                 value="Apply"
+                                 action="#{resourceApply.goToApplyRes()}" >                                     
+                </p:commandButton>
+            </h:form>
+        </div>
+    </ui:define>    
+
+</ui:composition>
+
