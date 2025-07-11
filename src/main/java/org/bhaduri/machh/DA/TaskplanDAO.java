@@ -30,7 +30,7 @@ public class TaskplanDAO extends TaskplanJpaController{
     public List<Taskplan> getListForDate(Date dateinput) {
         EntityManager em = getEntityManager();
         TypedQuery<Taskplan> query = em.createNamedQuery("Taskplan.activeList", Taskplan.class);  
-        query.setParameter("tdate", dateinput);
+        query.setParameter("taskdate", dateinput);
         List<Taskplan> activecroplist = query.getResultList();
         return activecroplist;
     }

@@ -36,7 +36,8 @@ import java.util.Date;
     @NamedQuery(name = "Taskplan.findByHasvestid", query = "SELECT t FROM Taskplan t WHERE t.hasvestid = :hasvestid"),
     @NamedQuery(name = "Taskplan.findByResourceid", query = "SELECT t FROM Taskplan t WHERE t.resourceid = :resourceid"),
     @NamedQuery(name = "Taskplan.findByAppliedamt", query = "SELECT t FROM Taskplan t WHERE t.appliedamt = :appliedamt"),
-    @NamedQuery(name = "Taskplan.findByAppamtcost", query = "SELECT t FROM Taskplan t WHERE t.appamtcost = :appamtcost")})
+    @NamedQuery(name = "Taskplan.findByAppamtcost", query = "SELECT t FROM Taskplan t WHERE t.appamtcost = :appamtcost"),
+    @NamedQuery(name = "Taskplan.findByAppliedflag", query = "SELECT t FROM Taskplan t WHERE t.appliedflag = :appliedflag")})
 public class Taskplan implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,6 +72,9 @@ public class Taskplan implements Serializable {
     private BigDecimal appliedamt;
     @Column(name = "appamtcost")
     private BigDecimal appamtcost;
+    @Size(max = 45)
+    @Column(name = "appliedflag")
+    private String appliedflag;
 
     public Taskplan() {
     }
@@ -149,6 +153,14 @@ public class Taskplan implements Serializable {
 
     public void setAppamtcost(BigDecimal appamtcost) {
         this.appamtcost = appamtcost;
+    }
+
+    public String getAppliedflag() {
+        return appliedflag;
+    }
+
+    public void setAppliedflag(String appliedflag) {
+        this.appliedflag = appliedflag;
     }
 
     @Override

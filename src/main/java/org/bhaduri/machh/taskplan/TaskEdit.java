@@ -4,13 +4,22 @@
  */
 package org.bhaduri.machh.taskplan;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.TaskPlanDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -24,7 +33,7 @@ public class TaskEdit implements Serializable {
     private String selectedTask;
     private String taskName;
     private String taskType;
-    private String taskDt;
+    private Date taskDt;
     private List<FarmresourceDTO> availableresources;
     private int selectedIndexRes;
     private List<HarvestDTO> activeharvests;
@@ -42,10 +51,11 @@ public class TaskEdit implements Serializable {
      */
     public TaskEdit() {
     }
-    public void fillValues() throws NamingException {
+    public void fillValues() throws NamingException, ParseException {
         MasterDataServices masterDataService = new MasterDataServices();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         TaskPlanDTO taskRecord = masterDataService.getTaskPlanForId(selectedTask);
-        taskDt = taskRecord.getTaskDt();
+        taskDt = sdf.parse(taskRecord.getTaskDt());
         taskType = taskRecord.getTaskType();
         taskName = taskRecord.getTaskName();
         
@@ -68,11 +78,13 @@ public class TaskEdit implements Serializable {
         if (taskType.equals("LABHRVST")) {
             resReadonly = true;
             costReadonly = false;
+            taskType = "Labour";
             unit = "Rs.";
         }
         if (taskType.equals("RES")) {
             resReadonly = false;
             costReadonly = true;
+            taskType = "Resource";
 
             unit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                     get(selectedIndexRes).getResourceId())).getUnit();
@@ -127,44 +139,77 @@ public class TaskEdit implements Serializable {
         }
     }
     
-    public void saveTask() throws NamingException {
-//        String redirectUrl = "/secured/harvest/resourceapply?faces-redirect=true&selectedHarvest=" + selectedHarvest;
-//        FacesMessage message;
-//        FacesContext f = FacesContext.getCurrentInstance();
-//        f.getExternalContext().getFlash().setKeepMessages(true);
-//        if (selectedRes == null || selectedRes.trim().isEmpty()) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-//                    "Select one resource.");
-//            f.addMessage("resid", message);
-//            return redirectUrl;
-//        }
-//        if (amtapplied == 0) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-//                    "Apply non-zero amount of resource.");
-//            f.addMessage("amtapplied", message);
-//            return redirectUrl;
-//        } else {
-//            float remainingAmt = Float.parseFloat(amount) - amtapplied;
-//            if (remainingAmt == 0) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-//                        "Strored resource would be finished after this application.");
-//                f.addMessage("amtapplied", message);
-////                return null;
-//            }
-//            if (remainingAmt < 0) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
-//                        "Stored resource is less than applied resource.");
-//                f.addMessage("amtapplied", message);
-//                return redirectUrl;
-////                return null;
-//            }
-//        }
+    public String saveTask() throws NamingException {
+        
+        String redirectUrl = "/secured/taskplan/taskedit?faces-redirect=true&selectedTask=" + selectedTask;
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        Date today = new Date();
+        if (taskDt.before(today)) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                    "Task cannot be added in a past date.");
+            f.addMessage(null, message);
+            return redirectUrl;
+        }
+        
+        if (taskType.equals("Resource") && amtapplied == 0) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                    "Provide non-zero resource amount.");
+            f.addMessage("amtapplied", message);
+            return redirectUrl;
+        }
+        if (taskType.equals("Labour") && appliedcost == 0) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                    "Provide non-zero cost.");
+            f.addMessage("amtapplied", message);
+            return redirectUrl;
+        }
 //        int sqlFlag = 0;
-//        MasterDataServices masterDataService = new MasterDataServices();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        MasterDataServices masterDataService = new MasterDataServices();
+        
 //        
 //        
-//        //resourcecrop record construction
+//        //taskplan record construction
+        TaskPlanDTO taskplanRec = masterDataService.getTaskPlanForId(selectedTask);
+        taskplanRec.setTaskId(selectedTask);
+        taskplanRec.setHarvestId(activeharvests.get(selectedIndexHarvest).getHarvestid());
+        if (taskplanRec.getTaskType().equals("RES")) {
+//            taskplanRec.setTaskType("RES");
+            taskplanRec.setResourceId(availableresources.get(selectedIndexRes).getResourceId());
+            taskplanRec.setAppliedAmount(String.format("%.2f", amtapplied));
+            taskplanRec.setAppliedAmtCost(null);
+        }
+        if (taskplanRec.getTaskType().equals("LABHRVST")) {
+//            taskplanRec.setTaskType("LABHRVST");
+            taskplanRec.setResourceId(null);
+            taskplanRec.setAppliedAmount(null);
+            taskplanRec.setAppliedAmtCost(String.format("%.2f", appliedcost));
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        taskplanRec.setTaskDt(sdf.format(taskDt));
+        taskplanRec.setAppliedFlag(null);
+        
+        int response = masterDataService.editTaskplanRecord(taskplanRec);
+        redirectUrl = "/secured/taskplan/tasklist?faces-redirect=true";
+        if (response == SUCCESS) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                    "Task is updated successfully");
+            f.addMessage(null, message);
+        } else {
+            if (response == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                         "Task does not exist.");
+                f.addMessage(null, message);
+            }
+            if (response == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                         "Failure on adding task");
+                f.addMessage(null, message);
+            }
+
+        }
+        return redirectUrl;
 //        ResourceCropDTO resourceCrop = new ResourceCropDTO();        
 //        int applicationid = masterDataService.getMaxIdForResCrop();
 //        if (applicationid == 0 || applicationid == DB_SEVERE) {
@@ -244,6 +289,8 @@ public class TaskEdit implements Serializable {
 //        return redirectUrl;
         
     }
+    
+    
     public String getSelectedTask() {
         return selectedTask;
     }
@@ -268,13 +315,15 @@ public class TaskEdit implements Serializable {
         this.taskType = taskType;
     }
 
-    public String getTaskDt() {
+    public Date getTaskDt() {
         return taskDt;
     }
 
-    public void setTaskDt(String taskDt) {
+    public void setTaskDt(Date taskDt) {
         this.taskDt = taskDt;
     }
+
+    
 
     public List<FarmresourceDTO> getAvailableresources() {
         return availableresources;

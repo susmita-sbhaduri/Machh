@@ -31,7 +31,7 @@
                         <h:outputText value="#{task.taskName}" />
                     </p:column>
                     <p:column headerText="Task Type">
-                        <h:outputText value="#{task.taskType}" />
+                        <h:outputText value="#{task.taskType eq 'RES' ? 'Resource' : (task.taskType eq 'LABHRVST' ? 'Labour': '')}" />
                     </p:column>   
                     <p:column headerText="Harvest name">
                         <h:outputText value="#{task.harvestDto.siteName}-#{task.harvestDto.cropCategory}-
@@ -41,8 +41,12 @@
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Apply"
-                                         action="#{taskList.goApplyResource()}" >
-                            <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />    
+                                         action="#{taskList.goApplyResource()}"
+                                         disabled="#{task.appliedFlag eq 'Y'}">
+                            <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />   
+                            <p:confirm header="Confirmation"
+                                       message="Are you sure you want to apply this task?"
+                                       icon="pi pi-exclamation-triangle"/>
                         </p:commandButton>
                     </p:column>
                     <p:column>
@@ -146,6 +150,10 @@
                         </div>
                     </div>
                 </p:panel>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" icon="pi pi-times"/>
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                </p:confirmDialog>
             </h:form>
         </div>
     </ui:define>

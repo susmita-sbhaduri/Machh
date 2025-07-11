@@ -2377,7 +2377,7 @@ public class MasterDataServices {
                     record.setAppliedAmount(null);
                 else
                     record.setAppliedAmount(String.format("%.2f", taskplanlist.get(i).getAppliedamt()));
-                
+                record.setAppliedFlag(taskplanlist.get(i).getAppliedflag());
                 recordList.add(record);
                 record = new TaskPlanDTO();
             }        
@@ -2417,13 +2417,53 @@ public class MasterDataServices {
                     .getAppliedAmtCost())));
             
             mysqlDate = formatter.parse(taskrec.getTaskDt());
-            record.setTaskdate(mysqlDate);       
+            record.setTaskdate(mysqlDate);  
+            record.setAppliedflag(taskrec.getAppliedFlag());
             taskplandao.create(record);
             return SUCCESS;
         } 
         catch (PreexistingEntityException e) {
             System.out.println("Record is already there for this taskplan record");            
             return DB_DUPLICATE;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in addTaskplanRecord.");
+            return DB_SEVERE;
+        }
+    }
+    public int editTaskplanRecord(TaskPlanDTO taskrec) {        
+        TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Taskplan record = new Taskplan();
+            record.setId(Integer.valueOf(taskrec.getTaskId()));
+            record.setTasktype(taskrec.getTaskType());
+            record.setTaskname(taskrec.getTaskName());
+            record.setHasvestid(Integer.parseInt(taskrec.getHarvestId()));
+            if(taskrec.getResourceId()==null){
+               record.setResourceid(null);
+            } else record.setResourceid(Integer.parseInt(taskrec.getResourceId()));
+             if(taskrec.getAppliedAmount()==null){
+               record.setAppliedamt(null);
+            } else record.setAppliedamt(BigDecimal.valueOf(Double.parseDouble(taskrec
+                    .getAppliedAmount())));
+             
+            if(taskrec.getAppliedAmtCost()==null){
+               record.setAppamtcost(null);
+            } else record.setAppamtcost(BigDecimal.valueOf(Double.parseDouble(taskrec
+                    .getAppliedAmtCost())));
+            
+            mysqlDate = formatter.parse(taskrec.getTaskDt());
+            record.setTaskdate(mysqlDate);    
+            record.setAppliedflag(taskrec.getAppliedFlag());
+            taskplandao.edit(record);
+            return SUCCESS;
+        } 
+        catch (NoResultException e) {
+            System.out.println("This taskplan record does not exist.");            
+            return DB_NON_EXISTING;
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in addTaskplanRecord.");
@@ -2463,6 +2503,7 @@ public class MasterDataServices {
             } else {
                 record.setAppliedAmount(String.format("%.2f", taskplanrec.getAppliedamt()));
             }
+            record.setAppliedFlag(taskplanrec.getAppliedflag());
             return record;
         }
         catch (NoResultException e) {
