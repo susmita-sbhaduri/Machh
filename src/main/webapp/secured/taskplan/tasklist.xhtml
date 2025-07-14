@@ -44,9 +44,7 @@
                                          action="#{taskList.goApplyResource()}"
                                          disabled="#{task.appliedFlag eq 'Y'}">
                             <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />   
-                            <p:confirm header="Confirmation"
-                                       message="Are you sure you want to apply this task?"
-                                       icon="pi pi-exclamation-triangle"/>
+                            
                         </p:commandButton>
                     </p:column>
                     <p:column>

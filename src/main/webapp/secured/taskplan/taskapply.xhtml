@@ -19,9 +19,9 @@
             <f:viewParam name="selectedTask" value="#{taskApply.selectedTask}"></f:viewParam>
             <f:viewAction action="#{taskApply.fillValues()}" />
         </f:metadata>
-        
+
         <div class="card">
-            <h:form id="resappform" style="text-align: left">
+            <h:form id="resapplyform" style="text-align: left">
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Site" />
                     </div>
@@ -35,7 +35,8 @@
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{taskApply.cropname}" style="font-weight:bold;"/>
                     </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel for="resid" value="Resource to be applied" />
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="resid" value="Resource to be applied" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputText value="#{taskApply.resname}" style="font-weight:bold;"/>
@@ -46,23 +47,20 @@
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputText value="#{taskApply.amount}" style="font-weight:bold;"/>
                     </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Unit" />
-                    </div>
+
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputText value="#{taskApply.unit}" style="font-weight:bold;"/>
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:outputLabel for="amtapplied" value="Amount to be Applied" />
+                        <p:outputLabel value="Amount to be Applied" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputText value="#{taskApply.amtapplied}" style="font-weight:bold;"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel for="adate" value="Apply Date" />
+                        <h:outputLabel value="Unit" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputText value="#{taskApply.appDt}" style="font-weight:bold;"/>
+                        <h:outputText value="#{taskApply.unit}" style="font-weight:bold;"/>
                     </div>
+
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputLabel value="Resource Category" />
                     </div>
@@ -82,24 +80,37 @@
                         <h:outputText value="#{taskApply.cropwtunit}" style="font-weight:bold;"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel for="appliedcost" value="Cost to be Applied" />
+                        <h:outputLabel for="adate" value="Apply Date" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{taskApply.appDt}" style="font-weight:bold;"/>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="appliedcost" value="Labour Cost" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputText value="#{taskApply.appliedcost}" style="font-weight:bold;"/>                        
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Submit"
                                          action="#{taskApply.saveTask()}">
+                            <p:confirm header="Confirmation"
+                                       message="Are you sure you want to apply this task?"
+                                       icon="pi pi-exclamation-triangle"/>
                         </p:commandButton>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:button icon="pi pi-times" value="Cancel" outcome="/secured/taskplan/tasklist" />
                     </div>
                 </div>
-                
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" icon="pi pi-times"/>
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                </p:confirmDialog>
             </h:form>
         </div>
     </ui:define>    

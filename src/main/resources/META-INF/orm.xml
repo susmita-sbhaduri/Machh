@@ -143,9 +143,17 @@
     <named-query name="Resourcecrop.getResCropHarvest">
         <query>SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid</query>
     </named-query>
+    <named-query name="Resourcecrop.getResCropResource">
+        <query>SELECT r FROM Resourcecrop r WHERE r.resourceid = :resourceid</query>
+    </named-query>
     <named-query name="Resourcecrop.detailsRescrop">
         <query>SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid 
             AND r.appldate &gt;= :startdate AND r.appldate &lt;= :enddate
+        </query>
+    </named-query>
+    <named-query name="Resourcecrop.rescropsForRes">
+        <query>SELECT r FROM Resourcecrop r WHERE r.resourceid = :resourceid 
+            AND r.appldate &gt;= :startdate AND r.appldate &lt;= :enddate ORDER BY r.appldate DESC
         </query>
     </named-query>    
     <named-query name="Resourcecrop.getResCropId">

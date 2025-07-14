@@ -38,7 +38,7 @@
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{taskEdit.taskName}" style="font-weight:bold;"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel for="harvestid" value="Active Harvests" />
+                        <h:outputLabel for="harvestid" value="Active Harvests(Site-Crop Category-Cropname)" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
                         <p:selectOneMenu id="harvestid" value="#{taskEdit.selectedIndexHarvest}" >
@@ -62,9 +62,17 @@
                                            itemLabel="#{res.resourceName}" 
                                            itemValue="#{taskEdit.availableresources.indexOf(res)}"/>
                             <p:ajax event="change" listener="#{taskEdit.onResourceChange}" 
-                                    update="unitPanel rescatPanel iniamtPanel cropamtPanel" 
+                                    update="unitPanel amountPanel rescatPanel iniamtPanel cropamtPanel" 
                                     process="@this"/>
                         </p:selectOneMenu>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Available Amount" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputPanel id="amountPanel">
+                        <h:outputText value="#{taskEdit.amount}" style="font-weight:bold;"/>
+                        </p:outputPanel>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:outputLabel for="amtapplied" value="Resource Amt to be Applied" />

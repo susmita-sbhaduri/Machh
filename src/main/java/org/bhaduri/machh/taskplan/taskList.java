@@ -74,242 +74,245 @@ public class taskList implements Serializable {
         }
     }
 
-    public String goApplyResource() throws NamingException{
-        String redirectUrl = "/secured/taskplan/tasklist?faces-redirect=true";
-        
-        FacesMessage message;
-        FacesContext f = FacesContext.getCurrentInstance();
-        f.getExternalContext().getFlash().setKeepMessages(true);
-        
-        int sqlFlag = 0;
-        MasterDataServices masterDataService = new MasterDataServices();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        //Fetching taskplan record
-        TaskPlanDTO taskplanRec = masterDataService.getTaskPlanForId(selectedTask.getTaskId());
-        
-        if (taskplanRec.getTaskType().equals("RES")) {
-            //resourcecrop record construction
-            ResourceCropDTO resourceCrop = new ResourceCropDTO();
-            int applicationid = masterDataService.getMaxIdForResCrop();
-            if (applicationid == 0 || applicationid == DB_SEVERE) {
-                resourceCrop.setApplicationId("1");
-            } else {
-                resourceCrop.setApplicationId(String.valueOf(applicationid + 1));
-            }
-            resourceCrop.setHarvestId(taskplanRec.getHarvestId());
-            resourceCrop.setResourceId(taskplanRec.getResourceId());
-            resourceCrop.setAppliedAmount(taskplanRec.getAppliedAmount());
-            
-            //shopresource record construction and update
-            String shopResupdate = calcShopResAmt(taskplanRec.getAppliedAmount(),
-                    resourceCrop.getApplicationId(), taskplanRec.getResourceId());
-            if (shopResupdate.equals("OK")) {
-                resourceCrop.setAppliedAmtCost((String.format("%.2f", resCropAppliedCost)));
-            } else {
-                resourceCrop.setAppliedAmtCost(null);
-            }
-            resourceCrop.setApplicationDt(sdf.format(selectedDate));
-            
-            //farmresource record construction
-            FarmresourceDTO resourceRec = masterDataService
-                    .getResourceNameForId(Integer.parseInt(taskplanRec.getResourceId()));
-            String amount = resourceRec.getAvailableAmt();
-            float remainingAmt = Float.parseFloat(amount) - Float.parseFloat(taskplanRec.getAppliedAmount());
-            resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
-            
-            //taskplan record construction for update
-            taskplanRec.setAppliedFlag("Y");
-            
-            //Addition and update started
-            int rescropres = masterDataService.addResCropRecord(resourceCrop);
-            
-            if (rescropres == SUCCESS) {
-                sqlFlag = sqlFlag + 1;
-            } else {
-                if (rescropres == DB_DUPLICATE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-                             "Resource already applied with this application ID=" + resourceCrop.getApplicationId());
-                    f.addMessage(null, message);
-                }
-                if (rescropres == DB_SEVERE) {
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-                             "Failure on applying task");
-                    f.addMessage(null, message);
-                }
-//                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-                return redirectUrl;
-            }
-            
-            if (sqlFlag == 1) {
-                int resres = masterDataService.editResource(resourceRec);
-                if (resres == SUCCESS) {
-                    sqlFlag = sqlFlag + 1;
-                } else {
-                    if (resres == DB_NON_EXISTING) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                                 "Resource record does not exist");
-                        f.addMessage(null, message);
-                    }
-                    if (resres == DB_SEVERE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                                 "Failure on resource update");
-                        f.addMessage(null, message);
-                    }
-                    int delres = masterDataService.delResCropRecord(resourceCrop);
-                    if (delres == DB_SEVERE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-                                 "resourcecrop record could not be deleted");
-                        f.addMessage(null, message);
-                    }
-//                    redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-                    return redirectUrl;
-                }
-            }
-            
-            if (sqlFlag == 2) {
-                int taskres = masterDataService.editTaskplanRecord(taskplanRec);
-                if (taskres == SUCCESS) {
-                    sqlFlag = sqlFlag + 1;
-                } else {
-                    if (taskres == DB_NON_EXISTING) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                                "Taskplan record does not exist");
-                        f.addMessage(null, message);
-                    }
-                    if (taskres == DB_SEVERE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                                "Failure on taskplan update");
-                        f.addMessage(null, message);
-                    }
-                    int delres = masterDataService.delResCropRecord(resourceCrop);
-                    if (delres == DB_SEVERE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-                                "resourcecrop record could not be deleted");
-                        f.addMessage(null, message);
-                    }
-                    //rollback changes in farmresource
-                    resourceRec.setAvailableAmt(amount);
-                    int delfarmres = masterDataService.editResource(resourceRec);
-                    if (delfarmres == DB_SEVERE) {
-                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-                                "farmresource record could not be updated");
-                        f.addMessage(null, message);
-                    }
-//                    redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-                    return redirectUrl;
-                }
-            }
-            
-            if (sqlFlag == 3) {
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-                        "Task applied successfully with application ID=" + resourceCrop.getApplicationId());
-                f.addMessage(null, message);
-            }            
-        }
-        
-        if (taskplanRec.getTaskType().equals("LABHRVST")) {
-            
-        }
+    public String goApplyResource(){
+        String redirectUrl = "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + selectedTask.getTaskId();
         return redirectUrl;
-    }
-    public String calcShopResAmt(String quantityApplied, String applId, String resId) 
-            throws NamingException {
-        MasterDataServices masterDataService = new MasterDataServices();
-        FacesMessage message;
-        FacesContext f = FacesContext.getCurrentInstance();
-        f.getExternalContext().getFlash().setKeepMessages(true);
-        String redirectUrl = "/secured/taskplan/tasklist?faces-redirect=true";
-        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResid(resId);
-
-        ShopResDTO shopResRec = new ShopResDTO();
-        float appliedQuantity = Float.parseFloat(quantityApplied);
-//        int breaki = 0;
-        for (int i = 0; i < shopResListResid.size(); i++) {
-            shopResRec.setId(shopResListResid.get(i).getId());
-            shopResRec.setRate(shopResListResid.get(i).getRate());
-            shopResRec.setResRateDate(shopResListResid.get(i).getResRateDate());
-            shopResRec.setResourceId(shopResListResid.get(i).getResourceId());
-            shopResRec.setShopId(shopResListResid.get(i).getShopId());
-//            shopResRec.setResAppId(applId);
-            ///
-//            ShopResCropDTO shoprescrop = new ShopResCropDTO();
-//            int maxid = masterDataService.getMaxIdForShopResCrop();
-//            if (maxid == 0 || maxid == DB_SEVERE) {
-//                shoprescrop.setId("1");
+    
+//        String redirectUrl = "/secured/taskplan/tasklist?faces-redirect=true";
+//        
+//        FacesMessage message;
+//        FacesContext f = FacesContext.getCurrentInstance();
+//        f.getExternalContext().getFlash().setKeepMessages(true);
+//        
+//        int sqlFlag = 0;
+//        MasterDataServices masterDataService = new MasterDataServices();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        //Fetching taskplan record
+//        TaskPlanDTO taskplanRec = masterDataService.getTaskPlanForId(selectedTask.getTaskId());
+//        
+//        if (taskplanRec.getTaskType().equals("RES")) {
+//            //resourcecrop record construction
+//            ResourceCropDTO resourceCrop = new ResourceCropDTO();
+//            int applicationid = masterDataService.getMaxIdForResCrop();
+//            if (applicationid == 0 || applicationid == DB_SEVERE) {
+//                resourceCrop.setApplicationId("1");
 //            } else {
-//                shoprescrop.setId(String.valueOf(maxid + 1));
+//                resourceCrop.setApplicationId(String.valueOf(applicationid + 1));
 //            }
-//            shoprescrop.setResCropId(applId);
-//            shoprescrop.setShopResId(shopResListResid.get(i).getId());
-            ///
-            float shopResStock = Float.parseFloat(shopResListResid.get(i).getStockPerRate());
-            float shopResRate = Float.parseFloat(shopResListResid.get(i).getRate());
-            if (appliedQuantity <= shopResStock) {
-                //in this case the applied resource is deducted from the stock(consumed
-                //from the stock completely and stock is not more than 0, hence break from this loop.
-                shopResStock = shopResStock - appliedQuantity;                
-                resCropAppliedCost = resCropAppliedCost + (appliedQuantity * shopResRate);                
-                shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
-//                shopResRec.setAmtApplied(String.format("%.2f", appliedQuantity));
-                
-                ///                
-//                shoprescrop.setAmtApplied(String.format("%.2f", appliedQuantity));
-                ///
-                appliedQuantity = 0;
-                
-                int shopres = masterDataService.editShopForRes(shopResRec);
-                if (shopres != SUCCESS) {
-                    resCropAppliedCost = 0;
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "shopresource record could not be updated");
-                    f.addMessage(null, message);
-                    return redirectUrl;
-                }
-                
-                ///
-//                int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
-//                if (shoprescropres != SUCCESS) {
+//            resourceCrop.setHarvestId(taskplanRec.getHarvestId());
+//            resourceCrop.setResourceId(taskplanRec.getResourceId());
+//            resourceCrop.setAppliedAmount(taskplanRec.getAppliedAmount());
+//            
+//            //shopresource record construction and update
+//            String shopResupdate = calcShopResAmt(taskplanRec.getAppliedAmount(),
+//                    resourceCrop.getApplicationId(), taskplanRec.getResourceId());
+//            if (shopResupdate.equals("OK")) {
+//                resourceCrop.setAppliedAmtCost((String.format("%.2f", resCropAppliedCost)));
+//            } else {
+//                resourceCrop.setAppliedAmtCost(null);
+//            }
+//            resourceCrop.setApplicationDt(sdf.format(selectedDate));
+//            
+//            //farmresource record construction
+//            FarmresourceDTO resourceRec = masterDataService
+//                    .getResourceNameForId(Integer.parseInt(taskplanRec.getResourceId()));
+//            String amount = resourceRec.getAvailableAmt();
+//            float remainingAmt = Float.parseFloat(amount) - Float.parseFloat(taskplanRec.getAppliedAmount());
+//            resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
+//            
+//            //taskplan record construction for update
+//            taskplanRec.setAppliedFlag("Y");
+//            
+//            //Addition and update started
+//            int rescropres = masterDataService.addResCropRecord(resourceCrop);
+//            
+//            if (rescropres == SUCCESS) {
+//                sqlFlag = sqlFlag + 1;
+//            } else {
+//                if (rescropres == DB_DUPLICATE) {
+//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+//                             "Resource already applied with this application ID=" + resourceCrop.getApplicationId());
+//                    f.addMessage(null, message);
+//                }
+//                if (rescropres == DB_SEVERE) {
+//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+//                             "Failure on applying task");
+//                    f.addMessage(null, message);
+//                }
+////                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+//                return redirectUrl;
+//            }
+//            
+//            if (sqlFlag == 1) {
+//                int resres = masterDataService.editResource(resourceRec);
+//                if (resres == SUCCESS) {
+//                    sqlFlag = sqlFlag + 1;
+//                } else {
+//                    if (resres == DB_NON_EXISTING) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                                 "Resource record does not exist");
+//                        f.addMessage(null, message);
+//                    }
+//                    if (resres == DB_SEVERE) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                                 "Failure on resource update");
+//                        f.addMessage(null, message);
+//                    }
+//                    int delres = masterDataService.delResCropRecord(resourceCrop);
+//                    if (delres == DB_SEVERE) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+//                                 "resourcecrop record could not be deleted");
+//                        f.addMessage(null, message);
+//                    }
+////                    redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+//                    return redirectUrl;
+//                }
+//            }
+//            
+//            if (sqlFlag == 2) {
+//                int taskres = masterDataService.editTaskplanRecord(taskplanRec);
+//                if (taskres == SUCCESS) {
+//                    sqlFlag = sqlFlag + 1;
+//                } else {
+//                    if (taskres == DB_NON_EXISTING) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                                "Taskplan record does not exist");
+//                        f.addMessage(null, message);
+//                    }
+//                    if (taskres == DB_SEVERE) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                                "Failure on taskplan update");
+//                        f.addMessage(null, message);
+//                    }
+//                    int delres = masterDataService.delResCropRecord(resourceCrop);
+//                    if (delres == DB_SEVERE) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+//                                "resourcecrop record could not be deleted");
+//                        f.addMessage(null, message);
+//                    }
+//                    //rollback changes in farmresource
+//                    resourceRec.setAvailableAmt(amount);
+//                    int delfarmres = masterDataService.editResource(resourceRec);
+//                    if (delfarmres == DB_SEVERE) {
+//                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+//                                "farmresource record could not be updated");
+//                        f.addMessage(null, message);
+//                    }
+////                    redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+//                    return redirectUrl;
+//                }
+//            }
+//            
+//            if (sqlFlag == 3) {
+//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+//                        "Task applied successfully with application ID=" + resourceCrop.getApplicationId());
+//                f.addMessage(null, message);
+//            }            
+//        }
+//        
+//        if (taskplanRec.getTaskType().equals("LABHRVST")) {
+//            
+//        }
+//        return redirectUrl;
+//    }
+//    public String calcShopResAmt(String quantityApplied, String applId, String resId) 
+//            throws NamingException {
+//        MasterDataServices masterDataService = new MasterDataServices();
+//        FacesMessage message;
+//        FacesContext f = FacesContext.getCurrentInstance();
+//        f.getExternalContext().getFlash().setKeepMessages(true);
+//        String redirectUrl = "/secured/taskplan/tasklist?faces-redirect=true";
+//        List<ShopResDTO> shopResListResid = masterDataService.getShopResForResid(resId);
+//
+//        ShopResDTO shopResRec = new ShopResDTO();
+//        float appliedQuantity = Float.parseFloat(quantityApplied);
+////        int breaki = 0;
+//        for (int i = 0; i < shopResListResid.size(); i++) {
+//            shopResRec.setId(shopResListResid.get(i).getId());
+//            shopResRec.setRate(shopResListResid.get(i).getRate());
+//            shopResRec.setResRateDate(shopResListResid.get(i).getResRateDate());
+//            shopResRec.setResourceId(shopResListResid.get(i).getResourceId());
+//            shopResRec.setShopId(shopResListResid.get(i).getShopId());
+////            shopResRec.setResAppId(applId);
+//            ///
+////            ShopResCropDTO shoprescrop = new ShopResCropDTO();
+////            int maxid = masterDataService.getMaxIdForShopResCrop();
+////            if (maxid == 0 || maxid == DB_SEVERE) {
+////                shoprescrop.setId("1");
+////            } else {
+////                shoprescrop.setId(String.valueOf(maxid + 1));
+////            }
+////            shoprescrop.setResCropId(applId);
+////            shoprescrop.setShopResId(shopResListResid.get(i).getId());
+//            ///
+//            float shopResStock = Float.parseFloat(shopResListResid.get(i).getStockPerRate());
+//            float shopResRate = Float.parseFloat(shopResListResid.get(i).getRate());
+//            if (appliedQuantity <= shopResStock) {
+//                //in this case the applied resource is deducted from the stock(consumed
+//                //from the stock completely and stock is not more than 0, hence break from this loop.
+//                shopResStock = shopResStock - appliedQuantity;                
+//                resCropAppliedCost = resCropAppliedCost + (appliedQuantity * shopResRate);                
+//                shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
+////                shopResRec.setAmtApplied(String.format("%.2f", appliedQuantity));
+//                
+//                ///                
+////                shoprescrop.setAmtApplied(String.format("%.2f", appliedQuantity));
+//                ///
+//                appliedQuantity = 0;
+//                
+//                int shopres = masterDataService.editShopForRes(shopResRec);
+//                if (shopres != SUCCESS) {
 //                    resCropAppliedCost = 0;
 //                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-//                            "shoprescrop record could not be inserted");
+//                            "shopresource record could not be updated");
 //                    f.addMessage(null, message);
 //                    return redirectUrl;
 //                }
-                ///
-//                breaki = i;
-                break;
-            }
-            if (appliedQuantity  > shopResStock) {
-                resCropAppliedCost = resCropAppliedCost + (shopResStock * shopResRate);
-                appliedQuantity = appliedQuantity - shopResStock;
-//                shopResRec.setAmtApplied(String.format("%.2f", shopResStock));
-                ///                
-//                shoprescrop.setAmtApplied(String.format("%.2f", shopResStock));
-                ///
-                shopResStock = 0;
-                shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
-            }
-            int shopres = masterDataService.editShopForRes(shopResRec);
-            if (shopres != SUCCESS) {
-                resCropAppliedCost = 0;
-                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                        "shopresource record could not be updated");
-                f.addMessage(null, message);
-                return redirectUrl;
-            }
-            ///
-//            int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
-//            if (shoprescropres != SUCCESS) {
+//                
+//                ///
+////                int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
+////                if (shoprescropres != SUCCESS) {
+////                    resCropAppliedCost = 0;
+////                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+////                            "shoprescrop record could not be inserted");
+////                    f.addMessage(null, message);
+////                    return redirectUrl;
+////                }
+//                ///
+////                breaki = i;
+//                break;
+//            }
+//            if (appliedQuantity  > shopResStock) {
+//                resCropAppliedCost = resCropAppliedCost + (shopResStock * shopResRate);
+//                appliedQuantity = appliedQuantity - shopResStock;
+////                shopResRec.setAmtApplied(String.format("%.2f", shopResStock));
+//                ///                
+////                shoprescrop.setAmtApplied(String.format("%.2f", shopResStock));
+//                ///
+//                shopResStock = 0;
+//                shopResRec.setStockPerRate(String.format("%.2f", shopResStock));
+//            }
+//            int shopres = masterDataService.editShopForRes(shopResRec);
+//            if (shopres != SUCCESS) {
 //                resCropAppliedCost = 0;
 //                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-//                        "shoprescrop record could not be inserted");
+//                        "shopresource record could not be updated");
 //                f.addMessage(null, message);
 //                return redirectUrl;
 //            }
-                ///
-        }
-
-        return "OK";
+//            ///
+////            int shoprescropres = masterDataService.addShopResCrop(shoprescrop);
+////            if (shoprescropres != SUCCESS) {
+////                resCropAppliedCost = 0;
+////                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+////                        "shoprescrop record could not be inserted");
+////                f.addMessage(null, message);
+////                return redirectUrl;
+////            }
+//                ///
+//        }
+//
+//        return "OK";
     }
     public String goEditResource(){
         String redirectUrl = "/secured/taskplan/taskedit?faces-redirect=true&selectedTask=" + selectedTask.getTaskId();

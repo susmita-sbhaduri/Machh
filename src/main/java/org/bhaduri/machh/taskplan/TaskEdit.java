@@ -16,7 +16,6 @@ import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
-import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
@@ -38,6 +37,7 @@ public class TaskEdit implements Serializable {
     private int selectedIndexRes;
     private List<HarvestDTO> activeharvests;
     private int selectedIndexHarvest;
+    private String amount;
     private String unit;
     private float amtapplied;
     private float appliedcost;
@@ -80,6 +80,7 @@ public class TaskEdit implements Serializable {
             costReadonly = false;
             taskType = "Labour";
             unit = "Rs.";
+            amount = "NA";
         }
         if (taskType.equals("RES")) {
             resReadonly = false;
@@ -88,7 +89,8 @@ public class TaskEdit implements Serializable {
 
             unit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                     get(selectedIndexRes).getResourceId())).getUnit();
-
+            amount = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+                    get(selectedIndexRes).getResourceId())).getAvailableAmt();
             if (masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                     get(selectedIndexRes).getResourceId()))
                     .getCropwtunit() != null) {
@@ -120,7 +122,8 @@ public class TaskEdit implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         unit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                 get(selectedIndexRes).getResourceId())).getUnit();
-        
+        amount = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+                    get(selectedIndexRes).getResourceId())).getAvailableAmt();
         if(masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                 get(selectedIndexRes).getResourceId()))
                 .getCropwtunit()!=null){
@@ -419,6 +422,14 @@ public class TaskEdit implements Serializable {
 
     public void setCropwtunit(String cropwtunit) {
         this.cropwtunit = cropwtunit;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
     
     

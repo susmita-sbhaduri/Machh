@@ -1413,6 +1413,7 @@ public class MasterDataServices {
             record.setApplicationDt(formatter.format(mysqlDate));
             record.setAppliedAmount(String.format("%.2f", rec.getAppliedamt().floatValue()));
             record.setAppliedAmtCost(String.format("%.2f", rec.getAppamtcost().floatValue()));
+            record.setResUnit(getResourceNameForId(rec.getResourceid()).getUnit());
             return record;
         } catch (NoResultException e) {
             System.out.println("No resourcecrop record is found for this application Id.");
@@ -1422,6 +1423,8 @@ public class MasterDataServices {
             return null;
         }
     }
+    
+    
     
     public List<ResourceCropDTO> getResCropForHarvest(String harvestid) {
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
@@ -1450,6 +1453,40 @@ public class MasterDataServices {
             return recordlist;
         } catch (NoResultException e) {
             System.out.println("No resourcecrop record is found for this harvest.");
+            return null;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
+            return null;
+        }
+    }
+    
+    public List<ResourceCropDTO> getResCropForResource(String resid) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
+        List<ResourceCropDTO> recordlist = new ArrayList<>();
+        ResourceCropDTO record = new ResourceCropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            List<Resourcecrop> reclist = rescropdao.getResCropResource(Integer.parseInt(resid));
+            
+            for (int i = 0; i < reclist.size(); i++) {
+                record.setApplicationId(reclist.get(i).getApplicationid().toString());
+                record.setHarvestId(Integer.toString(reclist.get(i).getHarvestid()));
+                record.setResourceId(Integer.toString(reclist.get(i).getResourceid()));
+                record.setResourceName(getResourceNameForId(reclist.get(i).getResourceid())
+                        .getResourceName());
+                mysqlDate = reclist.get(i).getAppldate();
+                record.setApplicationDt(formatter.format(mysqlDate));
+                record.setAppliedAmount(String.format("%.2f", reclist.get(i).getAppliedamt().floatValue()));
+                record.setAppliedAmtCost(String.format("%.2f", reclist.get(i).getAppamtcost().floatValue()));
+                record.setResUnit(getResourceNameForId(reclist.get(i).getResourceid()).getUnit());
+                recordlist.add(record);
+                record = new ResourceCropDTO();
+            }  
+            return recordlist;
+        } catch (NoResultException e) {
+            System.out.println("No resourcecrop record is found for this resource.");
             return null;
         } catch (Exception exception) {
             System.out.println(exception + " has occurred in getResCropForHarvest(String harvestid).");
@@ -1695,6 +1732,7 @@ public class MasterDataServices {
                 record.setApplicationDt(null);
                 record.setAppliedAmount(String.format("%.2f", recordsummary.get(i).
                         getAppliedAmount().floatValue()));
+                record.setResUnit(getResourceNameForId(recordsummary.get(i).getResourceId()).getUnit());
                 recordlist.add(record);
                 record = new ResourceCropDTO();
             }  
@@ -1728,6 +1766,7 @@ public class MasterDataServices {
                         getAppliedamt().floatValue()));
                 record.setAppliedAmtCost(String.format("%.2f", resultlist.get(i).
                         getAppamtcost().floatValue()));
+                record.setResUnit(getResourceNameForId(resultlist.get(i).getResourceid()).getUnit());
                 recordlist.add(record);
                 record = new ResourceCropDTO();
             }  
@@ -1742,6 +1781,47 @@ public class MasterDataServices {
             return null;
         }
     }
+    
+    public List<ResourceCropDTO> getRescropDetailsForRes(String resid, Date sdate, Date edate) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
+        List<ResourceCropDTO> recordlist = new ArrayList<>();
+        ResourceCropDTO record = new ResourceCropDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            List<Resourcecrop> resultlist = rescropdao.getResCropDtlsResid(Integer.parseInt(resid), 
+                    sdate, edate);
+            
+            for (int i = 0; i < resultlist.size(); i++) {
+                record.setApplicationId(Integer.toString(resultlist.get(i).getApplicationid()));
+                record.setHarvestId(Integer.toString(resultlist.get(i).getHarvestid()));
+                record.setResourceId(Integer.toString(resultlist.get(i).getResourceid()));
+                record.setResourceName(getResourceNameForId(resultlist.get(i).getResourceid())
+                        .getResourceName());
+                record.setHarvestDto(getHarvestRecForId(Integer.toString(resultlist.get(i).getHarvestid())));
+                mysqlDate = resultlist.get(i).getAppldate();
+                record.setApplicationDt(formatter.format(mysqlDate));
+                record.setAppliedAmount(String.format("%.2f", resultlist.get(i).
+                        getAppliedamt().floatValue()));
+                record.setAppliedAmtCost(String.format("%.2f", resultlist.get(i).
+                        getAppamtcost().floatValue()));
+                record.setResUnit(getResourceNameForId(resultlist.get(i).getResourceid()).getUnit());
+                recordlist.add(record);
+                record = new ResourceCropDTO();
+            }  
+            return recordlist;
+           
+        }catch (NoResultException e) {
+            System.out.println("No Resourcecrop records are found for resid, start and end date");
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getRescropDetailsForRes().");
+            return null;
+        }
+    }
+    
     public List<ResourceCropDTO> getSummaryPerResForHrvst(Date sdate, Date edate, String harvestid) {
         //this is a group by one
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
@@ -1764,6 +1844,8 @@ public class MasterDataServices {
                         getAppliedAmount().floatValue()));
                 record.setAppliedAmtCost(String.format("%.2f", recordsummary.get(i).
                         getAppliedCost().floatValue()));
+                record.setResUnit(getResourceNameForId(recordsummary.get(i).getResourceId())
+                        .getUnit());
                 recordlist.add(record);
                 record = new ResourceCropDTO();
             }  
