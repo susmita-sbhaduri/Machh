@@ -20,11 +20,13 @@ import org.primefaces.event.DateViewChangeEvent;
 @Named(value = "taskSchedule")
 @ViewScoped
 public class TaskSchedule implements Serializable {
-    private Date selectedDate;
+    private Date selectedDate = new Date();
     /**
      * Creates a new instance of TaskSchedule
      */
     public TaskSchedule() {
+         Date first = getMonthStart(selectedDate);
+    Date last = getMonthEnd(selectedDate);
     }
     public void onMonthChange() {
     // This will be called when user changes the calendar view
