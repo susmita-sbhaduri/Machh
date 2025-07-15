@@ -31,7 +31,8 @@
                         <h:outputText value="#{task.taskName}" />
                     </p:column>
                     <p:column headerText="Task Type">
-                        <h:outputText value="#{task.taskType eq 'RES' ? 'Resource' : (task.taskType eq 'LABHRVST' ? 'Labour': '')}" />
+                        <h:outputText value="#{task.taskType eq 'RES' ? 'Resource' : (task.taskType eq 'LABHRVST' ? 'Labour(paid)': 
+                                               (task.taskType eq 'LAB' ? 'Labour' : ''))}" />
                     </p:column>   
                     <p:column headerText="Harvest name">
                         <h:outputText value="#{task.harvestDto.siteName}-#{task.harvestDto.cropCategory}-
@@ -44,26 +45,22 @@
                                          action="#{taskList.goApplyResource()}"
                                          disabled="#{task.appliedFlag eq 'Y'}">
                             <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />   
-                            
+
                         </p:commandButton>
                     </p:column>
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Edit"
-                                         action="#{taskList.goEditResource()}" >
+                                         action="#{taskList.goEditResource()}" 
+                                         disabled="#{task.appliedFlag eq 'Y'}">
                             <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />    
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>
-                <p:panel id="taskentrypanel" header="Add New Task" style="text-align: center">
+                <p:panel id="taskentrypanel" header="Add New Task" style="text-align: left">
                     <div class="ui-g">
-                        <div class="ui-g-12 ui-md-6 ui-lg-6">
-                            <h:outputLabel for="taskname" value="Task Name" />
-                        </div>
-                        <div class="ui-g-12 ui-md-6 ui-lg-6">
-                            <h:inputText id="taskname" value="#{taskList.taskName}"/>   
-                        </div>
+                        
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <h:outputLabel for="tasktype" value="Task Type" />
                         </div>
@@ -71,13 +68,20 @@
                             <p:selectOneRadio id="tasktype" value="#{taskList.selectedTaskType}"
                                               layout="pageDirection">
                                 <f:selectItem itemLabel="Resource" itemValue="res"/>
-                                <f:selectItem itemLabel="Labour" itemValue="lab"/>  
+                                <f:selectItem itemLabel="Labour Harvest" itemValue="labhar"/>
+                                <f:selectItem itemLabel="Labour" itemValue="lab"/>
                                 <p:ajax event="change" listener="#{taskList.onTaskTypeSelect}" 
-                                    update="tasklist" process="@this"/>
+                                        update="tasklist" process="@this"/>
                             </p:selectOneRadio>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
-                            <h:outputLabel for="harvestid" value="Active Harvests" />
+                            <h:outputLabel for="taskname" value="Task Name" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:inputText id="taskname" value="#{taskList.taskName}"/>   
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel for="harvestid" value="Active Harvests(Site-Crop Category-Cropname)" />
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
                             <p:selectOneMenu id="harvestid" value="#{taskList.selectedIndexHarvest}" >
@@ -86,7 +90,6 @@
                                                itemLabel="#{harvest.siteName}-#{harvest.cropCategory}-
                                                #{harvest.cropName}" 
                                                itemValue="#{taskList.activeharvests.indexOf(harvest)}"/>
-
                             </p:selectOneMenu>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
@@ -101,8 +104,17 @@
                                                itemLabel="#{res.resourceName}" 
                                                itemValue="#{taskList.availableresources.indexOf(res)}"/>
                                 <p:ajax event="change" listener="#{taskList.onResourceSelect}" 
-                                    update="unitPanel" process="@this"/>
+                                        update="unitPanel amountPanel rescatPanel iniamtPanel cropamtPanel" 
+                                        process="@this"/>
                             </p:selectOneMenu>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel value="Available Amount" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputPanel id="amountPanel">
+                                <h:outputText value="#{taskList.amount}" style="font-weight:bold;"/>
+                            </p:outputPanel>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <p:outputLabel for="amtapplied" value="Resource Amt to be Applied" />
@@ -113,7 +125,7 @@
                                          readonly="#{taskList.resReadonly}" >
                                 <f:convertNumber pattern="#0.00" />
                                 <p:keyFilter regEx="/[\d\.]/" />
-                                
+
                             </p:inputText>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
@@ -125,6 +137,30 @@
                             </p:outputPanel>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel value="Resource Category" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputPanel id="rescatPanel">
+                                <h:outputText value="#{taskList.rescat}" style="font-weight:bold;"/>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel value="Initial Amount(Crop) if applicable" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6"> 
+                            <p:outputPanel id="iniamtPanel">
+                                <h:outputText value="#{taskList.cropwt}" style="font-weight:bold;"/>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel value="Crop Amount Unit" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:outputPanel id="cropamtPanel">
+                                <h:outputText value="#{taskList.cropwtunit}" style="font-weight:bold;"/>
+                            </p:outputPanel>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <p:outputLabel for="appliedcost" value="Cost to be Applied" />
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
@@ -133,7 +169,16 @@
                                          readonly="#{taskList.costReadonly}" >
                                 <f:convertNumber pattern="#0.00" />
                                 <p:keyFilter regEx="/[\d\.]/" />
-                                
+
+                            </p:inputText>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputLabel value="Comments" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:inputText id="comments" 
+                                         value="#{taskList.comments}"
+                                         readonly="#{taskList.commReadonly}" >
                             </p:inputText>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
@@ -148,10 +193,7 @@
                         </div>
                     </div>
                 </p:panel>
-                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
-                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" icon="pi pi-times"/>
-                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
-                </p:confirmDialog>
+
             </h:form>
         </div>
     </ui:define>

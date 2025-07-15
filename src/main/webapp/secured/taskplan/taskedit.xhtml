@@ -71,7 +71,7 @@
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:outputPanel id="amountPanel">
-                        <h:outputText value="#{taskEdit.amount}" style="font-weight:bold;"/>
+                            <h:outputText value="#{taskEdit.amount}" style="font-weight:bold;"/>
                         </p:outputPanel>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
@@ -129,6 +129,16 @@
                         <p:outputPanel id="cropamtPanel">
                             <h:outputText value="#{taskEdit.cropwtunit}" style="font-weight:bold;"/>
                         </p:outputPanel>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Comments" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">                        
+                        <p:inputText id="comments" 
+                                     value="#{taskEdit.comments}"
+                                     readonly="#{taskEdit.commReadonly}" >                           
+
+                        </p:inputText>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:commandButton styleClass="blue-button" 

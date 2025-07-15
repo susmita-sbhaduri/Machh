@@ -21,6 +21,7 @@ public class TaskPlanDTO {
     private String appliedAmount;
     private String appliedAmtCost;
     private String appliedFlag;
+    private String comments;
 
     public String getTaskId() {
         return taskId;
@@ -117,6 +118,13 @@ public class TaskPlanDTO {
     public void setAppliedFlag(String appliedFlag) {
         this.appliedFlag = appliedFlag;
     }
-    
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }    
     
 }

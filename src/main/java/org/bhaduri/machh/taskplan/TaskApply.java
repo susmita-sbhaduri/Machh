@@ -13,8 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
+import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
+import org.bhaduri.machh.DTO.LabourCropDTO;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_DUPLICATE;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
 import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
@@ -45,6 +47,7 @@ public class TaskApply implements Serializable {
     private String cropwt;
     private String cropwtunit;
     private String appliedcost;
+    private String comments;
     private float resCropAppliedCost=0;
     /**
      * Creates a new instance of TaskApply
@@ -67,6 +70,9 @@ public class TaskApply implements Serializable {
             unit = resourceRec.getUnit();
             amtapplied = taskplanRec.getAppliedAmount();
             appliedcost = "";
+            comments = "";
+//            appliedcost = "NA";
+//            comments = "NA";
             if (resourceRec.getCropwtunit() != null) {
                 rescat = "Crop";
                 cropwt = resourceRec.getCropweight();
@@ -79,13 +85,43 @@ public class TaskApply implements Serializable {
         }
         if (taskplanRec.getTaskType().equals("LABHRVST")) {
             appliedcost = taskplanRec.getAppliedAmtCost();
+            comments = taskplanRec.getComments();
             resname = "";
-            amount = "NA";
+            amount = "";
             unit = "Rs.";
             amtapplied = "";
             rescat = "";
             cropwt = "";
             cropwtunit = "";
+            
+//            resname = "NA";
+//            amount = "NA";
+//            unit = "Rs.";
+//            amtapplied = "NA";
+//            rescat = "NA";
+//            cropwt = "NA";
+//            cropwtunit = "NA";
+        }
+        if (taskplanRec.getTaskType().equals("LAB")) {
+            appliedcost = "";
+            comments = taskplanRec.getComments();
+            resname = "";
+            amount = "";
+            unit = "";
+            amtapplied = "";
+            rescat = "";
+            cropwt = "";
+            cropwtunit = "";
+            
+//            appliedcost = "NA";
+//            comments = taskplanRec.getComments();
+//            resname = "NA";
+//            amount = "NA";
+//            unit = "NA";
+//            amtapplied = "NA";
+//            rescat = "NA";
+//            cropwt = "NA";
+//            cropwtunit = "NA";
         }
         appDt = taskplanRec.getTaskDt();
     }
@@ -106,15 +142,15 @@ public class TaskApply implements Serializable {
             float remainingAmt = Float.parseFloat(amount) - Float.parseFloat(amtapplied);
             if (remainingAmt == 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-                        "Strored resource would be finished after this application.");
+                        "Stored resource would be finished after this application.");
                 f.addMessage(null, message);
                 return "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + selectedTask;
             }
             if (remainingAmt < 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",
                         "Stored resource is less than applied resource.");
-                f.addMessage("amtapplied", message);
-                return "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + selectedTask;
+                f.addMessage(null, message);
+                return "/secured/taskplan/taskedit?faces-redirect=true&selectedTask=" + selectedTask;
             }
         
             //resourcecrop record construction
@@ -146,96 +182,222 @@ public class TaskApply implements Serializable {
             
             //taskplan record construction for update
             taskplanRec.setAppliedFlag("Y");
-//            
-//            //Addition and update started
-//            int rescropres = masterDataService.addResCropRecord(resourceCrop);
-//            
-//            if (rescropres == SUCCESS) {
-//                sqlFlag = sqlFlag + 1;
-//            } else {
-//                if (rescropres == DB_DUPLICATE) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-//                             "Resource already applied with this application ID=" + resourceCrop.getApplicationId());
-//                    f.addMessage(null, message);
-//                }
-//                if (rescropres == DB_SEVERE) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
-//                             "Failure on applying task");
-//                    f.addMessage(null, message);
-//                }
-////                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-//                return redirectUrl;
-//            }
-//            
-//            if (sqlFlag == 1) {
-//                int resres = masterDataService.editResource(resourceRec);
-//                if (resres == SUCCESS) {
-//                    sqlFlag = sqlFlag + 1;
-//                } else {
-//                    if (resres == DB_NON_EXISTING) {
-//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-//                                 "Resource record does not exist");
-//                        f.addMessage(null, message);
-//                    }
-//                    if (resres == DB_SEVERE) {
-//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-//                                 "Failure on resource update");
-//                        f.addMessage(null, message);
-//                    }
-//                    int delres = masterDataService.delResCropRecord(resourceCrop);
-//                    if (delres == DB_SEVERE) {
-//                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-//                                 "resourcecrop record could not be deleted");
-//                        f.addMessage(null, message);
-//                    }
-//                    return redirectUrl;
-//                }
-//            }
-//            
-//            if (sqlFlag == 2) {
-//                int taskres = masterDataService.editTaskplanRecord(taskplanRec);
-//                if (taskres == SUCCESS) {
-//                    sqlFlag = sqlFlag + 1;
-//                } else {
-//                    if (taskres == DB_NON_EXISTING) {
-//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-//                                "Taskplan record does not exist");
-//                        f.addMessage(null, message);
-//                    }
-//                    if (taskres == DB_SEVERE) {
-//                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-//                                "Failure on taskplan update");
-//                        f.addMessage(null, message);
-//                    }
-//                    int delres = masterDataService.delResCropRecord(resourceCrop);
-//                    if (delres == DB_SEVERE) {
-//                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-//                                "resourcecrop record could not be deleted");
-//                        f.addMessage(null, message);
-//                    }
-//                    //rollback changes in farmresource
-//                    resourceRec.setAvailableAmt(amount);
-//                    int delfarmres = masterDataService.editResource(resourceRec);
-//                    if (delfarmres == DB_SEVERE) {
-//                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
-//                                "farmresource record could not be updated");
-//                        f.addMessage(null, message);
-//                    }
-////                    redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-//                    return redirectUrl;
-//                }
-//            }
-//            
-//            if (sqlFlag == 3) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-//                        "Task applied successfully with application ID=" + resourceCrop.getApplicationId());
-//                f.addMessage(null, message);
-//            }            
+            
+            //Addition and update started
+            int rescropres = masterDataService.addResCropRecord(resourceCrop);
+            
+            if (rescropres == SUCCESS) {
+                sqlFlag = sqlFlag + 1;
+            } else {
+                if (rescropres == DB_DUPLICATE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                             "Resource already applied with this application ID=" + resourceCrop.getApplicationId());
+                    f.addMessage(null, message);
+                }
+                if (rescropres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                             "Failure on applying task");
+                    f.addMessage(null, message);
+                }
+//                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
+                return redirectUrl;
+            }
+            
+            if (sqlFlag == 1) {
+                int resres = masterDataService.editResource(resourceRec);
+                if (resres == SUCCESS) {
+                    sqlFlag = sqlFlag + 1;
+                } else {
+                    if (resres == DB_NON_EXISTING) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                 "Resource record does not exist");
+                        f.addMessage(null, message);
+                    }
+                    if (resres == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                 "Failure on resource update");
+                        f.addMessage(null, message);
+                    }
+                    int delres = masterDataService.delResCropRecord(resourceCrop);
+                    if (delres == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                                 "resourcecrop record could not be deleted");
+                        f.addMessage(null, message);
+                    }
+                    return redirectUrl;
+                }
+            }
+            
+            if (sqlFlag == 2) {
+                int taskres = masterDataService.editTaskplanRecord(taskplanRec);
+                if (taskres == SUCCESS) {
+                    sqlFlag = sqlFlag + 1;
+                } else {
+                    if (taskres == DB_NON_EXISTING) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "Taskplan record does not exist");
+                        f.addMessage(null, message);
+                    }
+                    if (taskres == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "Failure on taskplan update");
+                        f.addMessage(null, message);
+                    }
+                    int delres = masterDataService.delResCropRecord(resourceCrop);
+                    if (delres == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                                "resourcecrop record could not be deleted");
+                        f.addMessage(null, message);
+                    }
+                    //rollback changes in farmresource
+                    resourceRec.setAvailableAmt(amount);
+                    int delfarmres = masterDataService.editResource(resourceRec);
+                    if (delfarmres == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                                "farmresource record could not be updated");
+                        f.addMessage(null, message);
+                    }
+                    return redirectUrl;
+                }
+            }
+            
+            if (sqlFlag == 3) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                        "Task for resource applied successfully.");
+                f.addMessage(null, message);
+            }            
         }
-//        
-//        if (taskplanRec.getTaskType().equals("LABHRVST")) {
-//            
-//        }
+        
+        if (taskplanRec.getTaskType().equals("LABHRVST")) {
+            //        contruction of labourcrop record
+            LabourCropDTO labCropRec = new LabourCropDTO();
+            int applicationid = masterDataService.getMaxIdForLabCrop();
+            if (applicationid == 0 || applicationid == DB_SEVERE) {
+                labCropRec.setApplicationId("1");
+            } else {
+                labCropRec.setApplicationId(String.valueOf(applicationid + 1));
+            }
+            labCropRec.setHarvestId(taskplanRec.getHarvestId());
+            labCropRec.setApplicationDate(taskplanRec.getTaskDt());
+            
+//        contruction of expense record
+            ExpenseDTO expenseRec = new ExpenseDTO();
+            int expenseid = masterDataService.getNextIdForExpense();
+            if (expenseid == 0 || expenseid == DB_SEVERE) {
+                expenseRec.setExpenseId("1");
+            } else {
+                expenseRec.setExpenseId(String.valueOf(expenseid + 1));
+            }
+            expenseRec.setDate(taskplanRec.getTaskDt());
+            expenseRec.setExpenseType("LABHRVST");
+            expenseRec.setExpenseRefId(labCropRec.getApplicationId()); //######labourcrop app id
+            expenseRec.setExpenditure(taskplanRec.getAppliedAmtCost());
+            expenseRec.setCommString(comments);
+            
+            //taskplan record construction for update
+            taskplanRec.setAppliedFlag("Y");
+            
+            int labourapply = masterDataService.addLabourCropRecord(labCropRec);
+            if (labourapply == SUCCESS) {
+                sqlFlag = sqlFlag + 1;
+            } else {
+                if (labourapply == DB_DUPLICATE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Duplicate record error for labourapply");
+                    f.addMessage(null, message);
+                }
+                if (labourapply == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Failure on insert in labourapply");
+                    f.addMessage(null, message);
+                }
+                return redirectUrl;
+            }
+            
+            if (sqlFlag == 1) {
+                int expres = masterDataService.addExpenseRecord(expenseRec);
+                if (expres == SUCCESS) {
+                    sqlFlag = sqlFlag + 1;
+                } else {
+                    if (expres == DB_DUPLICATE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Failure", "Duplicate record error for expense table");
+                        f.addMessage(null, message);
+                    }
+                    if (expres == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Failure", "Failure on insert in expense table");
+                        f.addMessage(null, message);
+                    }
+                    int dellab = masterDataService.delLabourCropRecord(labCropRec);
+                    if (dellab == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                 "labourcrop record could not be deleted");
+                        f.addMessage(null, message);
+                    }
+                    return redirectUrl;
+                }
+            }
+            
+            if (sqlFlag == 2) {
+                int taskres = masterDataService.editTaskplanRecord(taskplanRec);
+                if (taskres == SUCCESS) {
+                    sqlFlag = sqlFlag + 1;
+                } else {
+                    if (taskres == DB_NON_EXISTING) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "Taskplan record does not exist");
+                        f.addMessage(null, message);
+                    }
+                    if (taskres == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Failure", "Failure in update of Taskplan table");
+                        f.addMessage(null, message);
+                    }
+                    int dellab = masterDataService.delLabourCropRecord(labCropRec);
+                    if (dellab == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                 "labourcrop record could not be deleted");
+                        f.addMessage(null, message);
+                    }
+                    int delexp = masterDataService.delExpenseRecord(expenseRec);
+                    if (delexp == DB_SEVERE) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                 "expense record could not be deleted");
+                        f.addMessage(null, message);
+                    }
+                    return redirectUrl;
+                }
+            }
+            if (sqlFlag == 3) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                        "Labour(paid) task applied successfully." );
+                f.addMessage(null, message);
+            }  
+        }
+        
+        if (taskplanRec.getTaskType().equals("LAB")) {
+            //taskplan record construction for update
+            taskplanRec.setAppliedFlag("Y");
+            int taskres = masterDataService.editTaskplanRecord(taskplanRec);
+            if (taskres == SUCCESS) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                        "Labour task applied successfully." );
+                f.addMessage(null, message);
+            } else {
+                if (taskres == DB_NON_EXISTING) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Taskplan record does not exist");
+                    f.addMessage(null, message);
+                }
+                if (taskres == DB_SEVERE) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                            "Failure", "Failure in update of Taskplan table");
+                    f.addMessage(null, message);
+                }                
+                return redirectUrl;
+            }
+        }
         return redirectUrl;
     }
     public String calcShopResAmt(String quantityApplied, String applId, String resId) 
@@ -412,6 +574,14 @@ public class TaskApply implements Serializable {
 
     public void setResCropAppliedCost(float resCropAppliedCost) {
         this.resCropAppliedCost = resCropAppliedCost;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
     
     

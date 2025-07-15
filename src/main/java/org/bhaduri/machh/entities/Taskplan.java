@@ -37,7 +37,8 @@ import java.util.Date;
     @NamedQuery(name = "Taskplan.findByResourceid", query = "SELECT t FROM Taskplan t WHERE t.resourceid = :resourceid"),
     @NamedQuery(name = "Taskplan.findByAppliedamt", query = "SELECT t FROM Taskplan t WHERE t.appliedamt = :appliedamt"),
     @NamedQuery(name = "Taskplan.findByAppamtcost", query = "SELECT t FROM Taskplan t WHERE t.appamtcost = :appamtcost"),
-    @NamedQuery(name = "Taskplan.findByAppliedflag", query = "SELECT t FROM Taskplan t WHERE t.appliedflag = :appliedflag")})
+    @NamedQuery(name = "Taskplan.findByAppliedflag", query = "SELECT t FROM Taskplan t WHERE t.appliedflag = :appliedflag"),
+    @NamedQuery(name = "Taskplan.findByComments", query = "SELECT t FROM Taskplan t WHERE t.comments = :comments")})
 public class Taskplan implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -75,6 +76,9 @@ public class Taskplan implements Serializable {
     @Size(max = 45)
     @Column(name = "appliedflag")
     private String appliedflag;
+    @Size(max = 100)
+    @Column(name = "comments")
+    private String comments;
 
     public Taskplan() {
     }
@@ -161,6 +165,14 @@ public class Taskplan implements Serializable {
 
     public void setAppliedflag(String appliedflag) {
         this.appliedflag = appliedflag;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     @Override

@@ -11,6 +11,7 @@ import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
@@ -41,8 +42,10 @@ public class TaskEdit implements Serializable {
     private String unit;
     private float amtapplied;
     private float appliedcost;
+    private String comments;
     private boolean resReadonly = false; // default not readonly
     private boolean costReadonly = false;
+    private boolean commReadonly = false;
     private String rescat;
     private String cropwt;
     private String cropwtunit;
@@ -78,13 +81,31 @@ public class TaskEdit implements Serializable {
         if (taskType.equals("LABHRVST")) {
             resReadonly = true;
             costReadonly = false;
-            taskType = "Labour";
+            commReadonly = false;
+            taskType = "Labour(to be paid)";
             unit = "Rs.";
             amount = "NA";
+            rescat = "NA";
+            cropwt = "NA";
+            cropwtunit = "NA";
+            comments = taskRecord.getComments();
+        }
+        if (taskType.equals("LAB")) {
+            resReadonly = true;
+            costReadonly = true;
+            commReadonly = false;
+            taskType = "Labour";
+            unit = "NA";
+            amount = "NA";
+            rescat = "NA";
+            cropwt = "NA";
+            cropwtunit = "NA";
+            comments = taskRecord.getComments();
         }
         if (taskType.equals("RES")) {
             resReadonly = false;
             costReadonly = true;
+            commReadonly = true;
             taskType = "Resource";
 
             unit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
@@ -124,6 +145,7 @@ public class TaskEdit implements Serializable {
                 get(selectedIndexRes).getResourceId())).getUnit();
         amount = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                     get(selectedIndexRes).getResourceId())).getAvailableAmt();
+        amtapplied = 0;
         if(masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                 get(selectedIndexRes).getResourceId()))
                 .getCropwtunit()!=null){
@@ -149,7 +171,15 @@ public class TaskEdit implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         Date today = new Date();
-        if (taskDt.before(today)) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(today);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date todayAtMidnight = cal.getTime();
+        if (taskDt.before(todayAtMidnight)) {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
                     "Task cannot be added in a past date.");
             f.addMessage(null, message);
@@ -162,7 +192,7 @@ public class TaskEdit implements Serializable {
             f.addMessage("amtapplied", message);
             return redirectUrl;
         }
-        if (taskType.equals("Labour") && appliedcost == 0) {
+        if (taskType.equals("Labour(to be paid)") && appliedcost == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
                     "Provide non-zero cost.");
             f.addMessage("amtapplied", message);
@@ -182,12 +212,19 @@ public class TaskEdit implements Serializable {
             taskplanRec.setResourceId(availableresources.get(selectedIndexRes).getResourceId());
             taskplanRec.setAppliedAmount(String.format("%.2f", amtapplied));
             taskplanRec.setAppliedAmtCost(null);
+            taskplanRec.setComments(null);
         }
         if (taskplanRec.getTaskType().equals("LABHRVST")) {
-//            taskplanRec.setTaskType("LABHRVST");
             taskplanRec.setResourceId(null);
             taskplanRec.setAppliedAmount(null);
             taskplanRec.setAppliedAmtCost(String.format("%.2f", appliedcost));
+            taskplanRec.setComments(comments);
+        }
+        if (taskplanRec.getTaskType().equals("LAB")) {
+            taskplanRec.setResourceId(null);
+            taskplanRec.setAppliedAmount(null);
+            taskplanRec.setAppliedAmtCost(null);
+            taskplanRec.setComments(comments);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         taskplanRec.setTaskDt(sdf.format(taskDt));
@@ -213,83 +250,6 @@ public class TaskEdit implements Serializable {
 
         }
         return redirectUrl;
-//        ResourceCropDTO resourceCrop = new ResourceCropDTO();        
-//        int applicationid = masterDataService.getMaxIdForResCrop();
-//        if (applicationid == 0 || applicationid == DB_SEVERE) {
-//            resourceCrop.setApplicationId("1");
-//        } else {
-//            resourceCrop.setApplicationId(String.valueOf(applicationid + 1));
-//        }
-//        resourceCrop.setResourceId(selectedRes);
-//        resourceCrop.setHarvestId(selectedHarvest);
-//        resourceCrop.setAppliedAmount(String.format("%.2f", amtapplied)); 
-//        //shopresource record construction and update
-//        String shopResupdate = calcShopResAmt(amtapplied, resourceCrop.getApplicationId());
-//        //shopresource record construction and update
-//        if(shopResupdate.equals("OK")){
-//            resourceCrop.setAppliedAmtCost((String.format("%.2f", resCropAppliedCost)));
-//        } else resourceCrop.setAppliedAmtCost("0.00");
-//        resourceCrop.setApplicationDt(sdf.format(applyDt));
-//        
-//        
-//        
-//        
-//        //farmresource record construction
-//        FarmresourceDTO resourceRec = masterDataService.getResourceNameForId(Integer.parseInt(selectedRes));
-//        float remainingAmt = Float.parseFloat(amount) - amtapplied;
-//        resourceRec.setAvailableAmt(String.format("%.2f", remainingAmt));
-//        
-//        int rescropres = masterDataService.addResCropRecord(resourceCrop);
-//        
-//        if (rescropres == SUCCESS) {
-//            sqlFlag = sqlFlag + 1;
-//        } else {
-//            if (rescropres == DB_DUPLICATE) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure."
-//                        , "Resource already applied with this application ID=" + resourceCrop.getApplicationId());
-//                f.addMessage(null, message);
-//            }
-//            if (rescropres == DB_SEVERE) {
-//                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure."
-//                        , "Failure on applying resource");
-//                f.addMessage(null, message);
-//            } 
-//            redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-//            return redirectUrl;
-//        }
-//        
-//        
-//        if (sqlFlag == 1) {
-//            int resres = masterDataService.editResource(resourceRec);
-//            if (resres == SUCCESS) {
-//                sqlFlag = sqlFlag + 1;
-//            } else {
-//                if (resres == DB_NON_EXISTING) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure"
-//                            , "Resource record does not exist");
-//                    f.addMessage(null, message);
-//                }
-//                if (resres == DB_SEVERE) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure"
-//                            , "Failure on resource update");
-//                    f.addMessage(null, message);
-//                }
-//                int delres = masterDataService.delResCropRecord(resourceCrop);
-//                if (delres == DB_SEVERE) {
-//                    message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure"
-//                            , "resourcecrop record could not be deleted");
-//                    f.addMessage(null, message);
-//                }
-//                redirectUrl = "/secured/harvest/activehrvstlst?faces-redirect=true";
-//                return redirectUrl;
-//            }
-//        }
-//        if (sqlFlag == 2) {
-//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-//                    "Resource applied successfully with application ID=" + resourceCrop.getApplicationId());
-//            f.addMessage(null, message);
-//        }
-//        return redirectUrl;
         
     }
     
@@ -430,6 +390,22 @@ public class TaskEdit implements Serializable {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public boolean isCommReadonly() {
+        return commReadonly;
+    }
+
+    public void setCommReadonly(boolean commReadonly) {
+        this.commReadonly = commReadonly;
     }
     
     

@@ -2460,6 +2460,7 @@ public class MasterDataServices {
                 else
                     record.setAppliedAmount(String.format("%.2f", taskplanlist.get(i).getAppliedamt()));
                 record.setAppliedFlag(taskplanlist.get(i).getAppliedflag());
+                record.setComments(taskplanlist.get(i).getComments());
                 recordList.add(record);
                 record = new TaskPlanDTO();
             }        
@@ -2501,6 +2502,7 @@ public class MasterDataServices {
             mysqlDate = formatter.parse(taskrec.getTaskDt());
             record.setTaskdate(mysqlDate);  
             record.setAppliedflag(taskrec.getAppliedFlag());
+            record.setComments(taskrec.getComments());
             taskplandao.create(record);
             return SUCCESS;
         } 
@@ -2540,6 +2542,7 @@ public class MasterDataServices {
             mysqlDate = formatter.parse(taskrec.getTaskDt());
             record.setTaskdate(mysqlDate);    
             record.setAppliedflag(taskrec.getAppliedFlag());
+            record.setComments(taskrec.getComments());
             taskplandao.edit(record);
             return SUCCESS;
         } 
@@ -2586,6 +2589,7 @@ public class MasterDataServices {
                 record.setAppliedAmount(String.format("%.2f", taskplanrec.getAppliedamt()));
             }
             record.setAppliedFlag(taskplanrec.getAppliedflag());
+            record.setComments(taskplanrec.getComments());
             return record;
         }
         catch (NoResultException e) {

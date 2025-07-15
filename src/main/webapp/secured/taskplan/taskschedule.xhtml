@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content">
+        <h4>Task Schedule.</h4>
+        <p:growl id="growl" showDetail="true" />
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        &nbsp;&nbsp;&nbsp;
+
+
+        <div class="card">            
+            <h:form id="tasklist" style="text-align: center">
+                <p:calendar id="calendar" 
+                            mode="inline" value="#{taskSchedule.selectedDate}">
+                <p:ajax event="viewChange" listener="#{taskSchedule.onMonthChange}" 
+                        update="taskTable,calendar"/>
+                </p:calendar>
+
+                <p:dataTable id="taskTable" var="task" value="#{taskList.tasks}" style="margin-top:2em" 
+                             reflow="true">
+
+                    <p:column headerText="Task Name">
+                        <h:outputText value="#{task.taskName}" />
+                    </p:column>
+                    <p:column headerText="Task Type">
+                        <h:outputText value="#{task.taskType eq 'RES' ? 'Resource' : (task.taskType eq 'LABHRVST' ? 'Labour(paid)': 
+                                               (task.taskType eq 'LAB' ? 'Labour' : ''))}" />
+                    </p:column>   
+                    <p:column headerText="Harvest name">
+                        <h:outputText value="#{task.harvestDto.siteName}-#{task.harvestDto.cropCategory}-
+                                      #{task.harvestDto.cropName}" />
+                    </p:column>
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Apply"
+                                         action="#{taskList.goApplyResource()}"
+                                         disabled="#{task.appliedFlag eq 'Y'}">
+                            <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />   
+
+                        </p:commandButton>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Edit"
+                                         action="#{taskList.goEditResource()}" 
+                                         disabled="#{task.appliedFlag eq 'Y'}">
+                            <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />    
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                
+
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
+
