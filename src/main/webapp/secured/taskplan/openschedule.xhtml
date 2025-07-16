@@ -13,51 +13,41 @@
 
         <div class="card">
             <h:form id="openschedule" style="text-align: center">
-                <input type="hidden" id="scheduleRangeStart" name="scheduleRangeStart" />
-                <input type="hidden" id="scheduleRangeEnd" name="scheduleRangeEnd" />
 
-                <p:remoteCommand name="rcOnViewChange"
-                                 action="#{openSchedule.onScheduleDateRangeChange}"
-                                 process="@this"
-                                 update="schedule"
-                                 />
                 <p:schedule id="schedule" value="#{openSchedule.eventModel}" widgetVar="myschedule">
-                    <p:ajax event="viewChange"
-                            oncomplete="handleScheduleViewChange();"/>
-<!--                    <p:ajax event="viewChange" listener="#{openSchedule.onViewChange}" update="schedule" />-->
-                    <p:ajax event="dateSelect" listener="#{openSchedule.onDateSelect}" 
+                    <p:ajax event="eventSelect" listener="#{openSchedule.onEventSelect}" 
                             update="eventDetails"
                             oncomplete="PF('eventDialog').show();" />
                 </p:schedule>
                 <p:dialog id="eventDetails"
                           widgetVar="eventDialog" 
                           modal="true" 
-                          resizable="false">
-                    <ui:repeat value="#{beanProg.eventsForSelectedDate}" var="event">
-                        <h:outputText value="Title: #{event.title}" /><br/>
-                        <h:outputText value="Start: #{event.startDate}" /><br/>
-                        <h:outputText value="End: #{event.endDate}" /><br/>
-                        <h:outputText value="Description: #{event.description}" /><br/>
+                          resizable="false"
+                          header="Event Details">
+
+                    <ui:repeat value="#{openSchedule.eventsForSelectedDate}" var="event">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Title:" />
+                            <h:outputText value="#{event.title}" />
+
+                            <h:outputText value="Start:" />
+                            <h:outputText value="#{event.startDate}" />
+
+                            <h:outputText value="End:" />
+                            <h:outputText value="#{event.endDate}" />
+
+                            <h:outputText value="Description:" />
+                            <h:outputText value="#{event.description}" />
+
+                        </h:panelGrid>
                         <hr/>
                     </ui:repeat>
+                    <p:commandButton value="Task done"
+                                     action="#{openSchedule.submitTasks}"
+                                     update="@form"
+                                     oncomplete="PF('eventDialog').hide()" />
+
                 </p:dialog>
-                <!-- Put this in your .xhtml file, before or after your <p:schedule> -->
-                <script type="text/javascript">
-                    function handleScheduleViewChange() {
-                        var sched = PF('myschedule').getCalendar();
-                        var start = sched.view.activeStart;
-                        var end = sched.view.activeEnd;
-
-                        var startStr = start.toISOString().slice(0, 10);
-                        var endStr = end.toISOString().slice(0, 10);
-
-                        document.getElementById('scheduleRangeStart').value = startStr;
-                        document.getElementById('scheduleRangeEnd').value = endStr;
-
-                        rcOnViewChange([{name: 'rangeStart', value: startStr}, {name: 'rangeEnd', value: endStr}]);
-                    }
-                </script>
-                
             </h:form>
         </div>
     </ui:define>
