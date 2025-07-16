@@ -35,6 +35,8 @@ import org.bhaduri.machh.services.MasterDataServices;
 public class TaskApply implements Serializable {
     private String selectedTask;
     private String selectedHarvest;
+    private String taskName;
+    private String taskType;
     private String site;
     private String cropcat;
     private String cropname;
@@ -58,11 +60,14 @@ public class TaskApply implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         TaskPlanDTO taskplanRec = masterDataService.getTaskPlanForId(selectedTask);
         
+        taskName = taskplanRec.getTaskName();
+        
         HarvestDTO harvestRecord = masterDataService.getHarvestRecForId(taskplanRec.getHarvestId());
         site = harvestRecord.getSiteName();
         cropcat = harvestRecord.getCropCategory();
         cropname = harvestRecord.getCropName();
         if (taskplanRec.getTaskType().equals("RES")) {
+            taskType = "Resource";
             FarmresourceDTO resourceRec = masterDataService
                     .getResourceNameForId(Integer.parseInt(taskplanRec.getResourceId()));
             resname = resourceRec.getResourceName();
@@ -84,6 +89,7 @@ public class TaskApply implements Serializable {
             }
         }
         if (taskplanRec.getTaskType().equals("LABHRVST")) {
+            taskType = "Labour(to be paid)";
             appliedcost = taskplanRec.getAppliedAmtCost();
             comments = taskplanRec.getComments();
             resname = "";
@@ -103,6 +109,7 @@ public class TaskApply implements Serializable {
 //            cropwtunit = "NA";
         }
         if (taskplanRec.getTaskType().equals("LAB")) {
+            taskType = "Labour";
             appliedcost = "";
             comments = taskplanRec.getComments();
             resname = "";
@@ -582,6 +589,22 @@ public class TaskApply implements Serializable {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(String taskType) {
+        this.taskType = taskType;
     }
     
     

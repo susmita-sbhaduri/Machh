@@ -41,7 +41,7 @@
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
-                                         value="Apply"
+                                         value="Done"
                                          action="#{taskList.goApplyResource()}"
                                          disabled="#{task.appliedFlag eq 'Y'}">
                             <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />   
@@ -55,6 +55,14 @@
                                          action="#{taskList.goEditResource()}" 
                                          disabled="#{task.appliedFlag eq 'Y'}">
                             <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}" />    
+                        </p:commandButton>
+                    </p:column>
+                    <p:column>
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="View"
+                                         action="#{taskList.viewTask()}">                                         
+                            <f:setPropertyActionListener value="#{task}" target="#{taskList.selectedTask}"/>   
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>

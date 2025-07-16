@@ -28,7 +28,7 @@ import org.bhaduri.machh.services.MasterDataServices;
  */
 @Named(value = "taskList")
 @ViewScoped
-public class taskList implements Serializable {
+public class TaskList implements Serializable {
 
     private Date selectedDate;
     List<TaskPlanDTO> tasks;
@@ -54,7 +54,7 @@ public class taskList implements Serializable {
     /**
      * Creates a new instance of taskList
      */
-    public taskList() {
+    public TaskList() {
     }
 
     public String onDateSelect() throws NamingException {
@@ -99,6 +99,10 @@ public class taskList implements Serializable {
 
     public String goApplyResource(){
         String redirectUrl = "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + selectedTask.getTaskId();
+        return redirectUrl; 
+    }
+    public String viewTask(){
+        String redirectUrl = "/secured/taskplan/taskview?faces-redirect=true&selectedTask=" + selectedTask.getTaskId();
         return redirectUrl; 
     }
     public String goEditResource(){
@@ -159,21 +163,21 @@ public class taskList implements Serializable {
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
         MasterDataServices masterDataService = new MasterDataServices();
-        Date today = new Date(); // current date and time
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(today);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        Date todayAtMidnight = cal.getTime();
-        if (selectedDate.before(todayAtMidnight)) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                    "Task cannot be added in a past date.");
-            f.addMessage(null, message);
-            return redirectUrl;
-        }
+//        Date today = new Date(); // current date and time
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(today);
+//        cal.set(Calendar.HOUR_OF_DAY, 0);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//
+//        Date todayAtMidnight = cal.getTime();
+//        if (selectedDate.before(todayAtMidnight)) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                    "Task cannot be added in a past date.");
+//            f.addMessage(null, message);
+//            return redirectUrl;
+//        }
 
         if (taskName.isEmpty()) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",

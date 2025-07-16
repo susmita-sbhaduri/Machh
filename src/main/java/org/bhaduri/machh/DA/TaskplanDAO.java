@@ -31,8 +31,17 @@ public class TaskplanDAO extends TaskplanJpaController{
         EntityManager em = getEntityManager();
         TypedQuery<Taskplan> query = em.createNamedQuery("Taskplan.activeList", Taskplan.class);  
         query.setParameter("taskdate", dateinput);
-        List<Taskplan> activecroplist = query.getResultList();
-        return activecroplist;
+        List<Taskplan> recordlist = query.getResultList();
+        return recordlist;
+    }
+    
+    public List<Taskplan> detailsBetweenDates(Date startdate, Date enddate) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Taskplan> query = em.createNamedQuery("Taskplan.detailsBetweenDates", Taskplan.class);  
+        query.setParameter("startdate", startdate);
+        query.setParameter("enddate", enddate);
+        List<Taskplan> recordlist = query.getResultList();
+        return recordlist;
     }
     public Taskplan getTaskplanPerId(int id) {
         EntityManager em = getEntityManager();

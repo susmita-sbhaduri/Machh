@@ -170,21 +170,21 @@ public class TaskEdit implements Serializable {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
         f.getExternalContext().getFlash().setKeepMessages(true);
-        Date today = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(today);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        Date todayAtMidnight = cal.getTime();
-        if (taskDt.before(todayAtMidnight)) {
-            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                    "Task cannot be added in a past date.");
-            f.addMessage(null, message);
-            return redirectUrl;
-        }
+//        Date today = new Date();
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(today);
+//        cal.set(Calendar.HOUR_OF_DAY, 0);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//
+//        Date todayAtMidnight = cal.getTime();
+//        if (taskDt.before(todayAtMidnight)) {
+//            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                    "Task cannot be added in a past date.");
+//            f.addMessage(null, message);
+//            return redirectUrl;
+//        }
         
         if (taskType.equals("Resource") && amtapplied == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",

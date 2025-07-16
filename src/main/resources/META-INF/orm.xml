@@ -192,6 +192,11 @@
     <named-query name="Taskplan.taskplanPerId">
         <query>SELECT t FROM Taskplan t WHERE t.id = :id</query>
     </named-query>
+    <named-query name="Taskplan.detailsBetweenDates">
+        <query>SELECT t FROM Taskplan t WHERE t.taskdate &gt;= :startdate 
+            AND t.taskdate &lt;= :enddate
+        </query>
+    </named-query>
     <named-native-query 
         name="Resourcecrop.sumByResId" 
         result-set-mapping="RescropSummaryMapping">
