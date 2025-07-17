@@ -24,7 +24,7 @@ import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleModel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.primefaces.event.SelectEvent;
@@ -37,25 +37,27 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 public class OpenSchedule implements Serializable {
 
-    private ScheduleModel eventModel;
-    private List<ScheduleEvent<?>> eventsForSelectedDate;
+    private ScheduleModel taskModel= new DefaultScheduleModel();
+    private List<ScheduleEvent<?>> tasksForSelectedDate;
     
 
     /**
      * Creates a new instance of OpenSchedule
+     * @throws javax.naming.NamingException
      */
     public OpenSchedule() throws NamingException {
-        eventModel = new DefaultScheduleModel();
+//        eventModel = 
         // On initial load, fill with events for the current month
-        fillEventsForMonth(new Date());
+        fillTasksForMonth();
     }
 
-    public void fillEventsForMonth(Date anyDateInMonth) throws NamingException {
-        eventModel.clear();
-        Date[] range = getMonthRange(anyDateInMonth);
+    public void fillTasksForMonth() throws NamingException {
+        taskModel.clear();
+//        Date[] range = getMonthRange(anyDateInMonth);
         MasterDataServices masterDataService = new MasterDataServices();
         // Suppose you have a method to load your domain events
-        List<TaskPlanDTO> entries = masterDataService.getTaskdDetailsBetweenDates(range[0], range[1]);
+//        List<TaskPlanDTO> entries = masterDataService.getTaskdDetailsBetweenDates(range[0], range[1]);
+        List<TaskPlanDTO> entries = masterDataService.getAllTaskPlanList();
        
 
         for (TaskPlanDTO entry : entries) {
@@ -65,29 +67,58 @@ public class OpenSchedule implements Serializable {
                     .title(entry.getTaskName())
                     .startDate(startDateTime)
                     .endDate(startDateTime)
-                    .description(entry.getTaskName())
+                    .description(entry.getTaskType())
                     .id(entry.getTaskId())
+                    .data(entry.getAppliedFlag())
+                    .allDay(true) 
                     .build();
-            eventModel.addEvent(evt);
+            taskModel.addEvent(evt);
         }
     }
-
-    public void onEventSelect(SelectEvent<ScheduleEvent<?>> selectEvent) {
-        ScheduleEvent<?> selectedEvent = selectEvent.getObject();
+//    public void onViewChange() throws NamingException {
+//            fillTasksForMonth();
+//    }
+    public Date getStartDateAsDate(ScheduleEvent<?> event) {
+        LocalDateTime ldt = event.getStartDate();
+        if (ldt == null) {
+            return null;
+        }
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    
+    public Date getEndDateAsDate(ScheduleEvent<?> event) {
+        LocalDateTime ldt = event.getEndDate();
+        if (ldt == null) {
+            return null;
+        }
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    
+    public void onTaskSelect(SelectEvent<ScheduleEvent<?>> selectTask) {
+        ScheduleEvent<?> selectedEvent = selectTask.getObject();
 // Extract LocalDate from selected event
         LocalDate selectedDate = selectedEvent.getStartDate().toLocalDate();
 
         // Find all events that occur on this date
-        eventsForSelectedDate = eventModel.getEvents().stream()
+        tasksForSelectedDate = taskModel.getEvents().stream()
                 .filter(evt -> evt.getStartDate().toLocalDate().isEqual(selectedDate))
                 .collect(Collectors.toList());
     }
-    public void submitTasks() {
-        for (ScheduleEvent<?> event : eventsForSelectedDate) {
-            String taskid = event.getId();
-            // process as needed: e.g., save to DB, or just print
-            System.out.printf("Taskid: %s", taskid);
-        }
+    public String submitTask(ScheduleEvent<?> event) {
+        String taskid = event.getId();
+        System.out.printf("Taskid: %s", taskid);
+        String redirectUrl = "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + event.getId();
+        return redirectUrl; 
+//        for (ScheduleEvent<?> event : eventsForSelectedDate) {
+//            String taskid = event.getId();
+//            // process as needed: e.g., save to DB, or just print
+//            System.out.printf("Taskid: %s", taskid);
+//        }
+    }
+    
+    public void viewTask(ScheduleEvent<?> event) {
+        String taskid = event.getId();
+        System.out.printf("Taskid: %s", taskid);
     }
     // Utility to get first/last date of a month
     private Date[] getMonthRange(Date refDate) {
@@ -109,21 +140,20 @@ public class OpenSchedule implements Serializable {
         return new Date[]{start, end};
     }
 
-        
-    public ScheduleModel getEventModel() {
-        return eventModel;
+    public ScheduleModel getTaskModel() {
+        return taskModel;
     }
 
-    public void setEventModel(ScheduleModel eventModel) {
-        this.eventModel = eventModel;
+    public void setTaskModel(ScheduleModel taskModel) {
+        this.taskModel = taskModel;
+    }        
+
+    public List<ScheduleEvent<?>> getTasksForSelectedDate() {
+        return tasksForSelectedDate;
     }
 
-    public List<ScheduleEvent<?>> getEventsForSelectedDate() {
-        return eventsForSelectedDate;
-    }
-
-    public void setEventsForSelectedDate(List<ScheduleEvent<?>> eventsForSelectedDate) {
-        this.eventsForSelectedDate = eventsForSelectedDate;
+    public void setTasksForSelectedDate(List<ScheduleEvent<?>> tasksForSelectedDate) {
+        this.tasksForSelectedDate = tasksForSelectedDate;
     }
     
 }

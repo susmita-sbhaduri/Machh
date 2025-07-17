@@ -192,6 +192,9 @@
     <named-query name="Taskplan.taskplanPerId">
         <query>SELECT t FROM Taskplan t WHERE t.id = :id</query>
     </named-query>
+    <named-query name="Taskplan.getAllData">
+        <query>SELECT t FROM Taskplan t</query>
+    </named-query>
     <named-query name="Taskplan.detailsBetweenDates">
         <query>SELECT t FROM Taskplan t WHERE t.taskdate &gt;= :startdate 
             AND t.taskdate &lt;= :enddate

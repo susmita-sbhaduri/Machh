@@ -125,6 +125,11 @@ public class TaskList implements Serializable {
             resReadonly = true;
             costReadonly = true;
             commReadonly = false;
+            amount = "NA";
+            unit = "NA";
+            rescat = "NA";
+            cropwt = "NA";
+            cropwtunit = "NA";
         }
         if (selectedTaskType.equals("res")) {
             resReadonly = false;

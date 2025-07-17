@@ -134,7 +134,7 @@ public class TaskApply implements Serializable {
     }
     
     public String saveTask() throws NamingException{
-        String redirectUrl = "/secured/taskplan/tasklist?faces-redirect=true";
+        String redirectUrl = "/secured/taskplan/openschedule?faces-redirect=true";
         
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();

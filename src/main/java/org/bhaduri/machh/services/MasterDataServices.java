@@ -2476,6 +2476,54 @@ public class MasterDataServices {
         }
     }
     
+    public List<TaskPlanDTO> getAllTaskPlanList() {
+        TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);  
+        List<TaskPlanDTO> recordList = new ArrayList<>();
+        TaskPlanDTO record = new TaskPlanDTO();
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+            List<Taskplan> taskplanlist = taskplandao.getAllData();
+            for (int i = 0; i < taskplanlist.size(); i++) {
+                record.setTaskId(taskplanlist.get(i).getId().toString());
+                record.setTaskType(taskplanlist.get(i).getTasktype());
+                mysqlDate = taskplanlist.get(i).getTaskdate();                    
+                record.setTaskDt(formatter.format(mysqlDate));
+                record.setTaskName(taskplanlist.get(i).getTaskname());
+                record.setHarvestId(String.valueOf(taskplanlist.get(i).getHasvestid()));
+                record.setHarvestDto(getHarvestRecForId(String.valueOf(taskplanlist.get(i).getHasvestid())));
+                if (taskplanlist.get(i).getResourceid() == null)
+                    record.setResourceId(null);
+                else
+                    record.setResourceId(String.valueOf(taskplanlist.get(i).getResourceid()));
+                
+                if (taskplanlist.get(i).getAppamtcost() == null)
+                    record.setAppliedAmtCost(null);
+                else
+                    record.setAppliedAmtCost(String.format("%.2f", taskplanlist.get(i).getAppamtcost()));
+                
+                if (taskplanlist.get(i).getAppliedamt() == null)
+                    record.setAppliedAmount(null);
+                else
+                    record.setAppliedAmount(String.format("%.2f", taskplanlist.get(i).getAppliedamt()));
+                record.setAppliedFlag(taskplanlist.get(i).getAppliedflag());
+                record.setComments(taskplanlist.get(i).getComments());
+                recordList.add(record);
+                record = new TaskPlanDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No task is planned so far.");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getAllTaskPlanList.");
+            return null;
+        }
+    }
+    
     public List<TaskPlanDTO> getTaskdDetailsBetweenDates(Date startdate, Date enddate) {
         TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);  
         List<TaskPlanDTO> recordList = new ArrayList<>();

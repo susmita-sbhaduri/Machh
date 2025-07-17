@@ -8,45 +8,63 @@
                 xmlns:h="jakarta.faces.html">
 
     <ui:define name="content">
-        <h4>Details of application of the selected resource.</h4>
+        <h4>Open Schedule.</h4>
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
 
         <div class="card">
             <h:form id="openschedule" style="text-align: center">
 
-                <p:schedule id="schedule" value="#{openSchedule.eventModel}" widgetVar="myschedule">
-                    <p:ajax event="eventSelect" listener="#{openSchedule.onEventSelect}" 
-                            update="eventDetails"
-                            oncomplete="PF('eventDialog').show();" />
+                <p:schedule id="schedule" value="#{openSchedule.taskModel}" widgetVar="myschedule">
+                    <!--<p:ajax event="viewChange" listener="#{openSchedule.onViewChange}"/>-->
+                    <p:ajax event="eventSelect" listener="#{openSchedule.onTaskSelect}" 
+                            update="taskDetails"
+                            oncomplete="PF('taskDialog').show();" />
                 </p:schedule>
-                <p:dialog id="eventDetails"
-                          widgetVar="eventDialog" 
+                <p:dialog id="taskDetails"
+                          widgetVar="taskDialog" 
                           modal="true" 
                           resizable="false"
-                          header="Event Details">
+                          header="Task Details">
+                    <p:dataTable value="#{openSchedule.tasksForSelectedDate}" 
+                                 var="task"
+                                 id="taskTable" 
+                                 style="margin-top:2em" 
+                                 reflow="true">
+                        <p:column headerText="Title">
+                            #{task.title}
+                        </p:column>
 
-                    <ui:repeat value="#{openSchedule.eventsForSelectedDate}" var="event">
-                        <h:panelGrid columns="2">
-                            <h:outputText value="Title:" />
-                            <h:outputText value="#{event.title}" />
+                        <p:column headerText="Start">
+                            <h:outputText value="#{openSchedule.getStartDateAsDate(task)}">
+                                <f:convertDateTime pattern="dd MMM yyyy" />
+                            </h:outputText>
+                        </p:column>
 
-                            <h:outputText value="Start:" />
-                            <h:outputText value="#{event.startDate}" />
+                        <p:column headerText="End">
+                            <h:outputText value="#{openSchedule.getEndDateAsDate(task)}">
+                                <f:convertDateTime pattern="dd MMM yyyy" />
+                            </h:outputText>
+                        </p:column>
 
-                            <h:outputText value="End:" />
-                            <h:outputText value="#{event.endDate}" />
-
-                            <h:outputText value="Description:" />
-                            <h:outputText value="#{event.description}" />
-
-                        </h:panelGrid>
-                        <hr/>
-                    </ui:repeat>
-                    <p:commandButton value="Task done"
-                                     action="#{openSchedule.submitTasks}"
-                                     update="@form"
-                                     oncomplete="PF('eventDialog').hide()" />
-
+                        <p:column headerText="Description">
+                            #{task.description}
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Mark Done"
+                                             action="#{openSchedule.submitTask(task)}"
+                                             update="taskTable"
+                                             disabled="#{task.data eq 'Y'}"
+                                             icon="pi pi-check"                                             
+                                             oncomplete="PF('eventDialog').hide()" />
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="View"
+                                             action="#{openSchedule.viewTask(task)}"
+                                             update="taskTable"
+                                             icon="pi pi-check"
+                                             oncomplete="PF('eventDialog').hide()" />
+                        </p:column>
+                    </p:dataTable>
                 </p:dialog>
             </h:form>
         </div>
