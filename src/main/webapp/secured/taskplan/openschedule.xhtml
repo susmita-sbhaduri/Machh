@@ -34,38 +34,10 @@
                             update="taskDetails"
                             oncomplete="PF('taskDialog').show();" />
                 </p:schedule>
-                <p:dialog id="addDialog"
-                          widgetVar="addDialog" 
-                          modal="true" 
-                          resizable="true"
-                          header="Add new task Tothis date">
-                    <h:outputText value="You selected: ">
-                        <f:convertDateTime pattern="dd MMM yyyy" />
-                    </h:outputText>
-                    <h:outputText value="#{openSchedule.selectedDate}">
-                        <f:convertDateTime pattern="dd MMM yyyy" />
-                    </h:outputText>
-                    <br/><br/>
-                        <p:column>
-                            <p:commandButton value="Create new Task"
-                                             action="#{openSchedule.onDateConfirm}"
-                                             update="addDialog"
-                                             icon="pi pi-check"                                             
-                                             oncomplete="PF('addDialog').hide()" />
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="View"
-                                             action="#{openSchedule.viewTask(task)}"
-                                             update="taskTable"
-                                             icon="pi pi-check"
-                                             oncomplete="PF('eventDialog').hide()" />
-                        </p:column>
-                    
-                </p:dialog>
                 <p:dialog id="taskDetails"
                           widgetVar="taskDialog" 
                           modal="true" 
-                          resizable="false"
+                          resizable="true"
                           header="Task Details">
                     <p:dataTable value="#{openSchedule.tasksForSelectedDate}" 
                                  var="task"
@@ -109,6 +81,7 @@
                         </p:column>
                     </p:dataTable>
                 </p:dialog>
+                
             </h:form>
         </div>
     </ui:define>

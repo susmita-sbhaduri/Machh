@@ -34,6 +34,7 @@ public class OpenSchedule implements Serializable {
 
     private ScheduleModel taskModel = new DefaultScheduleModel();
     private List<ScheduleEvent<?>> tasksForSelectedDate;
+    private LocalDateTime selectedDateTime;
     private Date selectedDate;
 
     /**
@@ -76,13 +77,18 @@ public class OpenSchedule implements Serializable {
         }
     }
 
-    public void onDateSelect(SelectEvent<Date> event) {
-        this.selectedDate = event.getObject();
+    public void onDateSelect(SelectEvent<LocalDateTime> event) {
+        LocalDateTime localDateTime = event.getObject();
+        this.selectedDateTime = localDateTime; // add a LocalDateTime field to your bean
+
+        // If you need java.util.Date for compatibility:
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        this.selectedDate = date; // add a Date field to your bean if necessary
     }
-    public void onDateConfirm() {
-        // Use selectedDate as needed
-        // Example: System.out.println("Confirmed: " + selectedDate);
-    }
+//    public void onDateConfirm() {
+//        // Use selectedDate as needed
+//        // Example: System.out.println("Confirmed: " + selectedDate);
+//    }
 //    public void onViewChange() throws NamingException {
 //       
 //            fillTasksForMonth();
@@ -176,6 +182,14 @@ public class OpenSchedule implements Serializable {
 
     public void setSelectedDate(Date selectedDate) {
         this.selectedDate = selectedDate;
+    }
+
+    public LocalDateTime getSelectedDateTime() {
+        return selectedDateTime;
+    }
+
+    public void setSelectedDateTime(LocalDateTime selectedDateTime) {
+        this.selectedDateTime = selectedDateTime;
     }
     
     
