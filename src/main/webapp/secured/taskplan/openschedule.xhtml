@@ -8,6 +8,18 @@
                 xmlns:h="jakarta.faces.html">
 
     <ui:define name="content">
+        <style>
+            .applied-flag-yes {
+                background-color: #ff9999 !important;  /* darker red */
+                color: #800000 !important;             /* dark red font */
+                border-color: #b22222 !important;      /* firebrick */
+            }
+            .applied-flag-no {
+                background-color: #99ff99 !important;  /* darker green */
+                color: #006400 !important;             /* dark green font */
+                border-color: #228b22 !important;      /* forest green */
+            }
+        </style>
         <h4>Open Schedule.</h4>
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
 
@@ -15,11 +27,41 @@
             <h:form id="openschedule" style="text-align: center">
 
                 <p:schedule id="schedule" value="#{openSchedule.taskModel}" widgetVar="myschedule">
+                    <p:ajax event="dateSelect" listener="#{openSchedule.onDateSelect}" 
+                            oncomplete="PF('addDialog').show();" />
                     <!--<p:ajax event="viewChange" listener="#{openSchedule.onViewChange}"/>-->
                     <p:ajax event="eventSelect" listener="#{openSchedule.onTaskSelect}" 
                             update="taskDetails"
                             oncomplete="PF('taskDialog').show();" />
                 </p:schedule>
+                <p:dialog id="addDialog"
+                          widgetVar="addDialog" 
+                          modal="true" 
+                          resizable="true"
+                          header="Add new task Tothis date">
+                    <h:outputText value="You selected: ">
+                        <f:convertDateTime pattern="dd MMM yyyy" />
+                    </h:outputText>
+                    <h:outputText value="#{openSchedule.selectedDate}">
+                        <f:convertDateTime pattern="dd MMM yyyy" />
+                    </h:outputText>
+                    <br/><br/>
+                        <p:column>
+                            <p:commandButton value="Create new Task"
+                                             action="#{openSchedule.onDateConfirm}"
+                                             update="addDialog"
+                                             icon="pi pi-check"                                             
+                                             oncomplete="PF('addDialog').hide()" />
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="View"
+                                             action="#{openSchedule.viewTask(task)}"
+                                             update="taskTable"
+                                             icon="pi pi-check"
+                                             oncomplete="PF('eventDialog').hide()" />
+                        </p:column>
+                    
+                </p:dialog>
                 <p:dialog id="taskDetails"
                           widgetVar="taskDialog" 
                           modal="true" 
@@ -46,8 +88,9 @@
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="Description">
-                            #{task.description}
+                        <p:column headerText="Description">                           
+                            #{task.description eq 'RES' ? 'Resource' : (task.description eq 'LABHRVST' ? 'Labour(paid)': 
+                                               (task.description eq 'LAB' ? 'Labour': ''))}
                         </p:column>
                         <p:column>
                             <p:commandButton value="Mark Done"
