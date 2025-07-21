@@ -28,7 +28,9 @@
                         <f:selectItems value="#{harvestAdd.existingsites}" 
                                        var="site"
                                        itemLabel="#{site.siteName}" 
-                                       itemValue="#{harvestAdd.existingsites.indexOf(site)}"/>                                          
+                                       itemValue="#{harvestAdd.existingsites.indexOf(site)}"/>   
+                        <p:ajax event="change" listener="#{harvestAdd.onSiteSelect}" 
+                                    update="harvestaddform" process="@this"/>
                         </p:selectOneMenu>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">

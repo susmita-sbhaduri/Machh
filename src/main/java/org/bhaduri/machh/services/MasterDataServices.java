@@ -1380,6 +1380,33 @@ public class MasterDataServices {
         }
     }
     
+    public List<CropDTO> getCropListForSite(String siteid) {
+        CropDAO cropdao = new CropDAO(utx, emf);  
+        List<CropDTO> recordList = new ArrayList<>();
+        CropDTO record = new CropDTO();        
+        try {  
+            List<Crop> croplist = cropdao.getCropsPerSite(Integer.parseInt(siteid));
+            for (int i = 0; i < croplist.size(); i++) {
+                record.setCropId(croplist.get(i).getCropid().toString());
+                record.setCropCategory(croplist.get(i).getCropcategory());
+                record.setCropName(croplist.get(i).getCrop());
+                record.setDetails(croplist.get(i).getDetails());
+                             
+                recordList.add(record);
+                record = new CropDTO();
+            }        
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No crops for the siteid are found");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getCropListForSite.");
+            return null;
+        }
+    }
+    
     public int getMaxIdForResCrop(){
         ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
         try {

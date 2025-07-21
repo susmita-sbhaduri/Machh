@@ -33,6 +33,9 @@
     <named-query name="Crop.listAll">
         <query>SELECT c FROM Crop c</query>
     </named-query>
+    <named-query name="Crop.getCropsPerSite">
+        <query>SELECT c FROM Crop c WHERE c.siteid = :siteid</query>
+    </named-query>
     <named-query name="Farmresource.listAll">
         <query>SELECT f FROM Farmresource f</query>
     </named-query>
@@ -141,7 +144,7 @@
         <query>SELECT MAX(r.applicationid) FROM Resourcecrop r</query>
     </named-query>
     <named-query name="Resourcecrop.getResCropHarvest">
-        <query>SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid</query>
+        <query>SELECT r FROM Resourcecrop r WHERE r.harvestid = :harvestid ORDER BY r.appldate DESC</query>
     </named-query>
     <named-query name="Resourcecrop.getResCropResource">
         <query>SELECT r FROM Resourcecrop r WHERE r.resourceid = :resourceid</query>
@@ -173,7 +176,7 @@
         <query>SELECT MAX(l.applicationid) FROM Labourcrop l</query>
     </named-query>
     <named-query name="Labourcrop.getLabCropHarvest">
-        <query>SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid</query>
+        <query>SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid ORDER BY l.appldate DESC</query>
     </named-query>
     <named-query name="Labourcrop.detailsForHarvest">
         <query>SELECT l FROM Labourcrop l WHERE l.harvestid = :harvestid 

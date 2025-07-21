@@ -27,9 +27,10 @@
             <h:form id="openschedule" style="text-align: center">
 
                 <p:schedule id="schedule" value="#{openSchedule.taskModel}" widgetVar="myschedule">
-                    <p:ajax event="dateSelect" listener="#{openSchedule.onDateSelect}" 
+                    <p:ajax event="dateSelect" 
+                            listener="#{openSchedule.onDateSelect}" 
+                            update="addDialog"
                             oncomplete="PF('addDialog').show();" />
-                    <!--<p:ajax event="viewChange" listener="#{openSchedule.onViewChange}"/>-->
                     <p:ajax event="eventSelect" listener="#{openSchedule.onTaskSelect}" 
                             update="taskDetails"
                             oncomplete="PF('taskDialog').show();" />
@@ -81,7 +82,36 @@
                         </p:column>
                     </p:dataTable>
                 </p:dialog>
-                
+                <p:dialog id="addDialog"
+                          widgetVar="addDialog" 
+                          modal="true" 
+                          resizable="false"
+                          header="Add new task to this date">
+                    <div class="ui-g" style="align-items: center;">
+
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputText value="You selected: " />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <h:outputText value="#{openSchedule.selectedDate}">
+                                <f:convertDateTime pattern="dd MMM yyyy" />
+                            </h:outputText>
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:commandButton value="Create new Task"
+                                             action="#{openSchedule.onDateConfirm}"
+                                             update="addDialog"
+                                             icon="pi pi-check"                                             
+                                             oncomplete="PF('addDialog').hide()" />
+                        </div>
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:commandButton value="Cancel"
+                                             type="button"
+                                             onclick="PF('addDialog').hide()" />
+                        </div>
+
+                    </div>
+                </p:dialog>
             </h:form>
         </div>
     </ui:define>

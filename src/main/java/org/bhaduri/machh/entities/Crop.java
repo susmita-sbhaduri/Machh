@@ -28,6 +28,7 @@ import java.io.Serializable;
     @NamedQuery(name = "Crop.findByCropid", query = "SELECT c FROM Crop c WHERE c.cropid = :cropid"),
     @NamedQuery(name = "Crop.findByCropcategory", query = "SELECT c FROM Crop c WHERE c.cropcategory = :cropcategory"),
     @NamedQuery(name = "Crop.findByCrop", query = "SELECT c FROM Crop c WHERE c.crop = :crop"),
+    @NamedQuery(name = "Crop.findBySiteid", query = "SELECT c FROM Crop c WHERE c.siteid = :siteid"),
     @NamedQuery(name = "Crop.findByDetails", query = "SELECT c FROM Crop c WHERE c.details = :details")})
 public class Crop implements Serializable {
 
@@ -47,6 +48,8 @@ public class Crop implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "crop")
     private String crop;
+    @Column(name = "siteid")
+    private Integer siteid;
     @Size(max = 45)
     @Column(name = "details")
     private String details;
@@ -86,6 +89,14 @@ public class Crop implements Serializable {
 
     public void setCrop(String crop) {
         this.crop = crop;
+    }
+
+    public Integer getSiteid() {
+        return siteid;
+    }
+
+    public void setSiteid(Integer siteid) {
+        this.siteid = siteid;
     }
 
     public String getDetails() {

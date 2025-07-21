@@ -43,7 +43,7 @@ public class HarvestAdd implements Serializable {
     public String fillValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
         existingsites = masterDataService.getSites();
-        existingcrops = masterDataService.getCropList();
+        existingcrops = masterDataService.getCropListForSite(existingsites.get(selectedIndexSite).getSiteID());
         String redirectUrl = "/secured/userhome?faces-redirect=true";
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();
@@ -57,7 +57,10 @@ public class HarvestAdd implements Serializable {
         } else 
             return null;        
     }
-    
+    public void onSiteSelect() throws NamingException {
+        MasterDataServices masterDataService = new MasterDataServices();
+        existingcrops = masterDataService.getCropListForSite(existingsites.get(selectedIndexSite).getSiteID());
+    }
     public String saveHarvest() throws NamingException {
         FacesMessage message;
         FacesContext f = FacesContext.getCurrentInstance();

@@ -12,6 +12,7 @@ import java.util.Calendar;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.TaskPlanDTO;
 import org.bhaduri.machh.services.MasterDataServices;
@@ -79,16 +80,20 @@ public class OpenSchedule implements Serializable {
 
     public void onDateSelect(SelectEvent<LocalDateTime> event) {
         LocalDateTime localDateTime = event.getObject();
-        this.selectedDateTime = localDateTime; // add a LocalDateTime field to your bean
+        selectedDateTime = localDateTime; // add a LocalDateTime field to your bean
 
         // If you need java.util.Date for compatibility:
         Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        this.selectedDate = date; // add a Date field to your bean if necessary
+        selectedDate = date; // add a Date field to your bean if necessary
     }
-//    public void onDateConfirm() {
-//        // Use selectedDate as needed
-//        // Example: System.out.println("Confirmed: " + selectedDate);
-//    }
+    public String onDateConfirm() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        String selectedDateString = sdf.format(selectedDate);
+        String redirectUrl = "/secured/taskplan/taskadd?faces-redirect=true&selectedDate=" + selectedDateString;
+        return redirectUrl;
+        
+//        System.out.println("Confirmed: " + selectedDate);
+    }
 //    public void onViewChange() throws NamingException {
 //       
 //            fillTasksForMonth();
@@ -113,11 +118,11 @@ public class OpenSchedule implements Serializable {
     public void onTaskSelect(SelectEvent<ScheduleEvent<?>> selectTask) {
         ScheduleEvent<?> selectedEvent = selectTask.getObject();
 // Extract LocalDate from selected event
-        LocalDate selectedDate = selectedEvent.getStartDate().toLocalDate();
+        LocalDate selectedTaskDate = selectedEvent.getStartDate().toLocalDate();
 
         // Find all events that occur on this date
         tasksForSelectedDate = taskModel.getEvents().stream()
-                .filter(evt -> evt.getStartDate().toLocalDate().isEqual(selectedDate))
+                .filter(evt -> evt.getStartDate().toLocalDate().isEqual(selectedTaskDate))
                 .collect(Collectors.toList());
     }
 
