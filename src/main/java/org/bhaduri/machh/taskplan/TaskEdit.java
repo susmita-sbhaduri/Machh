@@ -231,7 +231,7 @@ public class TaskEdit implements Serializable {
         taskplanRec.setAppliedFlag(null);
         
         int response = masterDataService.editTaskplanRecord(taskplanRec);
-        redirectUrl = "/secured/taskplan/tasklist?faces-redirect=true";
+        redirectUrl = "/secured/taskplan/openschedule?faces-redirect=true";
         if (response == SUCCESS) {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
                     "Task is updated successfully");

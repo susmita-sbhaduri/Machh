@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+    <ui:define name="content">
+        <h4>Details of acquired resources so far.</h4>
+        <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
+
+        <f:metadata>   
+            <f:viewParam name="startDt" value="#{taskListDetails.startDt}"></f:viewParam>
+            <f:viewParam name="endDt" value="#{taskListDetails.endDt}"></f:viewParam>
+            <f:viewAction action="#{taskListDetails.fillValues()}" />
+        </f:metadata>
+        <div class="card">
+
+            <h:form id="tasklistform" style="text-align: center">
+                <div style="text-align: left;">
+                    <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+                    &nbsp;&nbsp;&nbsp;
+                    <p:commandButton value="Export as CSV" ajax="false">
+                        <p:dataExporter type="csv" 
+                                        target="tasklistform:tasklist" 
+                                        fileName="Tasklist"/>
+                    </p:commandButton>
+                </div>
+                <p:dataTable id="tasklist" var="task" value="#{taskListDetails.tasks}">                   
+
+                    <p:column headerText="Task Type" >
+                        <h:outputText value="#{task.taskType eq 'RES' ? 'Resource' : (task.taskType eq 'LABHRVST' ? 'Labour(paid)': 
+                                               (task.taskType eq 'LAB' ? 'Labour' : ''))}" />
+<!--                        <h:outputText value="#{task.taskType}" 
+                                      style="#{resacq.resName eq 'Total' ? 'font-weight:bold;' : ''}"/>-->
+                    </p:column>
+                    <p:column headerText="Task Name">
+                        <h:outputText value="#{task.taskName}" />
+                    </p:column>
+                    <p:column headerText="Task Date">
+                        <h:outputText value="#{task.taskDt}" />
+                    </p:column>
+                    <p:column headerText="Harvest(Site-Crop Category-Cropname)">
+                        <h:outputText value="#{task.harvestDto.siteName}-#{task.harvestDto.cropCategory}-
+                                           #{task.harvestDto.cropName}" />
+                    </p:column>
+                    <p:column headerText="Resource Name">
+                        <h:outputText value="#{task.resourceName}" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>    
+
+</ui:composition>

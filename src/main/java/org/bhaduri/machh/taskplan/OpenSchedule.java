@@ -21,9 +21,9 @@ import org.primefaces.model.ScheduleModel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.schedule.ScheduleRangeEvent;
 
 /**
  *
@@ -36,7 +36,7 @@ public class OpenSchedule implements Serializable {
     private ScheduleModel taskModel = new DefaultScheduleModel();
     private List<ScheduleEvent<?>> tasksForSelectedDate;
     private LocalDateTime selectedDateTime;
-    private Date selectedDate;
+    private String selectedDate;
 
     /**
      * Creates a new instance of OpenSchedule
@@ -57,6 +57,7 @@ public class OpenSchedule implements Serializable {
         for (TaskPlanDTO entry : entries) {
             LocalDate localDate = LocalDate.parse(entry.getTaskDt());
             LocalDateTime startDateTime = localDate.atStartOfDay();
+            LocalDateTime endDateTime = localDate.plusDays(1).atStartOfDay();  // <=== next day midnight
 
             String styleClass = "applied-flag-no";
             if ("Y".equals(entry.getAppliedFlag())) {
@@ -66,7 +67,7 @@ public class OpenSchedule implements Serializable {
             ScheduleEvent<?> evt = DefaultScheduleEvent.builder()
                     .title(entry.getTaskName())
                     .startDate(startDateTime)
-                    .endDate(startDateTime)
+                    .endDate(endDateTime)
                     .description(entry.getTaskType())
                     .id(entry.getTaskId())
                     .data(entry.getAppliedFlag())
@@ -82,14 +83,16 @@ public class OpenSchedule implements Serializable {
         LocalDateTime localDateTime = event.getObject();
         selectedDateTime = localDateTime; // add a LocalDateTime field to your bean
 
-        // If you need java.util.Date for compatibility:
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        selectedDate = date; // add a Date field to your bean if necessary
+        // Use DateTimeFormatter to strictly format date part
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        selectedDate = selectedDateTime.toLocalDate().format(formatter); // add a Date field to your bean if necessary                
+        
+        
     }
     public String onDateConfirm() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-        String selectedDateString = sdf.format(selectedDate);
-        String redirectUrl = "/secured/taskplan/taskadd?faces-redirect=true&selectedDate=" + selectedDateString;
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+//        String selectedDateString = sdf.format(selectedDate);
+        String redirectUrl = "/secured/taskplan/taskadd?faces-redirect=true&selectedDate=" + selectedDate;
         return redirectUrl;
         
 //        System.out.println("Confirmed: " + selectedDate);
@@ -99,12 +102,15 @@ public class OpenSchedule implements Serializable {
 //            fillTasksForMonth();
 //    }
 
-    public Date getStartDateAsDate(ScheduleEvent<?> event) {
+    public String getFormattedStartDate(ScheduleEvent<?> event) {
         LocalDateTime ldt = event.getStartDate();
         if (ldt == null) {
-            return null;
+            return "";
         }
-        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+        // Use DateTimeFormatter to strictly format date part
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        
+        return ldt.toLocalDate().format(formatter);
     }
 
     public Date getEndDateAsDate(ScheduleEvent<?> event) {
@@ -130,6 +136,18 @@ public class OpenSchedule implements Serializable {
         String taskid = event.getId();
         System.out.printf("Taskid: %s", taskid);
         String redirectUrl = "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + event.getId();
+        return redirectUrl;
+//        for (ScheduleEvent<?> event : eventsForSelectedDate) {
+//            String taskid = event.getId();
+//            // process as needed: e.g., save to DB, or just print
+//            System.out.printf("Taskid: %s", taskid);
+//        }
+    }
+    
+    public String editTask(ScheduleEvent<?> event) {
+        String taskid = event.getId();
+        System.out.printf("Taskid: %s", taskid);
+        String redirectUrl = "/secured/taskplan/taskedit?faces-redirect=true&selectedTask=" + event.getId();
         return redirectUrl;
 //        for (ScheduleEvent<?> event : eventsForSelectedDate) {
 //            String taskid = event.getId();
@@ -181,13 +199,15 @@ public class OpenSchedule implements Serializable {
         this.tasksForSelectedDate = tasksForSelectedDate;
     }
 
-    public Date getSelectedDate() {
+    public String getSelectedDate() {
         return selectedDate;
     }
 
-    public void setSelectedDate(Date selectedDate) {
+    public void setSelectedDate(String selectedDate) {
         this.selectedDate = selectedDate;
     }
+
+    
 
     public LocalDateTime getSelectedDateTime() {
         return selectedDateTime;

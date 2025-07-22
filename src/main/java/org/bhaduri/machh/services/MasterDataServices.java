@@ -2556,7 +2556,7 @@ public class MasterDataServices {
         List<TaskPlanDTO> recordList = new ArrayList<>();
         TaskPlanDTO record = new TaskPlanDTO();
         Date mysqlDate;
-        String pattern = "yyyy-MM-dd";
+        String pattern = "dd MMM yyyy";
         SimpleDateFormat formatter = new SimpleDateFormat(pattern);
         try {  
             List<Taskplan> taskplanlist = taskplandao.detailsBetweenDates(startdate, enddate);
@@ -2568,11 +2568,13 @@ public class MasterDataServices {
                 record.setTaskName(taskplanlist.get(i).getTaskname());
                 record.setHarvestId(String.valueOf(taskplanlist.get(i).getHasvestid()));
                 record.setHarvestDto(getHarvestRecForId(String.valueOf(taskplanlist.get(i).getHasvestid())));
-                if (taskplanlist.get(i).getResourceid() == null)
+                if (taskplanlist.get(i).getResourceid() == null){
                     record.setResourceId(null);
-                else
+                    record.setResourceName(null);
+                }else{
                     record.setResourceId(String.valueOf(taskplanlist.get(i).getResourceid()));
-                
+                    record.setResourceName(getResourceNameForId(taskplanlist.get(i).getResourceid()).getResourceName());
+                }
                 if (taskplanlist.get(i).getAppamtcost() == null)
                     record.setAppliedAmtCost(null);
                 else

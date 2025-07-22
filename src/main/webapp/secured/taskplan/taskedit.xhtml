@@ -12,7 +12,7 @@
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
         <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
         &nbsp;&nbsp;&nbsp;
-        <p:button value="Go back" outcome="/secured/taskplan/tasklist"/>
+        <p:button value="Go back" outcome="/secured/taskplan/openschedule"/>
         &nbsp;&nbsp;&nbsp;
 
         <f:metadata>
@@ -27,7 +27,7 @@
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Task Date" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:datePicker id="tdate" value="#{taskEdit.taskDt}" pattern="yyyy-MM-dd"/>
+                        <p:datePicker id="tdate" value="#{taskEdit.taskDt}" pattern="dd MMM yyyy"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Task Type" />
                     </div>
@@ -148,7 +148,7 @@
                         </p:commandButton>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/taskplan/tasklist" />
+                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/taskplan/openschedule" />
                     </div>
                 </div>    
             </h:form>
