@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" 
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd" version="2.0">
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm 
+                                     http://java.sun.com/xml/ns/persistence/orm_2_0.xsd" version="2.0">
 
     <named-query name="Users.getUserDetails">
         <query>SELECT u FROM Users u WHERE u.username = :username and u.password = :password</query>
@@ -12,6 +13,9 @@
     <named-query name="Employee.getMaxEmpId">
         <query>SELECT MAX(e.id) FROM Employee e</query>
     </named-query>
+<!--    <named-query name="Empleave.getMaxEmpLeaveId">
+        <query>SELECT MAX(e.id) FROM Empleave e</query>
+    </named-query>-->
     <named-query name="Employee.activeList">
         <query>SELECT e FROM Employee e WHERE e.enddate IS NULL</query>
     </named-query>
@@ -203,6 +207,7 @@
             AND t.taskdate &lt;= :enddate
         </query>
     </named-query>
+
     <named-native-query 
         name="Resourcecrop.sumByResId" 
         result-set-mapping="RescropSummaryMapping">

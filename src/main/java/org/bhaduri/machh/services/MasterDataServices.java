@@ -18,6 +18,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.bhaduri.machh.DA.CropDAO;
+import org.bhaduri.machh.DA.EmpLeaveDAO;
 import org.bhaduri.machh.DA.EmpexpenseDAO;
 import org.bhaduri.machh.DA.EmployeeDAO;
 import org.bhaduri.machh.DA.ExpenseDAO;
@@ -37,6 +38,7 @@ import org.bhaduri.machh.DA.TaskplanDAO;
 import org.bhaduri.machh.DA.UsersDAO;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.EmpExpDTO;
+import org.bhaduri.machh.DTO.EmpLeaveDTO;
 import org.bhaduri.machh.DTO.EmployeeDTO;
 import org.bhaduri.machh.DTO.ExpenseDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
@@ -63,6 +65,7 @@ import org.bhaduri.machh.JPA.exceptions.NonexistentEntityException;
 import org.bhaduri.machh.JPA.exceptions.PreexistingEntityException;
 import org.bhaduri.machh.entities.Crop;
 import org.bhaduri.machh.entities.Empexpense;
+import org.bhaduri.machh.entities.Empleave;
 import org.bhaduri.machh.entities.Employee;
 import org.bhaduri.machh.entities.Expense;
 
@@ -2573,7 +2576,9 @@ public class MasterDataServices {
                     record.setResourceName(null);
                 }else{
                     record.setResourceId(String.valueOf(taskplanlist.get(i).getResourceid()));
-                    record.setResourceName(getResourceNameForId(taskplanlist.get(i).getResourceid()).getResourceName());
+                    record.setResourceName(getResourceNameForId(taskplanlist.get(i).getResourceid())
+                            .getResourceName()+"(" +getResourceNameForId(taskplanlist.get(i).getResourceid())
+                                    .getUnit()+")");
                 }
                 if (taskplanlist.get(i).getAppamtcost() == null)
                     record.setAppliedAmtCost(null);
@@ -2725,6 +2730,46 @@ public class MasterDataServices {
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getTaskPlanForId.");
             return null;
+        }
+    }
+    
+    public int getMaxEmpLeaveId(){
+        EmpLeaveDAO leavedao = new EmpLeaveDAO(utx, emf);
+        try {
+            return leavedao.getMaxEmpLeaveId();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in empleave table");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getMaxEmpLeaveId().");
+            return DB_SEVERE;
+        }
+    }
+    
+    public int addEmpleaveRecord(EmpLeaveDTO leaverec) {
+        EmpLeaveDAO leavedao = new EmpLeaveDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "dd MMM yyyy";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {
+            Empleave rec = new Empleave();
+            rec.setId(Integer.valueOf(leaverec.getId()));
+            rec.setEmployeeid(Integer.parseInt(leaverec.getEmpid()));
+            rec.setComments(leaverec.getComments());
+            
+
+            mysqlDate = formatter.parse(leaverec.getLeavedate());
+            rec.setLeavedate(mysqlDate);
+            leavedao.create(rec);
+            return SUCCESS;
+        } catch (PreexistingEntityException e) {
+            System.out.println("Record is already there for this empleave record");
+            return DB_DUPLICATE;
+        } catch (Exception exception) {
+            System.out.println(exception + " has occurred in addEmpleaveRecord.");
+            return DB_SEVERE;
         }
     }
 // **********************commented   

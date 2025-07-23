@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                template="./../../WEB-INF/template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="jakarta.faces.core"
+                xmlns:h="jakarta.faces.html">
+
+   <ui:define name="content">
+        <p:growl id="growl" showDetail="true" />
+        <h4>Employee Leave.</h4>
+        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        &nbsp;&nbsp;&nbsp;
+        <f:metadata>
+            <f:viewAction action="#{empLeave.fillValues()}"/>
+        </f:metadata>
+
+        <div class="card">
+            <h:form id="empaddform" style="text-align: left">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="empname" value="Name" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:selectOneMenu id="empname" 
+                                             value="#{empLeave.selectedIndex}">
+                                <f:selectItems value="#{empLeave.employees}" 
+                                               var="employee"
+                                               itemLabel="#{employee.name}" 
+                                               itemValue="#{empLeave.employees.indexOf(employee)}"/> 
+                                
+                            </p:selectOneMenu> 
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="leavedate" value="Date of Leave"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:datePicker id="ldate" value="#{empLeave.leaveDt}" pattern="dd MMM yyyy"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:outputLabel for="comments" value="Reason" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:inputText id="comments" value="#{empLeave.comments}" />
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:commandButton styleClass="blue-button" 
+                                         icon="fa fa-edit" 
+                                         value="Save"
+                                         action="#{empLeave.saveEmpLeave()}" >                        
+                        </p:commandButton>
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/userhome" />
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
+

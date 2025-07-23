@@ -49,6 +49,18 @@
                     <p:column headerText="Resource Name">
                         <h:outputText value="#{task.resourceName}" />
                     </p:column>
+                    <p:column headerText="Amount Applied">
+                        <h:outputText value="#{task.appliedAmount}" />
+                    </p:column>                    
+                    <p:column headerText="Labour Cost">
+                        <h:outputText value="#{task.appliedAmtCost}" />
+                    </p:column>
+                    <p:column headerText="Task Status">
+                        <h:outputText value="#{task.appliedFlag eq 'Y' ? 'Done' : 'Not Done'}" />
+                    </p:column>                    
+                    <p:column headerText="Comments">
+                        <h:outputText value="#{task.comments}" />
+                    </p:column>
                 </p:dataTable>
             </h:form>
         </div>

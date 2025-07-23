@@ -42,7 +42,7 @@ public class TaskListDetails implements Serializable {
         startDate = formatter.parse(startDt);
         endDate = formatter.parse(endDt);
         MasterDataServices masterDataService = new MasterDataServices();
-        tasks = masterDataService.getRescropDetailsForRes(startDate, endDate);
+        tasks = masterDataService.getTaskdDetailsBetweenDates(startDate, endDate);
         if (tasks.isEmpty() || tasks == null) {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                     "No applied resource found for this date range.");
