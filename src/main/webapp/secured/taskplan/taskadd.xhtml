@@ -21,7 +21,7 @@
         </f:metadata>
 
         <div class="card">            
-            <h:form id="taskadd" style="text-align: center">               
+            <h:form id="taskadd" style="text-align: left">               
 
                 <div class="ui-g">
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Task Date" />
@@ -36,8 +36,8 @@
                         <p:selectOneRadio id="tasktype" value="#{taskAdd.selectedTaskType}"
                                           layout="pageDirection">
                             <f:selectItem itemLabel="Resource" itemValue="res"/>
-                            <f:selectItem itemLabel="Labour Harvest" itemValue="labhar"/>
-                            <f:selectItem itemLabel="Labour" itemValue="lab"/>
+                            <f:selectItem itemLabel="Labour(Paid)" itemValue="labhar"/>
+                            <f:selectItem itemLabel="Labour(Salaried)" itemValue="lab"/>
                             <p:ajax event="change" listener="#{taskAdd.onTaskTypeSelect}" 
                                     update="taskadd" process="@this"/>
                         </p:selectOneRadio>

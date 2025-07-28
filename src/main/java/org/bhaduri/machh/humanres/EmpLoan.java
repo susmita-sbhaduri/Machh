@@ -105,7 +105,7 @@ public class EmpLoan implements Serializable {
             empexpRec.setExpcategory("LOAN");
             empexpRec.setSdate(sdf.format(sdate));
             empexpRec.setEmpid(selectedEmp); //######empid as ref id   
-            empexpRec.setEmprefid("0");
+//            empexpRec.setEmprefid(null);
             
             int expres = masterDataService.addExpenseRecord(expenseRec);
             if (expres == SUCCESS) {

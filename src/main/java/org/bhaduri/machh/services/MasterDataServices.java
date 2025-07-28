@@ -2392,7 +2392,10 @@ public class MasterDataServices {
             rec.setTotalloan(BigDecimal.valueOf(Double.parseDouble(empexprec.getTotal())));
             rec.setOutstanding(BigDecimal.valueOf(Double.parseDouble(empexprec.getOutstanding())));
             rec.setExpcategory(empexprec.getExpcategory());
-            rec.setExprefid(Integer.valueOf(empexprec.getEmprefid()));
+            if(empexprec.getExpcategory().equals("LOAN"))
+                rec.setExprefid(null);
+            else
+                rec.setExprefid(Integer.valueOf(empexprec.getEmprefid()));
             mysqlDate = formatter.parse(empexprec.getSdate());
             rec.setStartdate(mysqlDate);
             
@@ -2687,6 +2690,25 @@ public class MasterDataServices {
         }
     }
     
+    public int deleteTaskplanRecord(TaskPlanDTO taskrec) {        
+        TaskplanDAO taskplandao = new TaskplanDAO(utx, emf);
+        
+        try {
+            Taskplan record = new Taskplan();
+            record.setId(Integer.valueOf(taskrec.getTaskId()));            
+            taskplandao.destroy(record.getId());
+            return SUCCESS;
+        } 
+        catch (NonexistentEntityException e) {
+            System.out.println("Record for this Taskplan does not exist");            
+            return DB_NON_EXISTING;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in deleteTaskplanRecord.");
+            return DB_SEVERE;
+        }
+    }
+    
     public TaskPlanDTO getTaskPlanForId(String id) {
         TaskplanDAO taskplandao = new TaskplanDAO(utx, emf); 
         TaskPlanDTO record = new TaskPlanDTO();
@@ -2747,7 +2769,21 @@ public class MasterDataServices {
             return DB_SEVERE;
         }
     }
-    
+    public int getCountLeaveEmp(String empid){
+        EmpLeaveDAO leavedao = new EmpLeaveDAO(utx, emf);
+        try {
+            Long longcount = leavedao.getLeaveCount(Integer.parseInt(empid));            
+            return longcount.intValue();
+        }
+        catch (NoResultException e) {
+            System.out.println("No records in empleave table for this employee");            
+            return 0;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getCountLeaveEmp().");
+            return DB_SEVERE;
+        }
+    }
     public int addEmpleaveRecord(EmpLeaveDTO leaverec) {
         EmpLeaveDAO leavedao = new EmpLeaveDAO(utx, emf);
         Date mysqlDate;

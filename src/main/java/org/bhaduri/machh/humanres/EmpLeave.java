@@ -81,7 +81,7 @@ public class EmpLeave implements Serializable {
         int response = masterDataService.addEmpleaveRecord(leaveRec);
         if (response == SUCCESS) {
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-                    "Employee added successfully");
+                    "Employee leave added successfully");
             f.addMessage(null, message);
 //            return "/secured/userhome?faces-redirect=true";
             return redirectUrl;

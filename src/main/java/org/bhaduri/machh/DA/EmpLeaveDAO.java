@@ -23,4 +23,11 @@ public class EmpLeaveDAO extends EmpleaveJpaController{
         TypedQuery<Integer> query = em.createNamedQuery("Empleave.getMaxEmpLeaveId", Integer.class);        
         return query.getSingleResult();
     }
+    
+    public Long getLeaveCount(int id) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Long> query = em.createNamedQuery("Empleave.getLeaveCount", Long.class);   
+        query.setParameter("employeeid", id);  
+        return query.getSingleResult();
+    }
 }

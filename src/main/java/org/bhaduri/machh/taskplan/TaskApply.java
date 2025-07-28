@@ -9,8 +9,6 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.ExpenseDTO;
@@ -151,7 +149,7 @@ public class TaskApply implements Serializable {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
                         "Stored resource would be finished after this application.");
                 f.addMessage(null, message);
-                return "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + selectedTask;
+//                return "/secured/taskplan/taskapply?faces-redirect=true&selectedTask=" + selectedTask;
             }
             if (remainingAmt < 0) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure.",

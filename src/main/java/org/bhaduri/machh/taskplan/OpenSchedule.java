@@ -162,6 +162,13 @@ public class OpenSchedule implements Serializable {
         String redirectUrl = "/secured/taskplan/taskview?faces-redirect=true&selectedTask=" + event.getId();
         return redirectUrl;
     }
+    
+    public String deleteTask(ScheduleEvent<?> event) {
+        String taskid = event.getId();
+        System.out.printf("Taskid: %s", taskid);
+        String redirectUrl = "/secured/taskplan/taskdelete?faces-redirect=true&selectedTask=" + event.getId();
+        return redirectUrl;
+    }
 
     // Utility to get first/last date of a month
     private Date[] getMonthRange(Date refDate) {

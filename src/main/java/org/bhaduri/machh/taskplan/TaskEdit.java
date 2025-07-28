@@ -185,7 +185,12 @@ public class TaskEdit implements Serializable {
 //            f.addMessage(null, message);
 //            return redirectUrl;
 //        }
-        
+        if (taskName.isEmpty()) {
+            message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
+                    "Task name is mandatory.");
+            f.addMessage("taskname", message);
+            return redirectUrl;
+        }
         if (taskType.equals("Resource") && amtapplied == 0) {
             message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failure",
                     "Provide non-zero resource amount.");
@@ -200,13 +205,11 @@ public class TaskEdit implements Serializable {
         }
 //        int sqlFlag = 0;
         MasterDataServices masterDataService = new MasterDataServices();
-        
-//        
-//        
 //        //taskplan record construction
         TaskPlanDTO taskplanRec = masterDataService.getTaskPlanForId(selectedTask);
         taskplanRec.setTaskId(selectedTask);
         taskplanRec.setHarvestId(activeharvests.get(selectedIndexHarvest).getHarvestid());
+        taskplanRec.setTaskName(taskName);
         if (taskplanRec.getTaskType().equals("RES")) {
 //            taskplanRec.setTaskType("RES");
             taskplanRec.setResourceId(availableresources.get(selectedIndexRes).getResourceId());

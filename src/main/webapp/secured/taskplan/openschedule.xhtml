@@ -86,6 +86,15 @@
                                              icon="pi pi-check"
                                              oncomplete="PF('eventDialog').hide()" />
                         </p:column>
+                        <p:column>
+                            <p:commandButton value="Delete"
+                                             action="#{openSchedule.deleteTask(task)}"
+                                             update="taskTable"
+                                             disabled="#{task.data eq 'Y'}"
+                                             icon="pi pi-check"
+                                             oncomplete="PF('eventDialog').hide()" />
+                        </p:column>
+
                     </p:dataTable>
                 </p:dialog>
                 <p:dialog id="addDialog"

@@ -38,6 +38,7 @@ public class PayEmployee implements Serializable {
     private float payback;
     private float bonus;
     private float leave;
+    private String outstanding;
     private boolean readOnlyCondition = false;
     /**
      * Creates a new instance of PayEmployee
@@ -56,9 +57,12 @@ public class PayEmployee implements Serializable {
         List<EmpExpDTO> empLoanRecs = masterDataService.getEmpActiveExpRecs(selectedEmp, "LOAN");
         if(empLoanRecs.isEmpty()){            
            readOnlyCondition = true;
-        } 
-        bonus = 0;
-        leave = 0;
+           outstanding = "NA";
+        } else
+            //at one time only one loan will be active hence 0th record is taken out            
+            outstanding = empLoanRecs.get(0).getOutstanding();
+        bonus = 0;        
+        leave = (salary/2) - ((salary/30)*masterDataService.getCountLeaveEmp(selectedEmp));
     }
     
     public String payEmp() throws NamingException, ParseException {
@@ -133,7 +137,7 @@ public class PayEmployee implements Serializable {
             MasterDataServices masterDataService = new MasterDataServices();
             String expCat = "LOAN";
         //The closed loan that is the enddate field in empexpense record is not filled up, is taken out.
-        //One load can be active at a time. Hence 0th record is selected.
+        //One loan can be active at a time. Hence 0th record is selected.
             EmpExpDTO empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp, expCat).get(0);
             if (payback > 0) {
                 Date loanStartDate = sdf.parse(empexpUpd.getSdate());
@@ -145,6 +149,12 @@ public class PayEmployee implements Serializable {
                 }
                 //Based on the repayment amount outstngcalc is calculated.
                 float outstngcalc = Float.parseFloat(empexpUpd.getOutstanding()) - payback;
+                if (outstngcalc < 0) {
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Repayment date must not be more than outstanding amount");
+                    f.addMessage(null, message);
+                    return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
+                }
                 empexpUpd.setOutstanding(String.format("%.2f", outstngcalc));
                 //if outstngcalc = 0 then loan is closed with the repayment date  
                 if (outstngcalc == 0) {
@@ -303,5 +313,13 @@ public class PayEmployee implements Serializable {
     public void setReadOnlyCondition(boolean readOnlyCondition) {
         this.readOnlyCondition = readOnlyCondition;
     }    
+
+    public String getOutstanding() {
+        return outstanding;
+    }
+
+    public void setOutstanding(String outstanding) {
+        this.outstanding = outstanding;
+    }
     
 }

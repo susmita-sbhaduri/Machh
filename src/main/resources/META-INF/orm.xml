@@ -13,9 +13,12 @@
     <named-query name="Employee.getMaxEmpId">
         <query>SELECT MAX(e.id) FROM Employee e</query>
     </named-query>
-<!--    <named-query name="Empleave.getMaxEmpLeaveId">
+    <named-query name="Empleave.getMaxEmpLeaveId">
         <query>SELECT MAX(e.id) FROM Empleave e</query>
-    </named-query>-->
+    </named-query>
+    <named-query name="Empleave.getLeaveCount">
+        <query>SELECT COUNT(e) FROM Empleave e WHERE e.employeeid =:employeeid</query>
+    </named-query>
     <named-query name="Employee.activeList">
         <query>SELECT e FROM Employee e WHERE e.enddate IS NULL</query>
     </named-query>
@@ -204,7 +207,7 @@
     </named-query>
     <named-query name="Taskplan.detailsBetweenDates">
         <query>SELECT t FROM Taskplan t WHERE t.taskdate &gt;= :startdate 
-            AND t.taskdate &lt;= :enddate
+            AND t.taskdate &lt;= :enddate ORDER BY t.taskdate DESC
         </query>
     </named-query>
 

@@ -4,14 +4,20 @@
  */
 package org.bhaduri.machh.taskplan;
 
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.FarmresourceDTO;
 import org.bhaduri.machh.DTO.HarvestDTO;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_NON_EXISTING;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.DB_SEVERE;
+import static org.bhaduri.machh.DTO.MachhResponseCodes.SUCCESS;
 import org.bhaduri.machh.DTO.TaskPlanDTO;
 import org.bhaduri.machh.services.MasterDataServices;
 
@@ -19,10 +25,10 @@ import org.bhaduri.machh.services.MasterDataServices;
  *
  * @author sb
  */
-@Named(value = "taskView")
+@Named(value = "taskDelete")
 @ViewScoped
-public class TaskView implements Serializable {
-    private String selectedTask;
+public class TaskDelete implements Serializable {
+private String selectedTask;
     
     private String taskName;
     private String taskType;
@@ -39,7 +45,7 @@ public class TaskView implements Serializable {
     private String cropwtunit;
     private String appliedcost;
     private String comments;
-    public TaskView() {
+    public TaskDelete() {
     }
     public void fillValues() throws NamingException {
         MasterDataServices masterDataService = new MasterDataServices();
@@ -97,11 +103,44 @@ public class TaskView implements Serializable {
             cropwt = "";
             cropwtunit = "";
         }
-        
         DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
         LocalDate date = LocalDate.parse(taskplanRec.getTaskDt(), inputFormat);
         taskDt = date.format(outputFormat);
+    }
+    
+    public String deleteTask() throws NamingException {
+        
+        String redirectUrl = "/secured/taskplan/openschedule?faces-redirect=true";
+        FacesMessage message;
+        FacesContext f = FacesContext.getCurrentInstance();
+        f.getExternalContext().getFlash().setKeepMessages(true);
+        MasterDataServices masterDataService = new MasterDataServices();
+        TaskPlanDTO taskplanRec = masterDataService.getTaskPlanForId(selectedTask);
+        taskplanRec.setTaskId(selectedTask);
+        
+        
+        int response = masterDataService.deleteTaskplanRecord(taskplanRec);
+//        redirectUrl = "/secured/taskplan/openschedule?faces-redirect=true";
+        if (response == SUCCESS) {
+            message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
+                    "Task is deleted successfully");
+            f.addMessage(null, message);
+        } else {
+            if (response == DB_NON_EXISTING) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                         "Task does not exist.");
+                f.addMessage(null, message);
+            }
+            if (response == DB_SEVERE) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure.",
+                         "Failure on adding task");
+                f.addMessage(null, message);
+            }
+
+        }
+        return redirectUrl;
+        
     }
 
     public String getSelectedTask() {
@@ -192,7 +231,6 @@ public class TaskView implements Serializable {
         this.taskDt = taskDt;
     }
 
-    
     public String getRescat() {
         return rescat;
     }
@@ -232,5 +270,6 @@ public class TaskView implements Serializable {
     public void setComments(String comments) {
         this.comments = comments;
     }
+    
     
 }

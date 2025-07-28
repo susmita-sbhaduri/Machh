@@ -32,6 +32,12 @@
                         </p:inputText>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel value="Outstanding Amt(Rs.)" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputText value="#{payEmployee.outstanding}" style="font-weight:bold;"/> 
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:outputLabel for="payback" value="Loan Repayment(Rs.)" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
@@ -64,7 +70,7 @@
                         <h:outputLabel for="paydate" value="Payment Date" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:datePicker id="paydate" value="#{payEmployee.paydate}" pattern="yyyy-MM-dd"/>
+                        <p:datePicker id="paydate" value="#{payEmployee.paydate}" pattern="dd MMM yyyy"/>
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:commandButton styleClass="blue-button" 

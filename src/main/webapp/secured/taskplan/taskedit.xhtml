@@ -35,7 +35,8 @@
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Task Name" />
                     </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{taskEdit.taskName}" style="font-weight:bold;"/>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">                        
+                        <h:inputText id="taskname" value="#{taskEdit.taskName}"/>  
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputLabel for="harvestid" value="Active Harvests(Site-Crop Category-Cropname)" />

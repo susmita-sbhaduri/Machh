@@ -22,5 +22,6 @@
     <class>org.bhaduri.machh.entities.Shopresource</class>
     <class>org.bhaduri.machh.entities.Shoprescrop</class>
     <class>org.bhaduri.machh.entities.Taskplan</class>
+    <class>org.bhaduri.machh.entities.Empleave</class>
   </persistence-unit>
 </persistence>
