@@ -102,28 +102,28 @@
                 <p:dialog id="addDialog"
                           widgetVar="addDialog" 
                           modal="true" 
-                          resizable="false"
-                          header="Add new task to this date">
-                    <div class="ui-g" style="align-items: center;">
+                          resizable="true"
+                          header="Add new task for #{openSchedule.selectedDate}">
+                    <div style="text-align: left;">
 
-                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+<!--                        <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <h:outputText value="You selected: " />
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <h:outputText value="#{openSchedule.selectedDate}"/>                                
-                        </div>
-                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        </div>-->
+                        <!--<div class="ui-g-12 ui-md-6 ui-lg-6">-->
                             <p:commandButton value="Create new Task"
                                              action="#{openSchedule.onDateConfirm}"
                                              update="addDialog"
                                              icon="pi pi-check"                                             
                                              oncomplete="PF('addDialog').hide()" />
-                        </div>
-                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <!--</div>-->
+<!--                        <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <p:commandButton value="Cancel"
                                              type="button"
                                              onclick="PF('addDialog').hide()" />
-                        </div>
+                        </div>-->
 
                     </div>
                 </p:dialog>
