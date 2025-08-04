@@ -81,7 +81,7 @@ public class EmpLoan implements Serializable {
 //              two tables.            
             ExpenseDTO expenseRec = new ExpenseDTO();
             int expenseid = masterDataService.getNextIdForExpense();
-            if (expenseid == 0 || expenseid == DB_SEVERE) {
+            if (expenseid == 0) {
                 expenseRec.setExpenseId("1");
             } else {
                 expenseRec.setExpenseId(String.valueOf(expenseid + 1));
@@ -95,7 +95,7 @@ public class EmpLoan implements Serializable {
             //Construction of empexpense record
             EmpExpDTO empexpRec = new EmpExpDTO();
             int empexpid = masterDataService.getMaxEmpExpenseId();
-            if (empexpid == 0 || empexpid == DB_SEVERE) {
+            if (empexpid == 0) {
                 empexpRec.setId("1");
             } else {
                 empexpRec.setId(String.valueOf(empexpid + 1));

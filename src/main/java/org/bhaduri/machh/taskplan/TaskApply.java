@@ -9,6 +9,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import jakarta.faces.view.ViewScoped;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.naming.NamingException;
 import org.bhaduri.machh.DTO.ExpenseDTO;
@@ -43,9 +45,9 @@ public class TaskApply implements Serializable {
     private String unit;
     private String amtapplied;
     private String appDt;
-    private String rescat;
-    private String cropwt;
-    private String cropwtunit;
+//    private String rescat;
+//    private String cropwt;
+//    private String cropwtunit;
     private String appliedcost;
     private String comments;
     private float resCropAppliedCost=0;
@@ -76,15 +78,15 @@ public class TaskApply implements Serializable {
             comments = "";
 //            appliedcost = "NA";
 //            comments = "NA";
-            if (resourceRec.getCropwtunit() != null) {
-                rescat = "Crop";
-                cropwt = resourceRec.getCropweight();
-                cropwtunit = resourceRec.getCropwtunit();
-            } else {
-                rescat = "Other";
-                cropwt = "";
-                cropwtunit = "";
-            }
+//            if (resourceRec.getCropwtunit() != null) {
+//                rescat = "Crop";
+//                cropwt = resourceRec.getCropweight();
+//                cropwtunit = resourceRec.getCropwtunit();
+//            } else {
+//                rescat = "Other";
+//                cropwt = "";
+//                cropwtunit = "";
+//            }
         }
         if (taskplanRec.getTaskType().equals("LABHRVST")) {
             taskType = "Labour(to be paid)";
@@ -94,9 +96,9 @@ public class TaskApply implements Serializable {
             amount = "";
             unit = "Rs.";
             amtapplied = "";
-            rescat = "";
-            cropwt = "";
-            cropwtunit = "";
+//            rescat = "";
+//            cropwt = "";
+//            cropwtunit = "";
             
 //            resname = "NA";
 //            amount = "NA";
@@ -114,9 +116,9 @@ public class TaskApply implements Serializable {
             amount = "";
             unit = "";
             amtapplied = "";
-            rescat = "";
-            cropwt = "";
-            cropwtunit = "";
+//            rescat = "";
+//            cropwt = "";
+//            cropwtunit = "";
             
 //            appliedcost = "NA";
 //            comments = taskplanRec.getComments();
@@ -128,7 +130,12 @@ public class TaskApply implements Serializable {
 //            cropwt = "NA";
 //            cropwtunit = "NA";
         }
-        appDt = taskplanRec.getTaskDt();
+        
+        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        LocalDate date = LocalDate.parse(taskplanRec.getTaskDt(), inputFormat);
+        appDt = date.format(outputFormat);
+        
     }
     
     public String saveTask() throws NamingException{
@@ -161,7 +168,8 @@ public class TaskApply implements Serializable {
             //resourcecrop record construction
             ResourceCropDTO resourceCrop = new ResourceCropDTO();
             int applicationid = masterDataService.getMaxIdForResCrop();
-            if (applicationid == 0 || applicationid == DB_SEVERE) {
+
+            if (applicationid == 0) {
                 resourceCrop.setApplicationId("1");
             } else {
                 resourceCrop.setApplicationId(String.valueOf(applicationid + 1));
@@ -277,7 +285,7 @@ public class TaskApply implements Serializable {
             //        contruction of labourcrop record
             LabourCropDTO labCropRec = new LabourCropDTO();
             int applicationid = masterDataService.getMaxIdForLabCrop();
-            if (applicationid == 0 || applicationid == DB_SEVERE) {
+            if (applicationid == 0) {
                 labCropRec.setApplicationId("1");
             } else {
                 labCropRec.setApplicationId(String.valueOf(applicationid + 1));
@@ -539,30 +547,6 @@ public class TaskApply implements Serializable {
 
     public void setAppDt(String appDt) {
         this.appDt = appDt;
-    }
-
-    public String getRescat() {
-        return rescat;
-    }
-
-    public void setRescat(String rescat) {
-        this.rescat = rescat;
-    }
-
-    public String getCropwt() {
-        return cropwt;
-    }
-
-    public void setCropwt(String cropwt) {
-        this.cropwt = cropwt;
-    }
-
-    public String getCropwtunit() {
-        return cropwtunit;
-    }
-
-    public void setCropwtunit(String cropwtunit) {
-        this.cropwtunit = cropwtunit;
     }
 
     public String getAppliedcost() {

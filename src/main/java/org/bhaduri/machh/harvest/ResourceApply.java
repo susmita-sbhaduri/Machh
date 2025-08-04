@@ -127,7 +127,7 @@ public class ResourceApply implements Serializable {
         //resourcecrop record construction
         ResourceCropDTO resourceCrop = new ResourceCropDTO();        
         int applicationid = masterDataService.getMaxIdForResCrop();
-        if (applicationid == 0 || applicationid == DB_SEVERE) {
+        if (applicationid == 0) {
             resourceCrop.setApplicationId("1");
         } else {
             resourceCrop.setApplicationId(String.valueOf(applicationid + 1));
@@ -226,7 +226,7 @@ public class ResourceApply implements Serializable {
             ///
             ShopResCropDTO shoprescrop = new ShopResCropDTO();
             int maxid = masterDataService.getMaxIdForShopResCrop();
-            if (maxid == 0 || maxid == DB_SEVERE) {
+            if (maxid == 0) {
                 shoprescrop.setId("1");
             } else {
                 shoprescrop.setId(String.valueOf(maxid + 1));

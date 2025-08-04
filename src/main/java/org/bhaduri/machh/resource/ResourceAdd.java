@@ -164,7 +164,7 @@ public class ResourceAdd implements Serializable {
 
         ShopResDTO resShopUpdBean = new ShopResDTO();
         int shopresid = masterDataService.getMaxIdForShopRes();
-        if (shopresid == 0 || shopresid == DB_SEVERE) {
+        if (shopresid == 0) {
             shopresid = 1;
         } else {
             shopresid = shopresid + 1;

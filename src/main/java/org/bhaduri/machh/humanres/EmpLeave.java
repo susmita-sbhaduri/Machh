@@ -67,7 +67,7 @@ public class EmpLeave implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         EmpLeaveDTO leaveRec = new EmpLeaveDTO();
         int maxid = masterDataService.getMaxEmpLeaveId();
-        if (maxid == 0 || maxid == DB_SEVERE) {
+        if (maxid == 0) {
             leaveRec.setId("1");
         } else {
             leaveRec.setId(String.valueOf(maxid + 1));

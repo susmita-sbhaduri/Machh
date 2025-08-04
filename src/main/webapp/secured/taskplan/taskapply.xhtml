@@ -10,8 +10,6 @@
     <ui:define name="content">
         <h4>Apply Task.</h4>
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
-        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        &nbsp;&nbsp;&nbsp;
         <p:button value="Go back" outcome="/secured/taskplan/openschedule"/>
         &nbsp;&nbsp;&nbsp;
 
@@ -72,24 +70,7 @@
                         <h:outputText value="#{taskApply.unit}" style="font-weight:bold;"/>
                     </div>
 
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel value="Resource Category" />
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputText value="#{taskApply.rescat}" style="font-weight:bold;"/> 
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel value="Initial Amount(Crop) if applicable" />
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">                        
-                        <h:outputText value="#{taskApply.cropwt}" style="font-weight:bold;"/>
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel value="Crop Amount Unit" />
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputText value="#{taskApply.cropwtunit}" style="font-weight:bold;"/>
-                    </div>
+
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputLabel for="adate" value="Task Apply Date" />
                     </div>
@@ -121,9 +102,7 @@
                                        icon="pi pi-exclamation-triangle"/>
                         </p:commandButton>
                     </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/taskplan/openschedule" />
-                    </div>
+                    
                 </div>
                 <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
                     <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" icon="pi pi-times"/>

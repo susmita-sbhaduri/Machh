@@ -70,7 +70,7 @@ public class HarvestAdd implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         HarvestDTO harvestToAdd = new HarvestDTO();
         int maxid = masterDataService.getMaxHarvestId();
-        if (maxid == 0 || maxid == DB_SEVERE) {
+        if (maxid == 0) {
             harvestToAdd.setHarvestid("1");
         } else {
             harvestToAdd.setHarvestid(String.valueOf(maxid + 1));

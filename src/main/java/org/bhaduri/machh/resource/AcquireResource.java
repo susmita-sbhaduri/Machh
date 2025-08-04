@@ -168,7 +168,7 @@ public class AcquireResource implements Serializable {
         } else {  
 //            else while we are creating ShopResDTO to add shop acquire record, with the same shop and res id 
             int shopresid = masterDataService.getMaxIdForShopRes();
-            if (shopresid == 0 || shopresid == DB_SEVERE) {
+            if (shopresid == 0) {
                 shopresid = 1;
             } else {
                 shopresid = shopresid + 1;
@@ -179,7 +179,7 @@ public class AcquireResource implements Serializable {
 //        contruction of resourceacquire record
         ResAcquireDTO resAcquireRec = new ResAcquireDTO();        
         int acquireid = masterDataService.getNextIdForResAquire();
-        if (acquireid == 0 || acquireid == DB_SEVERE) {
+        if (acquireid == 0) {
             resAcquireRec.setAcquireId("1");
         } else {
             resAcquireRec.setAcquireId(String.valueOf(acquireid + 1));
@@ -192,7 +192,7 @@ public class AcquireResource implements Serializable {
 //        contruction of expense record
         ExpenseDTO expenseRec = new ExpenseDTO();
         int expenseid = masterDataService.getNextIdForExpense();
-        if (expenseid == 0 || expenseid == DB_SEVERE) {
+        if (expenseid == 0) {
             expenseRec.setExpenseId("1");
         } else {
             expenseRec.setExpenseId(String.valueOf(expenseid + 1));

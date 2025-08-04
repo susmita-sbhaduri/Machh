@@ -32,7 +32,7 @@ public class TaskAdd implements Serializable {
     private String selectedDate;
     private Date taskDt;    
     private String taskName;
-    private String selectedTaskType;
+    private String selectedTaskType = "res";
     private List<FarmresourceDTO> availableresources;
     private int selectedIndexRes;
     private List<HarvestDTO> activeharvests;
@@ -45,9 +45,9 @@ public class TaskAdd implements Serializable {
     private boolean resReadonly = false; // default not readonly
     private boolean costReadonly = false;
     private boolean commReadonly = false;    
-    private String rescat;
-    private String cropwt;
-    private String cropwtunit;
+//    private String rescat;
+//    private String cropwt;
+//    private String cropwtunit;
     /**
      * Creates a new instance of TaskAdd
      */
@@ -64,22 +64,22 @@ public class TaskAdd implements Serializable {
                 get(selectedIndexRes).getResourceId())).getUnit();
         amount = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                 get(selectedIndexRes).getResourceId())).getAvailableAmt();
-        if (masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
-                get(selectedIndexRes).getResourceId()))
-                .getCropwtunit() != null) {
-            rescat = "Crop";
-            cropwt = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
-                    get(selectedIndexRes).getResourceId()))
-                    .getCropweight();
-            cropwtunit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
-                    get(selectedIndexRes).getResourceId()))
-                    .getCropwtunit();
-
-        } else {
-            rescat = "Other";
-            cropwt = "";
-            cropwtunit = "";
-        }
+//        if (masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+//                get(selectedIndexRes).getResourceId()))
+//                .getCropwtunit() != null) {
+//            rescat = "Crop";
+//            cropwt = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+//                    get(selectedIndexRes).getResourceId()))
+//                    .getCropweight();
+//            cropwtunit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+//                    get(selectedIndexRes).getResourceId()))
+//                    .getCropwtunit();
+//
+//        } else {
+//            rescat = "Other";
+//            cropwt = "";
+//            cropwtunit = "";
+//        }
     }
     
     public void onTaskTypeSelect() throws NamingException{
@@ -90,9 +90,9 @@ public class TaskAdd implements Serializable {
             commReadonly = false;
             amount = "NA";
             unit = "Rs.";
-            rescat = "NA";
-            cropwt = "NA";
-            cropwtunit = "NA";
+//            rescat = "NA";
+//            cropwt = "NA";
+//            cropwtunit = "NA";
         }
         if (selectedTaskType.equals("lab")) {
             resReadonly = true;
@@ -100,9 +100,9 @@ public class TaskAdd implements Serializable {
             commReadonly = false;
             amount = "NA";
             unit = "NA";
-            rescat = "NA";
-            cropwt = "NA";
-            cropwtunit = "NA";
+//            rescat = "NA";
+//            cropwt = "NA";
+//            cropwtunit = "NA";
         }
         if (selectedTaskType.equals("res")) {
             resReadonly = false;
@@ -117,22 +117,22 @@ public class TaskAdd implements Serializable {
                 get(selectedIndexRes).getResourceId())).getUnit();
         amount = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
                 get(selectedIndexRes).getResourceId())).getAvailableAmt();
-        if (masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
-                get(selectedIndexRes).getResourceId()))
-                .getCropwtunit() != null) {
-            rescat = "Crop";
-            cropwt = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
-                    get(selectedIndexRes).getResourceId()))
-                    .getCropweight();
-            cropwtunit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
-                    get(selectedIndexRes).getResourceId()))
-                    .getCropwtunit();
-
-        } else {
-            rescat = "Other";
-            cropwt = "";
-            cropwtunit = "";
-        }
+//        if (masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+//                get(selectedIndexRes).getResourceId()))
+//                .getCropwtunit() != null) {
+//            rescat = "Crop";
+//            cropwt = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+//                    get(selectedIndexRes).getResourceId()))
+//                    .getCropweight();
+//            cropwtunit = masterDataService.getResourceNameForId(Integer.parseInt(availableresources.
+//                    get(selectedIndexRes).getResourceId()))
+//                    .getCropwtunit();
+//
+//        } else {
+//            rescat = "Other";
+//            cropwt = "";
+//            cropwtunit = "";
+//        }
     }
     
     public String goToSaveTask() throws NamingException {
@@ -164,7 +164,7 @@ public class TaskAdd implements Serializable {
 
         TaskPlanDTO taskplanRec = new TaskPlanDTO();
         int taskid = masterDataService.getMaxTaskplanId();
-        if (taskid == 0 || taskid == DB_SEVERE) {
+        if (taskid == 0) {
             taskplanRec.setTaskId(String.valueOf("1"));
         } else {
             taskplanRec.setTaskId(String.valueOf(taskid + 1));
@@ -346,29 +346,4 @@ public class TaskAdd implements Serializable {
         this.commReadonly = commReadonly;
     }
 
-    public String getRescat() {
-        return rescat;
-    }
-
-    public void setRescat(String rescat) {
-        this.rescat = rescat;
-    }
-
-    public String getCropwt() {
-        return cropwt;
-    }
-
-    public void setCropwt(String cropwt) {
-        this.cropwt = cropwt;
-    }
-
-    public String getCropwtunit() {
-        return cropwtunit;
-    }
-
-    public void setCropwtunit(String cropwtunit) {
-        this.cropwtunit = cropwtunit;
-    }
-    
-    
 }

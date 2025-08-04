@@ -10,8 +10,7 @@
     <ui:define name="content">
         <h4>Task Add.</h4>
         <p:growl id="growl" showDetail="true" />
-        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>        
-        &nbsp;&nbsp;&nbsp;
+        
         <p:button value="Go back" outcome="/secured/taskplan/openschedule"/>
         &nbsp;&nbsp;&nbsp;
         
@@ -49,19 +48,7 @@
                         <h:inputText id="taskname" value="#{taskAdd.taskName}"/>   
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel for="harvestid" value="Active Harvests(Site-Crop Category-Cropname)" />
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
-                        <p:selectOneMenu id="harvestid" value="#{taskAdd.selectedIndexHarvest}" >
-                            <f:selectItems value="#{taskAdd.activeharvests}" 
-                                           var="harvest"
-                                           itemLabel="#{harvest.siteName}-#{harvest.cropCategory}-
-                                           #{harvest.cropName}" 
-                                           itemValue="#{taskAdd.activeharvests.indexOf(harvest)}"/>
-                        </p:selectOneMenu>
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel for="resourceid" value="Available Resources" />
+                        <h:outputLabel for="resourceid" value="Select Resource" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
                         <p:selectOneMenu id="resourceid" 
@@ -76,6 +63,19 @@
                                     process="@this"/>
                         </p:selectOneMenu>
                     </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="harvestid" value="Select Harvest" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6" >                        
+                        <p:selectOneMenu id="harvestid" value="#{taskAdd.selectedIndexHarvest}" >
+                            <f:selectItems value="#{taskAdd.activeharvests}" 
+                                           var="harvest"
+                                           itemLabel="#{harvest.siteName}-#{harvest.cropCategory}-
+                                           #{harvest.cropName}" 
+                                           itemValue="#{taskAdd.activeharvests.indexOf(harvest)}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputLabel value="Available Amount" />
                     </div>
@@ -104,30 +104,7 @@
                             <h:outputText id="unit" value="#{taskAdd.unit}" style="font-weight:bold;"/>
                         </p:outputPanel>
                     </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel value="Resource Category" />
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:outputPanel id="rescatPanel">
-                            <h:outputText value="#{taskAdd.rescat}" style="font-weight:bold;"/>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel value="Initial Amount(Crop) if applicable" />
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6"> 
-                        <p:outputPanel id="iniamtPanel">
-                            <h:outputText value="#{taskAdd.cropwt}" style="font-weight:bold;"/>
-                        </p:outputPanel>
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <h:outputLabel value="Crop Amount Unit" />
-                    </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:outputPanel id="cropamtPanel">
-                            <h:outputText value="#{taskAdd.cropwtunit}" style="font-weight:bold;"/>
-                        </p:outputPanel>
-                    </div>
+                   
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:outputLabel for="appliedcost" value="Cost to be Applied" />
                     </div>
@@ -156,9 +133,7 @@
                                          action="#{taskAdd.goToSaveTask()}" >                        
                         </p:commandButton>
                     </div>
-                    <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:button icon="pi pi-times" value="Cancel" outcome="/secured/taskplan/openschedule" />
-                    </div>
+                    
                 </div>
             </h:form>
         </div>

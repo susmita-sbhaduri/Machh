@@ -72,7 +72,7 @@ public class EmployeeAdd implements Serializable {
         MasterDataServices masterDataService = new MasterDataServices();
         EmployeeDTO empToAdd = new EmployeeDTO();
         int maxid = masterDataService.getMaxEmployeeId();
-        if (maxid == 0 || maxid == DB_SEVERE) {
+        if (maxid == 0 ) {
             empToAdd.setId("1");
         } else {
             empToAdd.setId(String.valueOf(maxid + 1));

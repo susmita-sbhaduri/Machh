@@ -198,7 +198,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getMaxHarvestId().");
-            return DB_SEVERE;
+//            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -819,7 +820,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getNextIdForResAquire().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -1042,7 +1044,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getNextIdForExpense().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -1198,7 +1201,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getNextIdForExpense().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -1421,7 +1425,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getMaxIdForResCrop().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -1606,7 +1611,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getMaxIdForShopResCrop().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -1897,7 +1903,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getMaxIdForLabCrop().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     public int editLabCropRecord(LabourCropDTO labcroprec) {
@@ -2112,7 +2119,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getMaxEmployeeId().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -2376,7 +2384,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getMaxEmpExpenseId().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     
@@ -2457,8 +2466,9 @@ public class MasterDataServices {
             return 0;
         }
         catch (Exception exception) {
-            System.out.println(exception + " has occurred in getMaxIdForResCrop().");
-            return DB_SEVERE;
+            System.out.println(exception + " has occurred in getMaxTaskplanId().");
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     public List<TaskPlanDTO> getTaskPlanListForDate(Date plandate) {
@@ -2766,7 +2776,8 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getMaxEmpLeaveId().");
-            return DB_SEVERE;
+            //            return DB_SEVERE;
+            return 0;
         }
     }
     public int getCountLeaveEmp(String empid){

@@ -66,7 +66,7 @@ public class LaborApply implements Serializable {
 //        contruction of labouracquire record
         LabourCropDTO labCropRec = new LabourCropDTO();        
         int applicationid = masterDataService.getMaxIdForLabCrop();
-        if (applicationid == 0 || applicationid == DB_SEVERE) {
+        if (applicationid == 0) {
             labCropRec.setApplicationId("1");
         } else {
             labCropRec.setApplicationId(String.valueOf(applicationid + 1));
@@ -78,7 +78,7 @@ public class LaborApply implements Serializable {
 //        contruction of expense record
         ExpenseDTO expenseRec = new ExpenseDTO();
         int expenseid = masterDataService.getNextIdForExpense();
-        if (expenseid == 0 || expenseid == DB_SEVERE) {
+        if (expenseid == 0) {
             expenseRec.setExpenseId("1");
         } else {
             expenseRec.setExpenseId(String.valueOf(expenseid + 1));

@@ -38,6 +38,7 @@ public class PayEmployee implements Serializable {
     private float payback;
     private float bonus;
     private float leave;
+    private float leaveApplicable;
     private String outstanding;
     private boolean readOnlyCondition = false;
     /**
@@ -51,7 +52,7 @@ public class PayEmployee implements Serializable {
         
         empRec = masterDataService.getEmpNameForId(selectedEmp);
         selectedEmpName = empRec.getName();
-        salary = Float.parseFloat(empRec.getSalary()); 
+        salary = 0; 
 //        If the employee has LOAN then EmpExpense record will have a record. Based on this, Loan Repayment
 //        field is based editable. If there is no record then this field becomes readonly
         List<EmpExpDTO> empLoanRecs = masterDataService.getEmpActiveExpRecs(selectedEmp, "LOAN");
@@ -61,8 +62,10 @@ public class PayEmployee implements Serializable {
         } else
             //at one time only one loan will be active hence 0th record is taken out            
             outstanding = empLoanRecs.get(0).getOutstanding();
-        bonus = 0;        
-        leave = (salary/2) - ((salary/30)*masterDataService.getCountLeaveEmp(selectedEmp));
+        bonus = 0; 
+        leaveApplicable = (Float.parseFloat(empRec.getSalary())/2) - 
+                ((Float.parseFloat(empRec.getSalary())/30)*masterDataService.getCountLeaveEmp(selectedEmp));
+        leave = 0;
     }
     
     public String payEmp() throws NamingException, ParseException {
@@ -140,6 +143,13 @@ public class PayEmployee implements Serializable {
         //One loan can be active at a time. Hence 0th record is selected.
             EmpExpDTO empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp, expCat).get(0);
             if (payback > 0) {
+                //Payback + Salary cannot be greater than salary
+                if((payback+salary)> Float.parseFloat(empRec.getSalary())){
+                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                            "Payback + Salary cannot be greater than salary");
+                    f.addMessage(null, message);
+                    return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
+                }
                 Date loanStartDate = sdf.parse(empexpUpd.getSdate());
                 if (paydate.compareTo(loanStartDate) < 0) {//if paydate is before loanStartDate
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
@@ -182,7 +192,7 @@ public class PayEmployee implements Serializable {
                  //Construction of empexpense record
                 EmpExpDTO empexpRec = new EmpExpDTO();
                 int empexpid = masterDataService.getMaxEmpExpenseId();
-                if (empexpid == 0 || empexpid == DB_SEVERE) {
+                if (empexpid == 0) {
                     empexpRec.setId("1");
                 } else {
                     empexpRec.setId(String.valueOf(empexpid + 1));
@@ -228,7 +238,7 @@ public class PayEmployee implements Serializable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         ExpenseDTO expenseRec = new ExpenseDTO();
         int expenseid = masterDataService.getNextIdForExpense();
-        if (expenseid == 0 || expenseid == DB_SEVERE) {
+        if (expenseid == 0) {
             expenseRec.setExpenseId("1");
         } else {
             expenseRec.setExpenseId(String.valueOf(expenseid + 1));
@@ -320,6 +330,14 @@ public class PayEmployee implements Serializable {
 
     public void setOutstanding(String outstanding) {
         this.outstanding = outstanding;
+    }
+
+    public float getLeaveApplicable() {
+        return leaveApplicable;
+    }
+
+    public void setLeaveApplicable(float leaveApplicable) {
+        this.leaveApplicable = leaveApplicable;
     }
     
 }

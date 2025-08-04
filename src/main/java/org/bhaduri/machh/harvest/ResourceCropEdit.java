@@ -247,7 +247,7 @@ public class ResourceCropEdit implements Serializable {
             if (shoprescroped == null) {
                 shoprescropflag = 1;
                 int maxid = masterDataService.getMaxIdForShopResCrop();
-                if (maxid == 0 || maxid == DB_SEVERE) {
+                if (maxid == 0) {
                     shoprescropadd.setId("1");
                 } else {
                     shoprescropadd.setId(String.valueOf(maxid + 1));

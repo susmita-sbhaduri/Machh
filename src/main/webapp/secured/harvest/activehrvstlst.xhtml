@@ -8,10 +8,10 @@
                 xmlns:h="jakarta.faces.html">
 
     <ui:define name="content">
-        <h4>Active Harvests.</h4>
+        <h4>Resources on Harvests.</h4>
         <p:growl id="growl" showDetail="true" />
-        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
-        &nbsp;&nbsp;&nbsp;
+<!--        <p:button outcome="/secured/userhome" value="Home" id="h_buttonid" icon="pi pi-home"/>
+        &nbsp;&nbsp;&nbsp;-->
         
         <f:metadata>
             <f:viewAction action="#{activeHarvestList.fillHarvestValues()}" />
@@ -34,14 +34,14 @@
                             <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
                         </p:commandButton>
                     </p:column>-->
-                    <p:column>
+<!--                    <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Apply Resource"
                                          action="#{activeHarvestList.goApplyResource()}" >
                             <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
                         </p:commandButton>
-                    </p:column>
+                    </p:column>-->
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
@@ -50,14 +50,14 @@
                             <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
                         </p:commandButton>
                     </p:column>
-                    <p:column>
+<!--                    <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Apply Labour"
                                          action="#{activeHarvestList.goApplyLabour()}" >
                             <f:setPropertyActionListener value="#{harvest}" target="#{activeHarvestList.selectedHarvest}" />    
                         </p:commandButton>
-                    </p:column>
+                    </p:column>-->
                     <p:column>
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
