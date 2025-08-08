@@ -31,7 +31,7 @@
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputText value="#{taskApply.taskType}" style="font-weight:bold;"/>
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputLabel value="Site" />
                     </div>
                     <div class="ui-g-12 ui-md-6 ui-lg-6"><h:outputText value="#{taskApply.site}" style="font-weight:bold;"/>
@@ -84,7 +84,7 @@
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputText value="#{taskApply.appliedcost}" style="font-weight:bold;"/>                        
                     </div>
-                    
+
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <h:outputLabel for="comments" value="Comments" />
                     </div>
@@ -93,21 +93,33 @@
                     </div>
 
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
-                        <p:commandButton styleClass="blue-button" 
+                        <p:commandButton id="submitBtn"
+                                         styleClass="blue-button" 
                                          icon="fa fa-edit" 
                                          value="Submit"
                                          action="#{taskApply.saveTask()}">
-                            <p:confirm header="Confirmation"
+
+<!--                            <p:confirm header="Confirmation"
                                        message="Are you sure you want to apply this task?"
-                                       icon="pi pi-exclamation-triangle"/>
-                        </p:commandButton>
-                    </div>
-                    
+                                       icon="pi pi-exclamation-triangle"/>-->
+                        </p:commandButton> 
+                   </div>
+
                 </div>
-                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
-                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" icon="pi pi-times"/>
-                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
-                </p:confirmDialog>
+                <h:outputScript>
+                    $(document).on('keydown', function(e) {
+                    if (e.key === "Enter") {
+                    e.preventDefault();
+                    $('#resapplyform\\:submitBtn').click();
+                    }
+                    });
+                </h:outputScript>
+            
+            ✅ 
+            <!--                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat" icon="pi pi-times"/>
+                                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                            </p:confirmDialog>-->
             </h:form>
         </div>
     </ui:define>    
