@@ -43,4 +43,11 @@ public class ResAcquireDAO extends ResourceaquireJpaController{
         TypedQuery<Resourceaquire> query = em.createNamedQuery("Resourceaquire.allResAcquired", Resourceaquire.class);        
         return query.getResultList();
     }
+    
+    public Resourceaquire recAcqForAcqid(int acqid){
+        EntityManager em = getEntityManager();
+        TypedQuery<Resourceaquire> query = em.createNamedQuery("Resourceaquire.recForAcqid", Resourceaquire.class);
+        query.setParameter("aquireid", acqid);
+        return query.getSingleResult();
+    }
 }

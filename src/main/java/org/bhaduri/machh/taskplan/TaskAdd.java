@@ -80,6 +80,11 @@ public class TaskAdd implements Serializable {
 //            cropwt = "";
 //            cropwtunit = "";
 //        }
+        if (selectedTaskType.equals("res")) {
+            resReadonly = false;
+            costReadonly = true;
+            commReadonly = true;
+        }
     }
     
     public void onTaskTypeSelect() throws NamingException{

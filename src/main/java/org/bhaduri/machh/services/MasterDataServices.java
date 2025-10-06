@@ -36,6 +36,7 @@ import org.bhaduri.machh.DA.TaskplanDAO;
 
 
 import org.bhaduri.machh.DA.UsersDAO;
+import org.bhaduri.machh.DTO.AllExpenseReportDTO;
 import org.bhaduri.machh.DTO.CropDTO;
 import org.bhaduri.machh.DTO.EmpExpDTO;
 import org.bhaduri.machh.DTO.EmpLeaveDTO;
@@ -978,6 +979,29 @@ public class MasterDataServices {
         }
         catch (Exception exception) {
             System.out.println(exception + " has occurred in getAcqResources.");
+            return null;
+        }
+    }
+    
+    public ResAcquireDTO getResIdForAcqid(String resacqid) {
+        ResAcquireDAO acqresdao = new ResAcquireDAO(utx, emf);        
+        ResAcquireDTO record = new ResAcquireDTO();  
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        try {  
+           Resourceaquire resacqrec = acqresdao.recAcqForAcqid(Integer.parseInt(resacqid));
+           record.setAcquireId(Integer.toString(resacqrec.getAquireid()));
+           record.setResoureId(Integer.toString(resacqrec.getResourceid()));
+           record.setAmount(String.format("%.2f",resacqrec.getAmount().floatValue()));
+           record.setAcquireDate(formatter.format(resacqrec.getAquiredate()));
+           return record;
+        }
+        catch (NoResultException e) {
+            System.out.println("No resourceid found for this resacqid");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getResIdForAcqid.");
             return null;
         }
     }
@@ -2817,6 +2841,90 @@ public class MasterDataServices {
         } catch (Exception exception) {
             System.out.println(exception + " has occurred in addEmpleaveRecord.");
             return DB_SEVERE;
+        }
+    }
+    
+    public List<AllExpenseReportDTO> getRescropExpRpt(String startdate, String enddate) {
+        ResourceCropDAO rescropdao = new ResourceCropDAO(utx, emf);
+        ExpenseDAO expensedao = new ExpenseDAO(utx, emf);
+        Date mysqlDate;
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+        List<AllExpenseReportDTO> recordList = new ArrayList<>();
+        AllExpenseReportDTO record = new AllExpenseReportDTO();
+
+        float totalcost = 0;
+        String acqid;
+        try {
+            List<Resourcecrop> rescroplist = rescropdao.getRescropForDates(formatter.parse(startdate),
+                    formatter.parse(enddate));
+            List<Expense> explist = expensedao.getExpMonthly(formatter.parse(startdate),
+                    formatter.parse(enddate));
+            pattern = "dd MMM yyyy";
+            formatter = new SimpleDateFormat(pattern);
+            
+            for (int i = 0; i < rescroplist.size(); i++) {
+                record.setExpenseCategory("ResourceApp");
+                record.setExpenseName(getResourceNameForId(rescroplist.get(i).getResourceid()).getResourceName());
+                record.setCost(String.format("%.2f", rescroplist.get(i).getAppamtcost()));
+
+                mysqlDate = rescroplist.get(i).getAppldate();
+                if (mysqlDate != null) {
+                    record.setDate(formatter.format(mysqlDate));
+                } else {
+                    record.setDate("");
+                }
+                totalcost = totalcost + rescroplist.get(i).getAppamtcost().floatValue();
+                recordList.add(record);
+                record = new AllExpenseReportDTO();
+            }
+            
+            for (int i = 0; i < explist.size(); i++) {                
+                if(explist.get(i).getExpensetype().equals("RES")){
+                    record.setExpenseCategory("ResourceAcq");
+                    acqid = getResIdForAcqid(explist.get(i).getExpenserefid().toString()).getResoureId();
+                    record.setExpenseName(getResourceNameForId(Integer.parseInt(acqid)).getResourceName());
+                }
+                if(explist.get(i).getExpensetype().equals("LABHRVST")){
+                    record.setExpenseCategory("Labour");
+                    record.setExpenseName("Paid Labor");
+                }
+                
+                if(explist.get(i).getExpensetype().equals("SALARY")||
+                   explist.get(i).getExpensetype().equals("LOAN")||
+                   explist.get(i).getExpensetype().equals("BONUS")||
+                   explist.get(i).getExpensetype().equals("LEAVE")){
+                   record.setExpenseCategory(explist.get(i).getExpensetype()); 
+                   record.setExpenseName(getEmpNameForId(explist.get(i).getExpenserefid().toString()).getName());
+                }               
+               
+                record.setCost(String.format("%.2f", explist.get(i).getExpediture()));
+                totalcost = totalcost + explist.get(i).getExpediture().floatValue();
+                mysqlDate = explist.get(i).getDate();
+                if (mysqlDate != null) {
+                    record.setDate(formatter.format(mysqlDate));
+                } else {
+                    record.setDate("");
+                }
+                recordList.add(record);
+                record = new AllExpenseReportDTO(); 
+                if (i == explist.size() - 1) {
+                    record.setExpenseCategory("Total");
+                    record.setExpenseName("");
+                    record.setCost(String.format("%.2f", totalcost));
+                    record.setDate("");
+                    recordList.add(record);
+                }
+            }
+            return recordList;
+        }
+        catch (NoResultException e) {
+            System.out.println("No expense record is found for report.");            
+            return null;
+        }
+        catch (Exception exception) {
+            System.out.println(exception + " has occurred in getRescropExpRpt.");
+            return null;
         }
     }
 // **********************commented   

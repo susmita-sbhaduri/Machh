@@ -41,4 +41,12 @@ public class ExpenseDAO extends ExpenseJpaController{
         query.setParameter("enddate", edate);
         return query.getResultList();
     }
+    
+    public List<Expense> getExpMonthly(Date sdate, Date edate) {
+        EntityManager em = getEntityManager();
+        TypedQuery<Expense> query = em.createNamedQuery("Expense.expMonthly", Expense.class); 
+        query.setParameter("startdate", sdate);
+        query.setParameter("enddate", edate);
+        return query.getResultList();
+    }
 }

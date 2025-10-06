@@ -144,6 +144,9 @@
     <named-query name="Resourceaquire.resAcqPerDt">
         <query>SELECT r FROM Resourceaquire r WHERE r.aquiredate = :aquiredate AND r.resourceid =:resourceid</query>
     </named-query>
+    <named-query name="Resourceaquire.recForAcqid">
+        <query>SELECT r FROM Resourceaquire r WHERE r.aquireid = :aquireid</query>
+    </named-query>
     <named-query name="Resourceaquire.allResAcquired">
         <query>SELECT r FROM Resourceaquire r ORDER BY r.resourceid</query>
     </named-query>
@@ -169,12 +172,21 @@
     <named-query name="Resourcecrop.getResCropId">
         <query>SELECT r FROM Resourcecrop r WHERE r.applicationid = :applicationid</query>
     </named-query>
+    <named-query name="Resourcecrop.rescropsForDates">
+        <query>SELECT r FROM Resourcecrop r WHERE 
+            r.appldate &gt;= :startdate AND r.appldate &lt;= :enddate ORDER BY r.resourceid
+        </query>
+    </named-query>
     <named-query name="Expense.getMaxExpId">
         <query>SELECT MAX(e.expenseid) FROM Expense e</query>
     </named-query>
     <named-query name="Expense.empPayments">
         <query>SELECT e FROM Expense e WHERE e.expensetype IN ('SALARY','LOAN','BONUS','LEAVE') AND 
             e.date &gt;= :startdate AND e.date &lt;= :enddate</query>
+    </named-query>
+    <named-query name="Expense.expMonthly">
+        <query>SELECT e FROM Expense e WHERE e.date &gt;= :startdate AND 
+            e.date &lt;= :enddate ORDER BY e.expensetype</query>
     </named-query>
     <named-query name="Expense.getRecForLabHrvst">
         <query>SELECT e FROM Expense e WHERE e.expenserefid = :expenserefid AND e.expensetype = :expensetype</query>
