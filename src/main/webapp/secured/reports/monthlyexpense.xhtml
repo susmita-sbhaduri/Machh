@@ -8,9 +8,11 @@
                 xmlns:h="jakarta.faces.html">
 
     <ui:define name="content">
-        <h4>Details of Expense for the Month of #{monthlyExpense.previousMonthText}.</h4>
+        <h4>Details of Expense for the Month of #{monthlyExpense.monthText}.</h4>
         <p:growl id="growl" showDetail="true" life="5000" sticky="false" />
         <f:metadata>  
+            <f:viewParam name="month" value="#{monthlyExpense.selectedMonth}"></f:viewParam>
+            <f:viewParam name="year" value="#{monthlyExpense.selectedYear}"></f:viewParam>
             <f:viewAction action="#{monthlyExpense.fillValues()}" />
         </f:metadata>  
         <div class="card">
@@ -23,7 +25,8 @@
                                         target="monexpform:monexp" 
                                         fileName="Monthlyexp"/>
                     </p:commandButton>
-
+                    &nbsp;&nbsp;&nbsp;
+                    <p:button outcome="/secured/reports/monthsforexprpt" value="Go Back" id="goback"/>
                 </div>
 
                 <p:dataTable id="monexp" var="monexp" value="#{monthlyExpense.expdetails}">                   

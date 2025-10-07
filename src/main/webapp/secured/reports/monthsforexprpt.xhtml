@@ -31,10 +31,24 @@
                     </div>
                     
                     <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <h:outputLabel for="syear" value="Select Year" />
+                    </div>
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
+                        <p:selectOneMenu id="syear" 
+                                         value="#{monthsForExpRpt.selectedYear}">
+                                        
+                            <f:selectItems value="#{monthsForExpRpt.years}" 
+                                           var="year"
+                                           itemLabel="#{year}" 
+                                           itemValue="#{year}"/>                            
+                        </p:selectOneMenu>
+                    </div>
+                    
+                    <div class="ui-g-12 ui-md-6 ui-lg-6">
                         <p:commandButton styleClass="blue-button" 
                                          icon="fa fa-edit" 
-                                         value="Report"
-                                         action="#{empPaymentDtls.paymentDetails()}" >                                     
+                                         value="Generate Report"
+                                         action="#{monthsForExpRpt.goToGenerateRpt()}" >                                     
                         </p:commandButton>
                     </div>
                 </div>

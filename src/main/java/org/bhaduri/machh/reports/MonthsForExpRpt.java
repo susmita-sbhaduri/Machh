@@ -23,12 +23,18 @@ public class MonthsForExpRpt implements Serializable {
 
     private String selectedMonth;
     private List<String> months;
+    private Integer selectedYear;
+    private List<Integer> years;
     
     public MonthsForExpRpt() {
         months = new ArrayList<>();
         for (Month month : Month.values()) {
             // Add month in "MMM" format, e.g. Jan, Feb
             months.add(month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH));
+        }
+        years = new ArrayList<>();
+        for (int y = 2019; y <= 2050; y++) {
+            years.add(y);
         }
     }
 
@@ -47,5 +53,26 @@ public class MonthsForExpRpt implements Serializable {
     public void setMonths(List<String> months) {
         this.months = months;
     }
-    
+
+    public Integer getSelectedYear() {
+        return selectedYear;
+    }
+
+    public void setSelectedYear(Integer selectedYear) {
+        this.selectedYear = selectedYear;
+    }
+
+    public List<Integer> getYears() {
+        return years;
+    }
+
+    public void setYears(List<Integer> years) {
+        this.years = years;
+    }
+    public String goToGenerateRpt() {        
+        
+        String redirectUrl = "/secured/reports/monthlyexpense?faces-redirect=true&month=" 
+                + selectedMonth + "&year=" + selectedYear;
+        return redirectUrl; 
+    }
 }
