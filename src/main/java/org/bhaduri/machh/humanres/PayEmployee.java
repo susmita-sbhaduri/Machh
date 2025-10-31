@@ -75,6 +75,24 @@ public class PayEmployee implements Serializable {
         f.getExternalContext().getFlash().setKeepMessages(true);
         int resp;
         if (salary > 0) {
+            if (salary > Float.parseFloat(empRec.getSalary())) {
+                message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                        "Paid salary cannot more than the salary set for the employee");
+                f.addMessage(null, message);
+                return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
+            }
+            // there is loan and user has entered payback
+            if(readOnlyCondition==false){
+                if (payback > 0) {
+                    //Payback + Salary cannot be greater than salary as payback will be deducted from salary
+                    if ((payback + salary) > Float.parseFloat(empRec.getSalary())) {
+                        message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+                                "Payback + Salary cannot be greater than salary");
+                        f.addMessage(null, message);
+                        return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
+                    }
+                }                
+            }
             resp = createExpenseRec("SALARY", String.format("%.2f",salary));
             if (resp == SUCCESS) {
                 message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
@@ -144,12 +162,12 @@ public class PayEmployee implements Serializable {
             EmpExpDTO empexpUpd = masterDataService.getEmpActiveExpRecs(selectedEmp, expCat).get(0);
             if (payback > 0) {
                 //Payback + Salary cannot be greater than salary
-                if((payback+salary)> Float.parseFloat(empRec.getSalary())){
-                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
-                            "Payback + Salary cannot be greater than salary");
-                    f.addMessage(null, message);
-                    return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
-                }
+//                if((payback+salary)> Float.parseFloat(empRec.getSalary())){
+//                    message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
+//                            "Payback + Salary cannot be greater than salary");
+//                    f.addMessage(null, message);
+//                    return "/secured/humanresource/payemployee?faces-redirect=true&selectedEmp=" + selectedEmp;
+//                }
                 Date loanStartDate = sdf.parse(empexpUpd.getSdate());
                 if (paydate.compareTo(loanStartDate) < 0) {//if paydate is before loanStartDate
                     message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Failure",
